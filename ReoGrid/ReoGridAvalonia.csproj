@@ -22,7 +22,15 @@
     <StartupObject></StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <Configurations>AvaloniaDebug;AvaloniaRelease</Configurations>
+    <Configurations>AvaloniaDebug;AvaloniaRelease;Debug;Release</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;AVALONIA;GLOBALUSING;EX_SCRIPT;VP_DEBUG_OFF;ALWAYS_CELL_CLIP;FORMULA;LANG_JP;OUTLINE;DRAWING;COMMENT;RICHTEXT;</DefineConstants>
+    <LangVersion>default</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;AVALONIA;GLOBALUSING;FORMULA;LANG_JP;OUTLINE;DRAWING;RICHTEXT;</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 	<PropertyGroup>
 		<Authors>Jingwood</Authors>
@@ -122,10 +130,9 @@
 		<EmbeddedResource Include="Resources\pick_range.cur" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.11" />
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-    <PackageReference Include="System.Security.Permissions" Version="7.0.0" />
+    <PackageReference Include="Avalonia" Version="11.3.13" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
+    <PackageReference Include="System.Security.Permissions" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NuGet\icon.png">
