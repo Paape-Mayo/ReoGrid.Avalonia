@@ -113,7 +113,7 @@ namespace unvell.ReoGrid
             this.builtInCrossCursor = LoadCursorFromResource(unvell.ReoGrid.Properties.Resources.cross);
 #endif // WINFORM || WPF
 
-#if AVALONIA
+#if AVALONIA && WINDOWS
             // initialize cursors
             // normal grid selector
             this.builtInCellsSelectionCursor = LoadCursorFromResource(unvell.ReoGrid.Properties.Resources.grid_select, false);
@@ -129,7 +129,7 @@ namespace unvell.ReoGrid
             this.builtInEntireSheetSelectCursor = this.builtInCellsSelectionCursor;
 
             this.builtInCrossCursor = LoadCursorFromResource(unvell.ReoGrid.Properties.Resources.cross);
-#endif // WINFORM || WPF
+#endif // AVALONIA && WINDOWS
 
             this.ControlStyle = ControlAppearanceStyle.CreateDefaultControlStyle();
             this.WorksheetScrolled += (s, e) => { this.ScrollCurrentWorksheet(e.X, e.Y); };
@@ -1228,6 +1228,10 @@ namespace unvell.ReoGrid
 #if AVALONIA
         private static Cursor LoadCursorFromResource(byte[] res, bool center = true)
         {
+            // Cursors are Windows-only; fall back to default cursor on non-Windows platforms
+            if (!OperatingSystem.IsWindows())
+                return Cursor.Default;
+
             using var ms = new MemoryStream(res);
             RGImage bitmap = new(ms);
             if (center)

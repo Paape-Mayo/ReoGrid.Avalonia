@@ -21,7 +21,6 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <StartupObject></StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Configurations>AvaloniaDebug;AvaloniaRelease;Debug;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -45,7 +44,7 @@
 		<PackageId>unvell.ReoGridAvalonia.dll</PackageId>
 		<Description>Powerful and lightweight open source .NET spreadsheet component. Compatible with Excel 2007 format or later. Simple APIs to open/edit/save/print an Excel spreadsheet in the .NET application.</Description>
 		<SignAssembly>true</SignAssembly>
-		<ApplicationIcon>favicon.ico</ApplicationIcon>
+		<ApplicationIcon Condition="$([MSBuild]::IsOSPlatform('Windows'))">favicon.ico</ApplicationIcon>
 		<Copyright>2012-2021 (c) Jingwood, unvell, all rights reserved.</Copyright>
 		<PackageTags>spreadsheet excel drawing grid workbook worksheet chart data formula script macro outline print</PackageTags>
 		<PackageReleaseNotes>https://github.com/unvell/ReoGrid/releases/tag/v3.0.0</PackageReleaseNotes>
@@ -141,12 +140,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Properties\DateTimeFormat.it.resx">
+    <EmbeddedResource Update="Properties\DateTimeFormat.it.resx" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Properties\DateTimeFormat.resx">
+    <EmbeddedResource Update="Properties\DateTimeFormat.resx" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DateTimeFormat.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
