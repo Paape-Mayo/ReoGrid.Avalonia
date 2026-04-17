@@ -237,9 +237,9 @@ namespace unvell.ReoGrid
                     var data = new DataObject();
                     data.Set(ClipBoardDataFormatIdentify, grid);
 
-                    //string text = StringifyRange(currentCopingRange);
-                    //if (!string.IsNullOrEmpty(text))
-                    //    data.Set(ClipBoardDataFormatIdentify, text);
+                    string text = StringifyRange(currentCopingRange);
+                    if (!string.IsNullOrEmpty(text))
+                        data.Set(DataFormats.Text, text);
 
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
                     var Clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
@@ -325,7 +325,7 @@ namespace unvell.ReoGrid
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
                     var clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
                     partialGrid = clipboard.GetDataAsync(ClipBoardDataFormatIdentify).Result as PartialGrid;
-                    //clipboardText = clipboard.GetDataAsync(ClipBoardDataFormatIdentify).Result as String;
+                    clipboardText = clipboard.GetTextAsync().Result;
 #elif ANDROID
 
 #endif // WINFORM || WPF

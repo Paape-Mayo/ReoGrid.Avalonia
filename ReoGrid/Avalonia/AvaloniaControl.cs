@@ -547,6 +547,15 @@ namespace unvell.ReoGrid
         /// <param name="e"></param>
         protected override void OnTextInput(TextInputEventArgs e)
         {
+            if (this.currentWorksheet != null
+                && !this.currentWorksheet.IsEditing
+                && !string.IsNullOrEmpty(e.Text))
+            {
+                this.currentWorksheet.StartEdit();
+                this.currentWorksheet.CellEditText = e.Text;
+                e.Handled = true;
+            }
+
             base.OnTextInput(e);
         }
 
