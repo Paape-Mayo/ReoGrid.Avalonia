@@ -39,7 +39,7 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/unvell/ReoGrid/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<VersionPrefix>3.0.1</VersionPrefix>
+		<VersionPrefix>3.0.2</VersionPrefix>
 		<VersionSuffix></VersionSuffix>
 		<PackageId>unvell.ReoGridAvalonia.dll</PackageId>
 		<Description>Powerful and lightweight open source .NET spreadsheet component. Compatible with Excel 2007 format or later. Simple APIs to open/edit/save/print an Excel spreadsheet in the .NET application.</Description>
