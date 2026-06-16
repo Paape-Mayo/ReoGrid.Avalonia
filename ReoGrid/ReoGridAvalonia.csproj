@@ -39,7 +39,7 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/unvell/ReoGrid/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<VersionPrefix>3.0.0</VersionPrefix>
+		<VersionPrefix>3.0.1</VersionPrefix>
 		<VersionSuffix></VersionSuffix>
 		<PackageId>unvell.ReoGridAvalonia.dll</PackageId>
 		<Description>Powerful and lightweight open source .NET spreadsheet component. Compatible with Excel 2007 format or later. Simple APIs to open/edit/save/print an Excel spreadsheet in the .NET application.</Description>
@@ -57,6 +57,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AvaloniaRelease|AnyCPU'">
     <DefineConstants>TRACE;AVALONIA;GLOBALUSING;FORMULA;LANG_JP;OUTLINE;DRAWING;RICHTEXT;</DefineConstants>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <!-- The TFM is plain net8.0, so the SDK never auto-defines WINDOWS. The
+       #if AVALONIA && WINDOWS cursor-init block in Control/ControlShare.cs
+       relies on it; define it here on Windows hosts so built-in cursors are
+       compiled in on Windows and degrade to Cursor.Default elsewhere. Runs
+       after the per-config DefineConstants groups so $(DefineConstants) is
+       already populated. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
@@ -113,7 +122,11 @@
     <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="unvell.ReoScript">
+    <!-- unvell.ReoScript.dll is a .NET Framework 2.0 assembly that references
+         System.Windows.Forms, which does not exist on Linux. It is only used
+         when EX_SCRIPT is defined (Debug / AvaloniaDebug), so gate the
+         reference to that to keep it out of the Release / Linux output. -->
+    <Reference Include="unvell.ReoScript" Condition="$(DefineConstants.Contains('EX_SCRIPT'))">
       <HintPath>..\Ref\unvell.ReoScript.dll</HintPath>
     </Reference>
   </ItemGroup>
