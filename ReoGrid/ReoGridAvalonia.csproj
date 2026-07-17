@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <TargetFrameworks>net8.0</TargetFrameworks>
+    <!-- This codebase predates nullable reference types; without an explicit setting
+         it inherits Nullable=enable from the PACE root Directory.Build.props and
+         emits ~3600 meaningless nullability warnings. -->
+    <Nullable>disable</Nullable>
     <OutputType>Library</OutputType>
     <RootNamespace>unvell.ReoGrid</RootNamespace>
     <AssemblyName>unvell.ReoGrid</AssemblyName>
