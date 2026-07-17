@@ -142,7 +142,7 @@
 		<EmbeddedResource Include="Resources\pick_range.cur" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.13" />
+    <PackageReference Include="Avalonia" Version="12.1.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
     <PackageReference Include="System.Security.Permissions" Version="10.0.3" />
   </ItemGroup>

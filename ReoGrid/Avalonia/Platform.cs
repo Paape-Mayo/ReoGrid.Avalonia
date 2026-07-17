@@ -21,6 +21,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using System;
 #if !AVALONIA
 using System.Drawing;
@@ -59,7 +60,7 @@ namespace unvell.ReoGrid.Rendering
         {
             if(key == KeyCode.ControlKey)
             {
-                var ctrlOrCmd = TopLevel.GetTopLevel(target)!.PlatformSettings!.HotkeyConfiguration.CommandModifiers;
+                var ctrlOrCmd = target.GetPlatformSettings()!.HotkeyConfiguration.CommandModifiers;
                 return inputKeyModifiers.HasFlag(ctrlOrCmd);
             }
             if (key == KeyCode.ShiftKey)
@@ -171,7 +172,7 @@ namespace unvell.ReoGrid.Rendering
 						FontWeight.Bold : FontWeight.Normal,
 						FontStretch.Normal);
 
-			IGlyphTypeface glyphTypeface;
+			GlyphTypeface glyphTypeface;
 
             double width = 0;
 			double height = 0;
@@ -182,7 +183,7 @@ namespace unvell.ReoGrid.Rendering
 
 				var size = fontSize * 1.33d;
 
-				var glyphIndexs = text.Select(ch => glyphTypeface.GetGlyph(ch)).ToArray() ;
+				var glyphIndexs = text.Select(ch => glyphTypeface.CharacterToGlyphMap.GetGlyph(ch)).ToArray() ;
 
                 GlyphRun run = new GlyphRun(glyphTypeface, size,text.AsMemory(), glyphIndexs);
 				width = run.Bounds.Size.Width;

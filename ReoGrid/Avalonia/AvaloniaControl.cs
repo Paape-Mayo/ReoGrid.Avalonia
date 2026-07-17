@@ -1026,7 +1026,7 @@ namespace unvell.ReoGrid
 
             }
 
-            protected override void OnLostFocus(RoutedEventArgs e)
+            protected override void OnLostFocus(FocusChangedEventArgs e)
             {
                 var sheet = this.Owner.CurrentWorksheet;
 

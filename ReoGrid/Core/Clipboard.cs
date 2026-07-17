@@ -35,6 +35,7 @@ using Clipboard = System.Windows.Clipboard;
 #elif AVALONIA
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 
 #endif // WINFORM
 
@@ -48,6 +49,16 @@ namespace unvell.ReoGrid
     partial class Worksheet
     {
         private static readonly string ClipBoardDataFormatIdentify = "{CB3BE3D1-2BF9-4fa6-9B35-374F6A0412CE}";
+
+#if AVALONIA
+        // Avalonia 12 typed clipboard format carrying the copied PartialGrid instance.
+        // In-process formats are never serialized to the platform clipboard, so the
+        // rich grid data is only available within this process (matching the previous
+        // DataObject behavior); other applications receive the tabbed-text fallback.
+        // Fully qualified to avoid colliding with the unvell.ReoGrid.DataFormat namespace.
+        private static readonly Avalonia.Input.DataFormat<PartialGrid> ClipBoardPartialGridFormat =
+            Avalonia.Input.DataFormat.CreateInProcessFormat<PartialGrid>(ClipBoardDataFormatIdentify);
+#endif // AVALONIA
 
         private RangePosition currentCopingRange = RangePosition.Empty;
 
@@ -233,17 +244,20 @@ namespace unvell.ReoGrid
                     Clipboard.SetDataObject(data);
 #elif AVALONIA
                     var grid = GetPartialGrid(currentCopingRange, PartialGridCopyFlag.All, ExPartialGridCopyFlag.None, true);
-                    
-                    var data = new DataObject();
-                    data.Set(ClipBoardDataFormatIdentify, grid);
+
+                    var item = new DataTransferItem();
+                    item.Set(ClipBoardPartialGridFormat, grid);
 
                     string text = StringifyRange(currentCopingRange);
                     if (!string.IsNullOrEmpty(text))
-                        data.Set(DataFormats.Text, text);
+                        item.SetText(text);
+
+                    var data = new DataTransfer();
+                    data.Add(item);
 
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
                     var Clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
-                    Clipboard.SetDataObjectAsync(data).Wait();
+                    Clipboard.SetDataAsync(data).Wait();
 
 #endif // WINFORM || WPF
 
@@ -324,8 +338,11 @@ namespace unvell.ReoGrid
 #elif AVALONIA
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
                     var clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
-                    partialGrid = clipboard.GetDataAsync(ClipBoardDataFormatIdentify).Result as PartialGrid;
-                    clipboardText = clipboard.GetTextAsync().Result;
+                    // In-process formats can only be read back from the DataTransfer
+                    // instance still owned by this process; do not dispose it.
+                    var inProcessData = clipboard.TryGetInProcessDataAsync().Result;
+                    partialGrid = inProcessData?.TryGetValueAsync(ClipBoardPartialGridFormat).Result;
+                    clipboardText = clipboard.TryGetTextAsync().Result;
 #elif ANDROID
 
 #endif // WINFORM || WPF
@@ -564,7 +581,10 @@ namespace unvell.ReoGrid
 #if AVALONIA
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
                     var clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
-                    var partialGrid = clipboard.GetDataAsync(ClipBoardDataFormatIdentify).Result as PartialGrid;
+                    // In-process formats can only be read back from the DataTransfer
+                    // instance still owned by this process; do not dispose it.
+                    var inProcessData = clipboard.TryGetInProcessDataAsync().Result;
+                    var partialGrid = inProcessData?.TryGetValueAsync(ClipBoardPartialGridFormat).Result;
 #else
 					DataObject data = Clipboard.GetDataObject() as DataObject;
 					PartialGrid partialGrid = data.GetData(ClipBoardDataFormatIdentify) as PartialGrid;
