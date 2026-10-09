@@ -5,6 +5,10 @@
          it inherits Nullable=enable from the PACE root Directory.Build.props and
          emits ~3600 meaningless nullability warnings. -->
     <Nullable>disable</Nullable>
+    <!-- Upstream generated an XML documentation file in Release for its NuGet package.
+         PACE builds this fork as a project reference, so the file had no reader; it only
+         shipped beside the app and reported every undocumented public member. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <OutputType>Library</OutputType>
     <RootNamespace>unvell.ReoGrid</RootNamespace>
     <AssemblyName>unvell.ReoGrid</AssemblyName>
@@ -33,7 +37,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;AVALONIA;GLOBALUSING;FORMULA;LANG_JP;OUTLINE;DRAWING;RICHTEXT;</DefineConstants>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 	<PropertyGroup>
 		<Authors>Jingwood</Authors>
@@ -60,7 +63,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AvaloniaRelease|AnyCPU'">
     <DefineConstants>TRACE;AVALONIA;GLOBALUSING;FORMULA;LANG_JP;OUTLINE;DRAWING;RICHTEXT;</DefineConstants>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <!-- The TFM is plain net8.0, so the SDK never auto-defines WINDOWS. The
        #if AVALONIA && WINDOWS cursor-init block in Control/ControlShare.cs
