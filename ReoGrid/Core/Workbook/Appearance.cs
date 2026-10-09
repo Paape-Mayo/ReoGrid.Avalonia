@@ -159,10 +159,9 @@ namespace unvell.ReoGrid
 		public float SelectionBorderWidth { get; set; }
 
 		/// <summary>
-		/// Construct empty control appearance
+		/// Construct empty control appearance. Use <see cref="CreateDefaultControlStyle"/> to create an instance.
 		/// </summary>
-		[Obsolete("use ControlAppearanceStyle.CreateDefaultControlStyle() to create instance")]
-		public ControlAppearanceStyle()
+		private ControlAppearanceStyle()
 		{
 			this.SelectionBorderWidth = 3f;
 		}

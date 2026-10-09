@@ -1413,7 +1413,7 @@ namespace unvell.ReoGrid
 									imageBody.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
 #elif AVALONIA
                                     var img = imageBody.Image;
-                                    img.Save(ms);
+                                    img.Save(ms, Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
 #endif // WINFORM | WPF
                                     xmlCell.data = "image/png," + Convert.ToBase64String(ms.ToArray());
                                 }

@@ -158,7 +158,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
         }
 
-        private IPointer? Pointer;
+        private IPointer Pointer;
 
         private bool splitterMoving = false;
         private bool scrollLeftDown = false, scrollRightDown = false;
@@ -554,7 +554,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
         public double ControlWidth { get; set; }
 
-        public event EventHandler<SheetTabMovedEventArgs> TabMoved;
+        public event EventHandler<SheetTabMovedEventArgs> TabMoved { add { } remove { } }
 
         public event EventHandler SelectedIndexChanged;
 

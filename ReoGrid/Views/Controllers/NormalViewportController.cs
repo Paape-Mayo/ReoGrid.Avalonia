@@ -861,12 +861,10 @@ namespace unvell.ReoGrid.Views
             //}
         }
 
-        private RGIntDouble scrollHorMin;
         private RGIntDouble scrollHorMax;
         private RGIntDouble scrollHorLarge;
         private RGFloat scrollHorValue;
 
-        private RGIntDouble scrollVerMin;
         private RGIntDouble scrollVerMax;
         private RGIntDouble scrollVerLarge;
         private RGFloat scrollVerValue;
@@ -1044,18 +1042,18 @@ namespace unvell.ReoGrid.Views
                 return;
             }
 
-            if (this.scrollHorValue < this.scrollHorMin)
+            if (this.scrollHorValue < 0)
             {
-                this.scrollHorValue = this.scrollHorMin;
+                this.scrollHorValue = 0;
             }
             else if (this.scrollHorValue > this.scrollHorMax)
             {
                 this.scrollHorValue = this.scrollHorMax;
             }
 
-            if (this.scrollVerValue < this.scrollVerMin)
+            if (this.scrollVerValue < 0)
             {
-                this.scrollVerValue = this.scrollVerMin;
+                this.scrollVerValue = 0;
             }
             else if (this.scrollVerValue > this.scrollVerMax)
             {
@@ -1065,8 +1063,8 @@ namespace unvell.ReoGrid.Views
             this.worksheet.controlAdapter.ScrollBarHorizontalMaximum = this.scrollHorMax;
             this.worksheet.controlAdapter.ScrollBarVerticalMaximum = this.scrollVerMax;
 
-            this.worksheet.controlAdapter.ScrollBarHorizontalMinimum = this.scrollHorMin;
-            this.worksheet.controlAdapter.ScrollBarVerticalMinimum = this.scrollVerMin;
+            this.worksheet.controlAdapter.ScrollBarHorizontalMinimum = 0;
+            this.worksheet.controlAdapter.ScrollBarVerticalMinimum = 0;
 
             this.worksheet.controlAdapter.ScrollBarHorizontalLargeChange = this.scrollHorLarge;
             this.worksheet.controlAdapter.ScrollBarVerticalLargeChange = this.scrollVerLarge;
@@ -1080,7 +1078,6 @@ namespace unvell.ReoGrid.Views
 
         private CellPosition currentFreezePos = new CellPosition(0, 0);
         private FreezeArea currentFrozenArea = FreezeArea.None;
-        private Point lastFrozenViewStart;
 
         public void Freeze(CellPosition freezePos, FreezeArea area = ReoGrid.FreezeArea.LeftTop)
         {

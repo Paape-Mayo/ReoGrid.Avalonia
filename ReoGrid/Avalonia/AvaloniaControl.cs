@@ -455,8 +455,6 @@ namespace unvell.ReoGrid
 
         #region Mouse
 
-        bool mouseCaptured = false;
-
         protected void OnMouseMove(object sender, PointerEventArgs e)
         {
             var point = e.GetCurrentPoint(this);

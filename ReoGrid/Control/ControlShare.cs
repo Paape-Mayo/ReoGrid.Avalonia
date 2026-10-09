@@ -181,6 +181,16 @@ namespace unvell.ReoGrid
                 this.WorksheetNameChanged?.Invoke(this, e);
             };
 
+            this.workbook.WorksheetNameBackColorChanged += (s, e) =>
+            {
+                this.WorksheetNameBackColorChanged?.Invoke(this, e);
+            };
+
+            this.workbook.WorksheetNameTextColorChanged += (s, e) =>
+            {
+                this.WorksheetNameTextColorChanged?.Invoke(this, e);
+            };
+
             this.workbook.SettingsChanged += (s, e) =>
             {
                 if (this.workbook.HasSettings(WorkbookSettings.View_ShowSheetTabControl))

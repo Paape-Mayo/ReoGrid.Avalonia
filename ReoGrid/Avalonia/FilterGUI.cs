@@ -55,7 +55,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             base.OnApplyTemplate(e);
 
             this.SortAZItem = e.NameScope.Find<RadioButton>("Part_SortAZItem");
-            this.SortAZItem = e.NameScope.Find<RadioButton>("Part_SortZAItem");
+            this.SortZAItem = e.NameScope.Find<RadioButton>("Part_SortZAItem");
             this.OkButton = e.NameScope.Find<Button>("Part_OkButton");
             this.CancelButton = e.NameScope.Find<Button>("Part_CancelButton");
             this.SelectAllButton = e.NameScope.Find<CheckBox>("Part_SelectAll");

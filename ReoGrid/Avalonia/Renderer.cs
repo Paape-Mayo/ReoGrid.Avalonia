@@ -694,8 +694,6 @@ namespace unvell.ReoGrid.Rendering
             //capLinePen.EndLineCap = PlatformUtility.ToWPFLineCap(endCap);
         }
 
-        private LineCap lineCap;
-
         public void DrawCappedLine(double x1, double y1, double x2, double y2)
         {
             if (this.capLinePen != null)
