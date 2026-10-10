@@ -101,18 +101,14 @@ namespace unvell.ReoGrid.CellTypes
 			get { return radioGroup; }
 			set
 			{
-				if (value == null)
-				{
-					this.RadioGroup = null;
-				}
-				else
-				{
-					if (!value.Contains(this))
-					{
-						value.AddRadioButton(this);
-					}
+				if (value == this.radioGroup) return;
 
-					this.radioGroup = value;
+				this.radioGroup?.RadioButtons.Remove(this);
+				this.radioGroup = value;
+
+				if (value != null && !value.Contains(this))
+				{
+					value.AddRadioButton(this);
 				}
 			}
 		}

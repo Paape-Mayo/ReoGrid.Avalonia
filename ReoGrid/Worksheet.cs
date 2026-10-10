@@ -2024,6 +2024,12 @@ namespace unvell.ReoGrid
             {
                 actionSupportedControl.DoAction(this, action);
             }
+            else
+            {
+                // Without a control there is no undo history to record it in, so do it directly.
+                action.Worksheet = this;
+                action.Do();
+            }
         }
 
         #endregion // Internal Utilites

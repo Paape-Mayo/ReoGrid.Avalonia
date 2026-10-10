@@ -832,6 +832,17 @@ namespace unvell.ReoGrid
         }
 
         /// <summary>
+        /// Do specified workbook action, such as inserting or removing a worksheet, so it can be undone.
+        /// </summary>
+        /// <param name="action">Action to be performed. One created without a workbook acts on this one.</param>
+        public void DoAction(WorkbookAction action)
+        {
+            action.Workbook ??= this;
+
+            this.actionManager.DoAction(action);
+        }
+
+        /// <summary>
         /// Undo the last action.
         /// </summary>
         public void Undo()

@@ -143,7 +143,7 @@ namespace unvell.ReoGrid
 		{
 			try
 			{
-				this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
+				this.controlAdapter?.ChangeCursor(CursorStyle.Busy);
 
 				this.SetRowsHeight(range.Row, range.Rows, r =>
 				{
@@ -165,10 +165,7 @@ namespace unvell.ReoGrid
 			}
 			finally
 			{
-				if (this.controlAdapter != null)
-				{
-					this.ControlAdapter!.ChangeCursor(Interaction.CursorStyle.PlatformDefault);
-				}
+				this.controlAdapter?.ChangeCursor(Interaction.CursorStyle.PlatformDefault);
 			}
 
 			this.RowsFiltered?.Invoke(this, EventArgs.Empty);
@@ -306,7 +303,7 @@ namespace unvell.ReoGrid
 
 			try
 			{
-				this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
+				this.controlAdapter?.ChangeCursor(CursorStyle.Busy);
 
 				if (!this.CheckQuickSortRange(range.Row, range.EndRow, range.Col, range.EndCol))
 				{
@@ -336,7 +333,7 @@ namespace unvell.ReoGrid
 
 			this.RequestInvalidate();
 
-			this.controlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
+			this.controlAdapter?.ChangeCursor(CursorStyle.PlatformDefault);
 
 			if (!affectRange.IsEmpty)
 			{

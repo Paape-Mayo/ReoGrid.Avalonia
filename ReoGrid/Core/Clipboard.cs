@@ -201,6 +201,9 @@ namespace unvell.ReoGrid
         /// </summary>
         public bool Copy()
         {
+            // The clipboard belongs to the control's window; a worksheet without a control has none.
+            if (this.controlAdapter == null) return false;
+
             if (IsEditing)
             {
                 this.controlAdapter!.EditControlCopy();
@@ -301,6 +304,8 @@ namespace unvell.ReoGrid
         /// </summary>
         public bool Paste()
         {
+            if (this.controlAdapter == null) return false;
+
             if (IsEditing)
             {
                 this.controlAdapter!.EditControlPaste();

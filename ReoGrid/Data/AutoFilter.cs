@@ -610,7 +610,7 @@ namespace unvell.ReoGrid.Data
 		{
 			try
 			{
-				this.Worksheet!.ControlAdapter!.ChangeCursor(CursorStyle.Busy);
+				this.Worksheet!.ControlAdapter?.ChangeCursor(CursorStyle.Busy);
 
 				for (int i = start; i <= end; i++)
 				{
@@ -620,7 +620,7 @@ namespace unvell.ReoGrid.Data
 			}
 			finally
 			{
-				this.Worksheet!.ControlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
+				this.Worksheet!.ControlAdapter?.ChangeCursor(CursorStyle.PlatformDefault);
 			}
 		}
 

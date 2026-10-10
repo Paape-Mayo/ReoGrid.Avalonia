@@ -333,6 +333,7 @@ namespace unvell.Common
 		/// <param name="name">Friendly name of this group.</param>
 		public ActionGroup(string name)
 		{
+			this.name = name;
 			actions = new List<IAction>();
 		}
 

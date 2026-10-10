@@ -842,7 +842,7 @@ namespace unvell.ReoGrid.Chart
 				{
 					if (this.platRowPoints.Length != ds.SerialCount)
 					{
-						Array.Resize(ref this.platColPoints, ds.SerialCount);
+						Array.Resize(ref this.platRowPoints, ds.SerialCount);
 					}
 				}
 

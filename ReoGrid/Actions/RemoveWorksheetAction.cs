@@ -38,6 +38,7 @@ namespace unvell.ReoGrid.Actions
 		/// <param name="index">Number of worksheet</param>
 		/// <param name="worksheet">Worksheet instance</param>
 		public RemoveWorksheetAction(int index, Worksheet worksheet)
+			: base(worksheet.Workbook)
 		{
 			this.Index = index;
 			this.Worksheet = worksheet;
