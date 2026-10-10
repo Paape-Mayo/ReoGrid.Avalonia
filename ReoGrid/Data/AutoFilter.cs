@@ -132,16 +132,16 @@ namespace unvell.ReoGrid.Data
           }
 
           var text = cell.DisplayText;
-          if (string.IsNullOrEmpty(text) && !columnFilterBody.ContainsBlank)
+          if (string.IsNullOrEmpty(text))
           {
+            // A cell with no text is blank, as a cell that was never set is.
+            if (!columnFilterBody.ContainsBlank) return false;
+          }
+          else if (!columnFilterBody.SelectedTextItems.Contains(text))
+          {
+            // hide the row
             return false;
           }
-
-					if (!columnFilterBody.SelectedTextItems.Contains(text!))
-					{
-						// hide the row
-						return false;
-					}
 
           c += cell == null ? 1 : cell.Colspan;
         }
@@ -530,28 +530,34 @@ namespace unvell.ReoGrid.Data
 			/// <returns></returns>
 			public List<string>? GetDistinctItems()
 			{
-				if (this.ColumnHeader == null || this.ColumnHeader.Worksheet == null) return null;
+				var sheet = this.ColumnHeader?.Worksheet;
+				if (sheet == null) return null;
 
-				List<string> items = new List<string>();
+				var items = new List<string>();
+				var seen = new HashSet<string>();
+				bool hasBlank = false;
 
-				int maxRow = this.ColumnHeader.Worksheet.MaxContentRow;
+				// Within the rows that hold data, a cell that was never set is blank too, so the
+				// blank item can bring its row back once a filter has hidden it.
+				int endRow = Math.Min(this.autoFilter.ApplyRange.EndRow, sheet.MaxContentRow);
 
-				this.ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
-					this.ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, true,
-					(r, c, cell) =>
-          {
-            var str = cell == null ? string.Empty : cell.DisplayText;
-            if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
+				for (int r = this.autoFilter.ApplyRange.Row; r <= endRow; r++)
+				{
+					var text = sheet.GetCell(r, this.ColumnHeader!.Index)?.DisplayText;
 
-						if (!items.Contains(str))
-						{
-							items.Add(str);
-						}
-
-						return true;
-					});
+					if (string.IsNullOrEmpty(text))
+					{
+						hasBlank = true;
+					}
+					else if (seen.Add(text))
+					{
+						items.Add(text);
+					}
+				}
 
 				items.Sort();
+
+				if (hasBlank) items.Add(LanguageResource.Filter_Blanks);
 
 				return items;
 			}
