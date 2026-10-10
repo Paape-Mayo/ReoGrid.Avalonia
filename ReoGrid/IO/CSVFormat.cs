@@ -21,22 +21,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace unvell.ReoGrid.IO
 {
 	internal static class CSVFormat
 	{
 		public const int DEFAULT_READ_BUFFER_LINES = 512;
-		
-		private static Regex lineRegex = new Regex("\\s*(\\\"(?<item>[^\\\"]*)\\\"|(?<item>[^,]*))\\s*,?", RegexOptions.Compiled);
 
-		public static void Read(Stream stream, Worksheet sheet, RangePosition targetRange, 
+		public static void Read(Stream stream, Worksheet sheet, RangePosition targetRange,
 			Encoding? encoding = null, int bufferLines = DEFAULT_READ_BUFFER_LINES, bool autoSpread = true)
 		{
 			targetRange = sheet.FixRange(targetRange);
 
-			string[] lines = new string[bufferLines];
 			List<object>[] bufferLineList = new List<object>[bufferLines];
 
 			for (int i = 0; i < bufferLineList.Length; i++)
@@ -53,6 +49,8 @@ namespace unvell.ReoGrid.IO
 
 			using (var sr = new StreamReader(stream, encoding))
 			{
+				var records = new CSVRecordReader(sr);
+
 				sheet.SuspendDataChangedEvents();
 				int maxCols = 0;
 
@@ -63,16 +61,13 @@ namespace unvell.ReoGrid.IO
 					{
 						int readLines = 0;
 
-						for (; readLines < lines.Length; readLines++)
+						for (; readLines < bufferLineList.Length; readLines++)
 						{
-							var line = sr.ReadLine();
-							if (line == null)
+							if (!records.ReadRecord(bufferLineList[readLines], targetRange.Cols))
 							{
 								finished = true;
 								break;
 							}
-
-							lines[readLines] = line;
 
 							totalReadLines++;
 							if (!autoSpread && totalReadLines > targetRange.Rows)
@@ -91,19 +86,7 @@ namespace unvell.ReoGrid.IO
 
 						for (int i = 0; i < readLines; i++)
 						{
-							var line = lines[i];
-
-							var toBuffer = bufferLineList[i];
-							toBuffer.Clear();
-
-							foreach (Match m in lineRegex.Matches(line))
-							{
-								toBuffer.Add(m.Groups["item"].Value);
-
-								if (toBuffer.Count >= targetRange.Cols) break;
-							}
-
-							if (maxCols < toBuffer.Count) maxCols = toBuffer.Count;
+							if (maxCols < bufferLineList[i].Count) maxCols = bufferLineList[i].Count;
 
 							if (autoSpread && maxCols >= sheet.ColumnCount)
 							{
@@ -128,6 +111,112 @@ namespace unvell.ReoGrid.IO
 			sw.Stop();
 			System.Diagnostics.Debug.WriteLine("load csv file: " + sw.ElapsedMilliseconds + " ms, rows: " + row);
 #endif
+		}
+	}
+
+	/// <summary>
+	/// Reads CSV records as RFC 4180 describes them: a quoted field may hold separators, line
+	/// breaks and doubled quotes, and every other character belongs to the field it is in.
+	/// </summary>
+	internal sealed class CSVRecordReader
+	{
+		private const int NothingPeeked = -2;
+
+		private readonly TextReader reader;
+		private readonly StringBuilder field = new StringBuilder();
+		private int peeked = NothingPeeked;
+
+		public CSVRecordReader(TextReader reader)
+		{
+			this.reader = reader;
+		}
+
+		/// <summary>
+		/// Read the next record, keeping at most the specified number of fields.
+		/// </summary>
+		/// <returns>False when the input has no more records.</returns>
+		public bool ReadRecord(List<object> fields, int maxFields)
+		{
+			fields.Clear();
+
+			int c = Read();
+			if (c == -1) return false;
+
+			bool inQuotes = false;
+			bool fieldStart = true;
+
+			while (true)
+			{
+				if (inQuotes)
+				{
+					// An unterminated quote runs to the end of the input.
+					if (c == -1) break;
+
+					if (c == '"')
+					{
+						if (Peek() == '"')
+						{
+							Read();
+							field.Append('"');
+						}
+						else
+						{
+							inQuotes = false;
+						}
+					}
+					else
+					{
+						field.Append((char)c);
+					}
+				}
+				else if (c == '"' && fieldStart)
+				{
+					inQuotes = true;
+				}
+				else if (c == ',')
+				{
+					AddField(fields, maxFields);
+					fieldStart = true;
+					c = Read();
+					continue;
+				}
+				else if (c == '\r' || c == '\n' || c == -1)
+				{
+					if (c == '\r' && Peek() == '\n') Read();
+					break;
+				}
+				else
+				{
+					field.Append((char)c);
+				}
+
+				fieldStart = false;
+				c = Read();
+			}
+
+			AddField(fields, maxFields);
+			return true;
+		}
+
+		private void AddField(List<object> fields, int maxFields)
+		{
+			if (fields.Count < maxFields) fields.Add(field.ToString());
+			field.Clear();
+		}
+
+		private int Read()
+		{
+			if (peeked == NothingPeeked) return reader.Read();
+
+			int c = peeked;
+			peeked = NothingPeeked;
+			return c;
+		}
+
+		private int Peek()
+		{
+			if (peeked == NothingPeeked) peeked = reader.Read();
+			return peeked;
 		}
 	}
 
