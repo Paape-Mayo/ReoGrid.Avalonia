@@ -232,6 +232,8 @@ namespace unvell.ReoGrid
 			}
 		}
 
+		private static readonly char[] LineBreaks = { '\r', '\n' };
+
 		/// <summary>
 		/// Export spreadsheet as CSV format from specified range.
 		/// </summary>
@@ -251,27 +253,21 @@ namespace unvell.ReoGrid
 			{
 				StringBuilder sb = new StringBuilder();
 
+				// One field per column keeps each value under its column; a row with no text is left out.
 				for (int r = range.Row; r <= maxRow; r++)
 				{
-					if (sb.Length > 0)
-					{
-						sw.WriteLine(sb.ToString());
-						sb.Length = 0;
-					}
+					sb.Length = 0;
+					bool hasText = false;
 
-					for (int c = range.Col; c <= maxCol;)
+					for (int c = range.Col; c <= maxCol; c++)
 					{
-						if (sb.Length > 0)
+						if (c > range.Col)
 						{
 							sb.Append(',');
 						}
 
 						var cell = this.GetCell(r, c);
-						if (cell == null || !cell.IsValidCell)
-						{
-							c++;
-						}
-						else
+						if (cell != null && cell.IsValidCell)
 						{
 							var data = cell.Data;
 
@@ -288,7 +284,7 @@ namespace unvell.ReoGrid
 							{
 								if (!string.IsNullOrEmpty(str)
 									&& (cell.DataFormat == CellDataFormatFlag.Text
-									|| str.IndexOf(',') >= 0 || str.IndexOf('"') >= 0
+									|| str.IndexOf(',') >= 0 || str.IndexOf('"') >= 0 || str.IndexOfAny(LineBreaks) >= 0
 									|| str.StartsWith(" ") || str.EndsWith(" ")))
 								{
 									quota = true;
@@ -298,6 +294,8 @@ namespace unvell.ReoGrid
 							{
 								str = Convert.ToString(data) ?? string.Empty;
 							}
+
+							if (str.Length > 0) hasText = true;
 
 							if (quota)
 							{
@@ -309,16 +307,13 @@ namespace unvell.ReoGrid
 							{
 								sb.Append(str);
 							}
-
-							c += cell.Colspan;
 						}
 					}
-				}
 
-				if (sb.Length > 0)
-				{
-					sw.WriteLine(sb.ToString());
-					sb.Length = 0;
+					if (hasText)
+					{
+						sw.WriteLine(sb.ToString());
+					}
 				}
 			}
 		}
