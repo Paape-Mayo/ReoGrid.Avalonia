@@ -9,6 +9,8 @@
          PACE builds this fork as a project reference, so the file had no reader; it only
          shipped beside the app and reported every undocumented public member. -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Held at zero warnings, as PACE is. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputType>Library</OutputType>
     <RootNamespace>unvell.ReoGrid</RootNamespace>
     <AssemblyName>unvell.ReoGrid</AssemblyName>
