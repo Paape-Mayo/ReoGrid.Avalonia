@@ -139,7 +139,7 @@ namespace unvell.ReoGrid.Interaction
 
 	public interface IVisualController
 	{
-		IUserVisual FocusVisual { get; }
+		IUserVisual? FocusVisual { get; }
 	}
 
 }

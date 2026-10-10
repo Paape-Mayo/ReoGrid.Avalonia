@@ -133,12 +133,12 @@ namespace unvell.ReoGrid.CellTypes
 		/// <summary>
 		/// Event raied when user clicked inside check box.
 		/// </summary>
-		public event EventHandler Click;
+		public event EventHandler? Click;
 
 		/// <summary>
 		/// Event raised when check status changed.
 		/// </summary>
-		public event EventHandler CheckChanged;
+		public event EventHandler? CheckChanged;
 
 		/// <summary>
 		/// Raise the click event.
@@ -147,7 +147,7 @@ namespace unvell.ReoGrid.CellTypes
 		{
 			if (this.Click != null)
 			{
-				this.Click(this, null);
+				this.Click(this, EventArgs.Empty);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		protected virtual void RaiseCheckChangedEvent()
 		{
-			this.CheckChanged?.Invoke(this, null);
+			this.CheckChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		#endregion // Event
@@ -239,7 +239,7 @@ namespace unvell.ReoGrid.CellTypes
 
                 };
 
-				path.Figures.Add(figure);
+				path.Figures!.Add(figure);
 
 				g.FillPath(StaticResources.SystemColor_WindowText, path);
 			}
@@ -258,7 +258,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">Data inputted by user.</param>
 		/// <returns>Data to be set into the cell.</returns>
-		public override object OnSetData(object data)
+		public override object? OnSetData(object? data)
 		{
 			this.IsChecked = data is bool && (bool)data;
 
@@ -307,7 +307,7 @@ namespace unvell.ReoGrid.CellTypes
 						this.Cell.Data = value;
 					}
 
-					CheckChanged?.Invoke(this, null);
+					CheckChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}

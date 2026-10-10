@@ -30,9 +30,9 @@ namespace unvell.ReoGrid.Utility
 {
 	internal static class XMLHelper
 	{
-		private static Dictionary<Type, XmlSerializer> xmlSerializers;
+		private static Dictionary<Type, XmlSerializer>? xmlSerializers;
 
-		public static T LoadXML<T>(Stream s) where T : class
+		public static T? LoadXML<T>(Stream s) where T : class
 		{
 			Type type = typeof(T);
 
@@ -42,7 +42,7 @@ namespace unvell.ReoGrid.Utility
 			{
 #endif
 
-				XmlSerializer serializer = null;
+				XmlSerializer? serializer = null;
 
 				if (xmlSerializers == null)
 				{
@@ -66,7 +66,7 @@ namespace unvell.ReoGrid.Utility
 #endif
 		}
 
-		public static void SaveXML<T>(Stream s, T obj)
+		public static void SaveXML<T>(Stream s, T obj) where T : notnull
 		{
 			Type type = typeof(T);
 
@@ -76,7 +76,7 @@ namespace unvell.ReoGrid.Utility
 			{
 #endif
 
-				XmlSerializer serializer = null;
+				XmlSerializer? serializer = null;
 
 				if (xmlSerializers == null)
 				{
@@ -88,7 +88,7 @@ namespace unvell.ReoGrid.Utility
 					xmlSerializers[type] = serializer = new XmlSerializer(type);
 				}
 
-				XmlSerializerNamespaces namespaces = null;
+				XmlSerializerNamespaces? namespaces = null;
 
 				var xmlnsProp = obj.GetType().GetField("xmlns", System.Reflection.BindingFlags.Instance
 					| System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);

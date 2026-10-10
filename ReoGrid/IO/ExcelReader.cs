@@ -57,7 +57,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			Stopwatch sw = Stopwatch.StartNew();
 #endif
 
-			var document = Document.ReadFromStream(stream);
+			var document = Document.ReadFromStream(stream)!;
 			if (document.Workbook.sheets.Count == 0) throw new ReoGridLoadException("Specified Excel file does not contain any valid sheets.");
 
 			rgWorkbook.Worksheets.Clear();
@@ -102,7 +102,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		private static void ReadNamedRangeAddr(RGWorkbook rgBook, string name, string addr, bool worksheetRange)
 		{
 			int sheetSplit = addr.IndexOf('!');
-			string sheetName = null;
+			string? sheetName = null;
 
 			if (sheetSplit >= 0)
 			{
@@ -138,7 +138,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 		private static void ReadNamedRange(RGWorkbook rgBook, Schema.Workbook workbook, Schema.DefinedName defName)
 		{
-			var name = defName.name;
+			var name = defName.name!;
 
 			int index = name.IndexOf('.');
 
@@ -170,9 +170,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 		#region Worksheet
 		private static void LoadWorksheet(RGWorkbook rgWorkbook, Document doc, WorkbookSheet sheetIndex)
 		{
-			RGWorksheet rgSheet = rgWorkbook.GetWorksheetByName(sheetIndex.name);
+			RGWorksheet rgSheet = rgWorkbook.GetWorksheetByName(sheetIndex.name)!;
 
-			var sheet = doc.LoadRelationResourceById<Schema.Worksheet>(doc.Workbook, sheetIndex.resId);
+			var sheet = doc.LoadRelationResourceById<Schema.Worksheet>(doc.Workbook, sheetIndex.resId)!;
 
 			float fixedCharWidth = MeasureToolkit.ScaleByDPI(7.0f); //ResourcePoolManager.Instance.GetFont("Arial", 10f, System.Drawing.FontStyle.Regular).SizeInPoints;
 
@@ -285,7 +285,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 					for (int i = startCol; i < startCol + count; i++)
 					{
-						var header = rgSheet.GetColumnHeader(i);
+						var header = rgSheet.GetColumnHeader(i)!;
 
 						header.IsAutoWidth = !OpenXMLUtility.IsTrue(col.customWidth);
 					}
@@ -310,7 +310,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			var cellFormats = styles.cellFormats;
 
 			// data
-			SharedStrings sharedStringTable = doc.ReadSharedStringTable();
+			SharedStrings? sharedStringTable = doc.ReadSharedStringTable();
 
 			if (fonts?.list != null && fonts.list.ElementAtOrDefault(0) is Font defaultFont)
 			{
@@ -334,7 +334,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 			Dictionary<int, SharedFormulaInfo> sharedFormulas = new Dictionary<int, SharedFormulaInfo>();
 
-			int rowTop = rgSheet.GetRowHeader(0).Top;
+			int rowTop = rgSheet.GetRowHeader(0)!.Top;
 			int lastRowIndex = -1;
 
 			int maxHBorderRow = -1, maxHBorderCol = -1;
@@ -356,7 +356,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 					//rgSheet.SetRowsHeight(lastRowIndex + 1, rowIndex - lastRowIndex - 1, defaultRowHeight);
 					for (int i = lastRowIndex + 1; i < rowIndex; i++)
 					{
-						var passedRowHeader = rgSheet.GetRowHeader(i);
+						var passedRowHeader = rgSheet.GetRowHeader(i)!;
 						passedRowHeader.Top = rowTop;
 						passedRowHeader.InnerHeight = defaultRowHeight;
 						rowTop += defaultRowHeight;
@@ -377,7 +377,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 						//&& 
 					!string.IsNullOrEmpty(row.height) && double.TryParse(row.height, numberStyle, System.Globalization.CultureInfo.InvariantCulture , out rowHeight))
 				{
-					rowHeader = rgSheet.GetRowHeader(rowIndex);
+					rowHeader = rgSheet.GetRowHeader(rowIndex)!;
 					ushort height = (ushort)Math.Round(rowHeight * dpi / 72f);
 
 					rowHeader.Top = rowTop;
@@ -395,7 +395,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				}
 				else
 				{
-					rowHeader = rgSheet.GetRowHeader(rowIndex);
+					rowHeader = rgSheet.GetRowHeader(rowIndex)!;
 
 					rowHeader.Top = rowTop;
 
@@ -426,7 +426,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				swRowStyle.Start();
 #endif // DEBUG
 
-				WorksheetRangeStyle rowStyle = null;
+				WorksheetRangeStyle? rowStyle = null;
 
 				int styleIndex = -1;
 
@@ -533,7 +533,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				foreach (Schema.Cell cell in row.cells)
 				{
 					CellPosition pos = new CellPosition(cell.address);
-					Cell rgCell = rgSheet.cells[pos.Row, pos.Col];
+					Cell? rgCell = rgSheet.cells[pos.Row, pos.Col];
 
 					if (rgCell == null)
 					{
@@ -548,10 +548,10 @@ namespace unvell.ReoGrid.IO.OpenXML
 					}
 
 #if DEBUG
-					Debug.Assert(rgCell.Height == rgSheet.GetRowHeader(pos.Row).InnerHeight + 1);
+					Debug.Assert(rgCell.Height == rgSheet.GetRowHeader(pos.Row)!.InnerHeight + 1);
 #endif // DEBUG
 
-					CellFormat style = null;
+					CellFormat? style = null;
 
 					#region Cell Style, Border
 
@@ -771,7 +771,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 					if (formula != null)
 					{
-						string cellFormula = null;
+						string? cellFormula = null;
 
 						if (formula.type == "shared")
 						{
@@ -831,7 +831,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			//int offset = 0;
 			for (int i = lastRowIndex + 1; i < rgSheet.Rows; i++)
 			{
-				var rowHeader = rgSheet.GetRowHeader(i);
+				var rowHeader = rgSheet.GetRowHeader(i)!;
 				rowHeader.Top = rowTop;
 				rowHeader.InnerHeight = defaultRowHeight;
 				rowTop += defaultRowHeight;
@@ -1098,7 +1098,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		}
 
 		private static void PreprocessCellStyle(Document doc, RGWorksheet rgSheet, CellFormat style,
-			FontCollection fonts, FillCollection fills)
+			FontCollection? fonts, FillCollection fills)
 		{
 			WorksheetRangeStyle styleset = new WorksheetRangeStyle(rgSheet.RootStyle);
 			SolidColor tempColor = new SolidColor();
@@ -1107,7 +1107,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			if (//style.applyFont == "1" && 
 				!string.IsNullOrEmpty(style.fontId))
 			{
-				var font = fonts.list.ElementAtOrDefault(int.Parse(style.fontId)) as Schema.Font;
+				var font = fonts?.list.ElementAtOrDefault(int.Parse(style.fontId)) as Schema.Font;
 
 				if (font != null)
 				{
@@ -1268,7 +1268,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 #endregion // Style
 
 #region Color
-		private static bool ConvertFromIndexedColor(Document doc, ColorValue color, ref SolidColor rgColor)
+		private static bool ConvertFromIndexedColor(Document doc, ColorValue? color, ref SolidColor rgColor)
 		{
 			if (color == null) return false;
 
@@ -1400,7 +1400,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			}
 		}
 
-		private static bool ConvertFromExcelBorder(Document doc, SideBorder sideBorder, ref RangeBorderStyle rgStyle)
+		private static bool ConvertFromExcelBorder(Document doc, SideBorder? sideBorder, ref RangeBorderStyle rgStyle)
 		{
 			if (sideBorder != null && !string.IsNullOrEmpty(sideBorder.style))
 			{
@@ -1565,14 +1565,14 @@ namespace unvell.ReoGrid.IO.OpenXML
 			{
 				var numFormat = styles.numberFormats.list.FirstOrDefault(nf => nf.formatId == formatId) as NumberFormat;
 
-				if (numFormat != null)
+				if (numFormat != null && numFormat.formatCode != null)
 				{
 					string[] patterns = numFormat.formatCode.Split(';');
 
 					if (patterns != null && patterns.Length > 0)
 					{
-						object arg = null;
-						Match currencyMatch = null;
+						object? arg = null;
+						Match? currencyMatch = null;
 
 						var pattern = patterns[0];
 
@@ -1677,7 +1677,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		{
 			foreach (var archor in drawingFile.twoCellAnchors)
 			{
-				DrawingObject obj = null;
+				DrawingObject? obj = null;
 
 				if (archor.pic != null)
 				{
@@ -1856,7 +1856,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			}
 		}
 
-		private static bool ConvertFromDashStyle(string val, out Graphics.LineStyles lineStyle)
+		private static bool ConvertFromDashStyle(string? val, out Graphics.LineStyles lineStyle)
 		{
 			switch (val)
 			{
@@ -1871,16 +1871,17 @@ namespace unvell.ReoGrid.IO.OpenXML
 		}
 
 #region Image
-		private static ImageObject LoadImage(Document doc, RGWorksheet rgSheet, Pic pic, Schema.Drawing drawingFile)
+		private static ImageObject? LoadImage(Document doc, RGWorksheet rgSheet, Pic pic, Schema.Drawing drawingFile)
 		{
 			var blipFill = pic.blipFill;
 
 			if (blipFill != null)
 			{
-				var blip = pic.blipFill.blip;
+				var blip = blipFill.blip;
 				if (blip != null && !string.IsNullOrEmpty(blip.embedId) && drawingFile._relationFile != null)
 				{
 					var relation = drawingFile._relationFile.relations.FirstOrDefault(r => r.id == blip.embedId);
+					if (relation == null) return null;
 					var finalPath = RelativePathUtility.GetRelativePath(drawingFile._path, relation.target);
 					var stream = doc.GetResourceStream(finalPath);
 
@@ -1943,9 +1944,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 #endregion // Image
 
 #region LoadShape
-		private static Drawing.DrawingObject LoadShape(Document doc, RGWorksheet rgSheet, Schema.Shape shape)
+		private static Drawing.DrawingObject? LoadShape(Document doc, RGWorksheet rgSheet, Schema.Shape shape)
 		{
-			DrawingObject obj = null;
+			DrawingObject? obj = null;
 
 			var prop = shape.prop;
 
@@ -1959,9 +1960,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 					case "roundRect":
 						Drawing.Shapes.RoundedRectangleShape roundRect = new Drawing.Shapes.RoundedRectangleShape();
 
-						if (shape.prop.prstGeom.avList != null)
+						if (prop.prstGeom.avList != null)
 						{
-							var adj = shape.prop.prstGeom.avList.FirstOrDefault(gd => gd.name == "adj");
+							var adj = prop.prstGeom.avList.FirstOrDefault(gd => gd.name == "adj");
 
 							if (adj != null)
 							{
@@ -2187,7 +2188,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 #endregion // GetDrawingBounds
 
 #region LoadGraphic
-		private static Drawing.DrawingObject LoadGraphic(Document doc, RGWorksheet rgSheet, Schema.Drawing drawingFile, Schema.GraphicFrame graphicFrame)
+		private static Drawing.DrawingObject? LoadGraphic(Document doc, RGWorksheet rgSheet, Schema.Drawing drawingFile, Schema.GraphicFrame graphicFrame)
 		{
 			var graphic = graphicFrame.graphic;
 
@@ -2214,7 +2215,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 #endregion // LoadGraphic
 
 #region Chart
-		private static Chart.Chart LoadChart(RGWorksheet rgSheet, Schema.ChartSpace chartSpace)
+		private static Chart.Chart? LoadChart(RGWorksheet rgSheet, Schema.ChartSpace chartSpace)
 		{
 			if (chartSpace.chart == null) return null;
 
@@ -2223,7 +2224,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			var plot = chart.plotArea;
 			if (plot == null) return null;
 
-			Chart.Chart rgChart = null;
+			Chart.Chart? rgChart = null;
 			Chart.WorksheetChartDataSource dataSource = new Chart.WorksheetChartDataSource(rgSheet);
 
 			if (plot.lineChart != null)
@@ -2320,6 +2321,8 @@ namespace unvell.ReoGrid.IO.OpenXML
 #endregion // Area Chart Plot Area
 			}
 
+			if (rgChart == null) return null;
+
 			bool showLegend = false;
 
 			if (chart.legend != null)
@@ -2335,8 +2338,8 @@ namespace unvell.ReoGrid.IO.OpenXML
 			return rgChart;
 		}
 
-		private static Chart.WorksheetChartDataSerial ReadDataSerial(Chart.WorksheetChartDataSource dataSource,
-			RGWorksheet rgSheet, IChartSerial serial)
+		private static Chart.WorksheetChartDataSerial? ReadDataSerial(Chart.WorksheetChartDataSource dataSource,
+			RGWorksheet rgSheet, IChartSerial? serial)
 		{
 			if (serial == null) return null;
 
@@ -2349,13 +2352,13 @@ namespace unvell.ReoGrid.IO.OpenXML
 				&& label.strRef != null)
 			{
 				if (label.strRef.formula != null
-					&& !string.IsNullOrEmpty(label.strRef.formula))
+					&& !string.IsNullOrEmpty(label.strRef.formula.val))
 				{
-					var serialNameVal = Formula.Evaluator.Evaluate(rgSheet.workbook, label.strRef.formula);
+					var serialNameVal = Formula.Evaluator.Evaluate(rgSheet.workbook!, label.strRef.formula.val);
 
 					if (serialNameVal.type == Formula.FormulaValueType.Cell)
 					{
-						labelAddress = (CellPosition)serialNameVal.value;
+						labelAddress = (CellPosition)serialNameVal.value!;
 					}
 				}
 
@@ -2376,13 +2379,13 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 			if (values.numRef != null
 				&& values.numRef.formula != null
-				&& !string.IsNullOrEmpty(values.numRef.formula))
+				&& !string.IsNullOrEmpty(values.numRef.formula.val))
 			{
-				var dataRangeVal = Formula.Evaluator.Evaluate(rgSheet.workbook, values.numRef.formula);
+				var dataRangeVal = Formula.Evaluator.Evaluate(rgSheet.workbook!, values.numRef.formula.val);
 
 				if (dataRangeVal.type == Formula.FormulaValueType.Range)
 				{
-					var range = (RangePosition)dataRangeVal.value;
+					var range = (RangePosition)dataRangeVal.value!;
 
 					if (serial is PieChartSerial)
 					{
@@ -2448,7 +2451,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				return;
 			}
 
-			string fontName = null;
+			string? fontName = null;
 			RGFloat fontSize = 8.5f;
 			SolidColor foreColor = SolidColor.Black;
 			SolidColor backColor = SolidColor.Transparent;
@@ -2543,7 +2546,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 	class SharedFormulaInfo
 	{
 		internal CellPosition pos;
-		internal string formula;
+		internal string formula = null!;
 	}
 #endregion // Reader
 
@@ -2633,7 +2636,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		{
 			var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
 			CellDataFormatFlag? format = null;
-			object arg = null;
+			object? arg = null;
 
 			switch (formatId)
 			{
@@ -2789,9 +2792,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 #region Excel Document
 	internal partial class Document
 	{
-		private IZipArchive zipArchive;
+		private IZipArchive zipArchive = null!;
 
-		public Schema.Workbook Workbook { get; private set; }
+		public Schema.Workbook Workbook { get; private set; } = null!;
 
 		public bool IsReadonly { get; private set; }
 
@@ -2800,7 +2803,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			IsReadonly = false;
 		}
 
-		public static Document ReadFromStream(Stream stream)
+		public static Document? ReadFromStream(Stream stream)
 		{
 			IZipArchive zip = SystemIOZipArchiveFactory.OpenOnStream(stream);
 
@@ -2819,7 +2822,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 		internal T LoadEntryFile<T>(string path, string name) where T : class
 		{
-			T obj = this.LoadObjectFromPath<T>(path, name);
+			T? obj = this.LoadObjectFromPath<T>(path, name);
 			if (obj == null) throw new ExcelFormatException("Failed to load specified entry resource: " + name);
 
 			return obj;
@@ -2835,9 +2838,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 			}
 		}
 
-		internal T LoadRelationResourceById<T>(OpenXMLFile entryFile, string id) where T : class
+		internal T? LoadRelationResourceById<T>(OpenXMLFile entryFile, string id) where T : class
 		{
-			var relation = entryFile._relationFile.relations.FirstOrDefault(_r => _r.id == id);
+			var relation = entryFile._relationFile?.relations.FirstOrDefault(_r => _r.id == id);
 
 			if (relation == null)
 			{
@@ -2847,13 +2850,13 @@ namespace unvell.ReoGrid.IO.OpenXML
 			return this.LoadObjectFromPath<T>(entryFile._path, relation.target);
 		}
 
-		internal T LoadRelationResourceByType<T>(OpenXMLFile entryFile, string typeNamespace) where T : class
+		internal T? LoadRelationResourceByType<T>(OpenXMLFile entryFile, string typeNamespace) where T : class
 		{
-			var relation = this.Workbook._relationFile.relations.FirstOrDefault(r => r.type == typeNamespace);
+			var relation = this.Workbook._relationFile?.relations.FirstOrDefault(r => r.type == typeNamespace);
 			return relation == null ? null : this.LoadObjectFromPath<T>(entryFile._path, relation.target);
 		}
 
-		internal T LoadObjectFromPath<T>(string path, string name) where T : class
+		internal T? LoadObjectFromPath<T>(string path, string? name) where T : class
 		{
 			var finalPath = RelativePathUtility.GetRelativePath(path, name);
 
@@ -2871,14 +2874,13 @@ namespace unvell.ReoGrid.IO.OpenXML
 					throw new ExcelFormatException("Resource stream cannot be found: " + path);
 				}
 
-				T obj = XMLHelper.LoadXML<T>(stream) as T;
+				T? obj = XMLHelper.LoadXML<T>(stream) as T;
 
-				if (obj is OpenXMLFile)
+				if (obj is OpenXMLFile entryFile)
 				{
 					var objectPath = RelativePathUtility.GetPathWithoutFilename(finalPath);
 					var objectName = RelativePathUtility.GetFileNameFromPath(finalPath);
 
-					var entryFile = obj as OpenXMLFile;
 					entryFile._path = objectPath;
 					this.LoadRelationShipsFile(entryFile, objectName);
 				}
@@ -2887,7 +2889,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			}
 		}
 
-		internal Stream GetResourceStream(string path)
+		internal Stream? GetResourceStream(string path)
 		{
 			var entry = this.zipArchive.GetFile(path);
 			return entry == null ? null : entry.GetStream();
@@ -2897,11 +2899,11 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 #region SharedStrings
 
-		public SharedStrings SharedStrings { get; set; }
+		public SharedStrings? SharedStrings { get; set; }
 
 		private const string sharedStrings_xml_filename = "sharedStrings.xml";
 
-		public SharedStrings ReadSharedStringTable()
+		public SharedStrings? ReadSharedStringTable()
 		{
 			if (this.zipArchive.IsFileExist(this.Workbook._path + sharedStrings_xml_filename))
 			{
@@ -2915,12 +2917,12 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 #endregion // SharedStrings
 
-		public Stylesheet Stylesheet { get; set; }
+		public Stylesheet Stylesheet { get; set; } = null!;
 
 #region Themesheet
-		private Theme themesheet;
+		private Theme? themesheet;
 
-		public Theme Themesheet
+		public Theme? Themesheet
 		{
 			get
 			{
@@ -2938,7 +2940,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		}
 
 #region Convert CompColor
-		internal SolidColor ConvertFromCompColor(CompColor compColor, CompColor overrideColor = null)
+		internal SolidColor ConvertFromCompColor(CompColor compColor, CompColor? overrideColor = null)
 		{
 			if (compColor._solidColor.A > 0)
 			{
@@ -2973,23 +2975,23 @@ namespace unvell.ReoGrid.IO.OpenXML
 			{
 				SolidColor color = SolidColor.Black;
 
-				var theme = this.Themesheet;
+				var clrScheme = this.Themesheet?.elements?.clrScheme;
 
 				switch (compColor.schemeColor.val)
 				{
-					case "dk1": color = ConvertFromCompColor(theme.elements.clrScheme.dk1); break;
-					case "lt1": color = ConvertFromCompColor(theme.elements.clrScheme.lt1); break;
-					case "dk2": color = ConvertFromCompColor(theme.elements.clrScheme.dk2); break;
-					case "lt2": color = ConvertFromCompColor(theme.elements.clrScheme.lt2); break;
-					case "accent1": color = ConvertFromCompColor(theme.elements.clrScheme.accent1); break;
-					case "accent2": color = ConvertFromCompColor(theme.elements.clrScheme.accent2); break;
-					case "accent3": color = ConvertFromCompColor(theme.elements.clrScheme.accent3); break;
-					case "accent4": color = ConvertFromCompColor(theme.elements.clrScheme.accent4); break;
-					case "accent5": color = ConvertFromCompColor(theme.elements.clrScheme.accent5); break;
-					case "accent6": color = ConvertFromCompColor(theme.elements.clrScheme.accent6); break;
-					case "hlink": color = ConvertFromCompColor(theme.elements.clrScheme.hlink); break;
-					case "folHlink": color = ConvertFromCompColor(theme.elements.clrScheme.folHlink); break;
-					case "phClr": color = ConvertFromCompColor(overrideColor); break;
+					case "dk1" when clrScheme != null: color = ConvertFromCompColor(clrScheme.dk1); break;
+					case "lt1" when clrScheme != null: color = ConvertFromCompColor(clrScheme.lt1); break;
+					case "dk2" when clrScheme != null: color = ConvertFromCompColor(clrScheme.dk2); break;
+					case "lt2" when clrScheme != null: color = ConvertFromCompColor(clrScheme.lt2); break;
+					case "accent1" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent1); break;
+					case "accent2" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent2); break;
+					case "accent3" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent3); break;
+					case "accent4" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent4); break;
+					case "accent5" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent5); break;
+					case "accent6" when clrScheme != null: color = ConvertFromCompColor(clrScheme.accent6); break;
+					case "hlink" when clrScheme != null: color = ConvertFromCompColor(clrScheme.hlink); break;
+					case "folHlink" when clrScheme != null: color = ConvertFromCompColor(clrScheme.folHlink); break;
+					case "phClr" when overrideColor != null: color = ConvertFromCompColor(overrideColor); break;
 				}
 
 				if (overrideColor != null)
@@ -2998,27 +3000,27 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 					var compColorVal = overrideColor.schemeColor;
 
-					if (compColorVal.shade != null)
+					if (compColorVal?.shade != null)
 					{
 						hlsColor.L = ColorUtility.CalculateFinalLumValue(-(float)compColorVal.shade.value / 100000f, (float)hlsColor.L * 255f) / 255f;
 					}
 
-					if (compColorVal.tint != null)
+					if (compColorVal?.tint != null)
 					{
 						hlsColor.L = ColorUtility.CalculateFinalLumValue((float)compColorVal.tint.value / 100000f, (float)hlsColor.L * 255f) / 255f;
 					}
 
-					if (compColorVal.lumMod != null)
+					if (compColorVal?.lumMod != null)
 					{
 						hlsColor.L *= (float)compColorVal.lumMod.value / 100000f;
 					}
 
-					if (compColorVal.lumOff != null)
+					if (compColorVal?.lumOff != null)
 					{
 						hlsColor.L += (float)compColorVal.lumOff.value / 100000f;
 					}
 
-					if (compColorVal.satMod != null)
+					if (compColorVal?.satMod != null)
 					{
 						hlsColor.S *= (float)compColorVal.satMod.value / 100000f;
 					}

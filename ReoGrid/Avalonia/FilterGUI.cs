@@ -38,17 +38,17 @@ namespace unvell.ReoGrid.AvaloniaPlatform
     [TemplatePart("Part_Popup", typeof(Popup))]
     public class ColumnFilterContextMenu : SelectingItemsControl
     {
-        RadioButton SortAZItem;
-        RadioButton SortZAItem;
+        RadioButton? SortAZItem;
+        RadioButton? SortZAItem;
 
-        Button OkButton;
+        Button? OkButton;
 
-        Button CancelButton;
-        CheckBox SelectAllButton;
+        Button? CancelButton;
+        CheckBox? SelectAllButton;
 
-        Popup Popup;
+        Popup? Popup;
 
-        public unvell.ReoGrid.Data.AutoColumnFilter.AutoColumnFilterBody HeaderBody { get; set; }
+        public unvell.ReoGrid.Data.AutoColumnFilter.AutoColumnFilterBody HeaderBody { get; set; } = null!;
 
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
@@ -61,27 +61,27 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             this.SelectAllButton = e.NameScope.Find<CheckBox>("Part_SelectAll");
             this.Popup = e.NameScope.Find<Popup>("Part_Popup");
 
-            this.SortAZItem.Click += SortAZItem_Click;
-            this.SortZAItem.Click += SortZAItem_Click;
-            this.OkButton.Click += OkButton_Click;
-            this.CancelButton.Click += CancelButton_Click;
+            if (this.SortAZItem != null) this.SortAZItem.Click += SortAZItem_Click;
+            if (this.SortZAItem != null) this.SortZAItem.Click += SortZAItem_Click;
+            if (this.OkButton != null) this.OkButton.Click += OkButton_Click;
+            if (this.CancelButton != null) this.CancelButton.Click += CancelButton_Click;
         }
 
-        private void CancelButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void CancelButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            this.Popup.Close();
+            this.Popup?.Close();
         }
 
-        private void OkButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OkButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             HeaderBody.IsSelectAll = false;
             HeaderBody.selectedTextItems.Clear();
             HeaderBody.SelectedTextItems.AddRange(this.Selection.SelectedItems.OfType<string>());
             HeaderBody.autoFilter.Apply();
-            this.Popup.Close();
+            this.Popup?.Close();
         }
 
-        private void SortZAItem_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void SortZAItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var worksheet = HeaderBody.ColumnHeader.Worksheet;
             try
@@ -94,7 +94,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             }
         }
 
-        private void SortAZItem_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void SortAZItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var headerBody = this.HeaderBody;
             var worksheet = headerBody.ColumnHeader.Worksheet;
@@ -178,9 +178,9 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
                         try
                         {
-                            headerBody.ColumnHeader.Worksheet.ControlAdapter.ChangeCursor(CursorStyle.Busy);
+                            headerBody.ColumnHeader.Worksheet.ControlAdapter!.ChangeCursor(CursorStyle.Busy);
 
-                            var items = headerBody.GetDistinctItems();
+                            var items = headerBody.GetDistinctItems()!;
                             items.Insert(0, LanguageResource.Filter_SelectAll);
                             filterPanel.ItemsSource = items;
 
@@ -192,13 +192,13 @@ namespace unvell.ReoGrid.AvaloniaPlatform
                             {
 								foreach (var item in headerBody.selectedTextItems)
 								{
-                                    filterPanel.SelectedItems.Add(item);
+                                    filterPanel.SelectedItems!.Add(item);
                                 }
                             }
                         }
                         finally
                         {
-                            headerBody.ColumnHeader.Worksheet.ControlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
+                            headerBody.ColumnHeader.Worksheet.ControlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
                         }
 
                         headerBody.DataDirty = false;
@@ -208,14 +208,17 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
                 var pp = new Graphics.Point(headerRect.Right - 240, buttonRect.Bottom + 1);
 
-                pp = worksheet.ControlAdapter.PointToScreen(pp);
+                pp = worksheet.ControlAdapter!.PointToScreen(pp);
 
                 var rect = new RGRect(pp, pp);
 
-                headerBody.ContextMenu.Popup.Placement = PlacementMode.AnchorAndGravity;
-                headerBody.ContextMenu.Popup.PlacementRect = rect;
-                headerBody.ContextMenu.Popup.PlacementAnchor = Avalonia.Controls.Primitives.PopupPositioning.PopupAnchor.Left;
-                headerBody.ContextMenu.Popup.Open();
+                if (headerBody.ContextMenu.Popup != null)
+                {
+                    headerBody.ContextMenu.Popup.Placement = PlacementMode.AnchorAndGravity;
+                    headerBody.ContextMenu.Popup.PlacementRect = rect;
+                    headerBody.ContextMenu.Popup.PlacementAnchor = Avalonia.Controls.Primitives.PopupPositioning.PopupAnchor.Left;
+                    headerBody.ContextMenu.Popup.Open();
+                }
             }
         }
     }

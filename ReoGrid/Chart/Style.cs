@@ -96,7 +96,7 @@ namespace unvell.ReoGrid.Chart
 			this.Chart = chart;
 		}
 
-		private IColor fillColor;
+		private IColor fillColor = null!;
 
 		public IColor FillColor
 		{

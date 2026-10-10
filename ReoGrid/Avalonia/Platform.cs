@@ -41,7 +41,7 @@ namespace unvell.ReoGrid
 	partial class Cell
 	{
 		[NonSerialized]
-		internal FormattedText formattedText;
+		internal FormattedText? formattedText;
 	}
 }
 
@@ -142,7 +142,7 @@ namespace unvell.ReoGrid.Rendering
 
         private static ResourcePoolManager resourcePoolManager = new ResourcePoolManager();
 
-		internal static Graphics.Size MeasureText(IRenderer r, string text, string fontName, double fontSize, Drawing.Text.FontStyles style)
+		internal static Graphics.Size MeasureText(IRenderer? r, string text, string fontName, double fontSize, Drawing.Text.FontStyles style)
 		{
 			ResourcePoolManager resManager;
             Typeface? typeface = null;
@@ -172,7 +172,7 @@ namespace unvell.ReoGrid.Rendering
 						FontWeight.Bold : FontWeight.Normal,
 						FontStretch.Normal);
 
-			GlyphTypeface glyphTypeface;
+			GlyphTypeface? glyphTypeface;
 
             double width = 0;
 			double height = 0;

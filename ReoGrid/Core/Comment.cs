@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -58,9 +59,9 @@ namespace unvell.ReoGrid
 	{
 		//internal CellComment cellComment;
 
-		private string comment;
+		private string? comment;
 
-		public string Comment
+		public string? Comment
 		{
 			get { return this.comment; }
 			set
@@ -79,10 +80,10 @@ namespace unvell.ReoGrid
 
 	partial class Worksheet
 	{
-		internal Dictionary<Cell, CellComment> cellComments = null;
-		internal Dictionary<Cell, CellComment> visibleCellComments = null;
+		internal Dictionary<Cell, CellComment>? cellComments = null;
+		internal Dictionary<Cell, CellComment>? visibleCellComments = null;
 
-		internal bool TryGetCellComment(Cell cell, out CellComment comment)
+		internal bool TryGetCellComment(Cell cell, [NotNullWhen(true)] out CellComment? comment)
 		{
 			if (this.cellComments != null)
 			{
@@ -115,7 +116,7 @@ namespace unvell.ReoGrid
 			if (this.cellComments != null)
 			{
 				this.cellComments.Remove(cell);
-				this.visibleCellComments.Remove(cell);
+				this.visibleCellComments?.Remove(cell);
 			}
 		}
 	}

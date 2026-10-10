@@ -7,7 +7,7 @@ namespace unvell.ReoGrid.Utility
 {
 	internal class RelativePathUtility
 	{
-		internal static string GetRelativePath(string originalPath, string relativePath)
+		internal static string GetRelativePath(string originalPath, string? relativePath)
 		{
 			if (string.IsNullOrEmpty(relativePath))
 			{

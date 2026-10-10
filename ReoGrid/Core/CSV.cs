@@ -138,7 +138,7 @@ namespace unvell.ReoGrid
 
 				Clear();
 
-				csvProvider.Load(this.workbook, s, encoding, arg);
+				csvProvider.Load(this.workbook!, s, encoding, arg);
 			}
 			finally
 			{
@@ -157,7 +157,7 @@ namespace unvell.ReoGrid
 		/// <param name="startRow">Number of rows start to export data, 
 		/// this property is useful to skip the headers on top of worksheet.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format.</param>
-		public void ExportAsCSV(string path, int startRow = 0, Encoding encoding = null)
+		public void ExportAsCSV(string path, int startRow = 0, Encoding? encoding = null)
 		{
 			ExportAsCSV(path, new RangePosition(startRow, 0, -1, -1), encoding);
 		}
@@ -168,7 +168,7 @@ namespace unvell.ReoGrid
 		/// <param name="path">File path to write CSV format as stream.</param>
 		/// <param name="addressOrName">Range to be output from this worksheet, specified by address or name.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format.</param>
-		public void ExportAsCSV(string path, string addressOrName, Encoding encoding = null)
+		public void ExportAsCSV(string path, string addressOrName, Encoding? encoding = null)
 		{
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
@@ -190,7 +190,7 @@ namespace unvell.ReoGrid
 		/// <param name="path">File path to write CSV format as stream.</param>
 		/// <param name="range">Range to be output from this worksheet.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format.</param>
-		public void ExportAsCSV(string path, RangePosition range, Encoding encoding = null)
+		public void ExportAsCSV(string path, RangePosition range, Encoding? encoding = null)
 		{
 			using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
 			{
@@ -205,7 +205,7 @@ namespace unvell.ReoGrid
 		/// <param name="startRow">Number of rows start to export data, 
 		/// this property is useful to skip the headers on top of worksheet.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format</param>
-		public void ExportAsCSV(Stream s, int startRow = 0, Encoding encoding = null)
+		public void ExportAsCSV(Stream s, int startRow = 0, Encoding? encoding = null)
 		{
 			this.ExportAsCSV(s, new RangePosition(startRow, 0, -1, -1), encoding);
 		}
@@ -216,7 +216,7 @@ namespace unvell.ReoGrid
 		/// <param name="s">Stream to write CSV format as stream.</param>
 		/// <param name="addressOrName">Range to be output from this worksheet, specified by address or name.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format.</param>
-		public void ExportAsCSV(Stream s, string addressOrName, Encoding encoding = null)
+		public void ExportAsCSV(Stream s, string addressOrName, Encoding? encoding = null)
 		{
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
@@ -238,7 +238,7 @@ namespace unvell.ReoGrid
 		/// <param name="s">Stream to write CSV format as stream.</param>
 		/// <param name="range">Range to be output from this worksheet.</param>
 		/// <param name="encoding">Text encoding during output text in CSV format.</param>
-		public void ExportAsCSV(Stream s, RangePosition range, Encoding encoding = null)
+		public void ExportAsCSV(Stream s, RangePosition range, Encoding? encoding = null)
 		{
 			range = FixRange(range);
 
@@ -296,7 +296,7 @@ namespace unvell.ReoGrid
 							}
 							else
 							{
-								str = Convert.ToString(data);
+								str = Convert.ToString(data) ?? string.Empty;
 							}
 
 							if (quota)

@@ -25,7 +25,7 @@ namespace unvell.ReoGrid.Actions
 	public class SetPartialGridAction : WorksheetReusableAction
 	{
 		private PartialGrid data;
-		private PartialGrid backupData;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Create action to set partial grid.

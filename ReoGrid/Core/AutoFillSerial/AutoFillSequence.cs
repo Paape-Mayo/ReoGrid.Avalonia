@@ -25,7 +25,7 @@ namespace unvell.ReoGrid
   {
     private readonly List<AutoFillSection> sections = new List<AutoFillSection>();
 
-    public AutoFillSequence(IList<object> values)
+    public AutoFillSequence(IList<object?> values)
     {
       if (values == null || values.Count == 0)
       {
@@ -49,9 +49,9 @@ namespace unvell.ReoGrid
       }
     }
 
-    public object[] Extrapolate(int count)
+    public object?[] Extrapolate(int count)
     {
-      List<object> result = new List<object>(count);
+      List<object?> result = new List<object?>(count);
 
       var iteration = 0;
 

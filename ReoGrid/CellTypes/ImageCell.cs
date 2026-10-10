@@ -42,7 +42,7 @@ namespace unvell.ReoGrid.CellTypes
         /// <summary>
         /// Get or set the image to be displayed in cell
         /// </summary>
-        public RGImage Image { get; set; }
+        public RGImage? Image { get; set; }
 
         #region Constructor
         /// <summary>
@@ -54,7 +54,7 @@ namespace unvell.ReoGrid.CellTypes
         /// Construct image cell-body to show a specified image
         /// </summary>
         /// <param name="image">Image to be displayed</param>
-        public ImageCell(RGImage image)
+        public ImageCell(RGImage? image)
             : this(image, default(ImageCellViewMode))
         {
         }
@@ -64,7 +64,7 @@ namespace unvell.ReoGrid.CellTypes
         /// </summary>
         /// <param name="image">Image to be displayed</param>
         /// <param name="viewMode">View mode decides how to display a image inside a cell</param>
-        public ImageCell(RGImage image, ImageCellViewMode viewMode)
+        public ImageCell(RGImage? image, ImageCellViewMode viewMode)
         {
             this.Image = image;
             this.viewMode = viewMode;

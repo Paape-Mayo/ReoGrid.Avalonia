@@ -41,22 +41,22 @@ namespace unvell.ReoGrid.Actions
 
 		//private bool isCellNull;
 
-		private object data;
+		private object? data;
 
 		/// <summary>
 		/// Data of cell.
 		/// </summary>
-		public object Data
+		public object? Data
 		{
 			get { return data; }
 			set { data = value; }
 		}
 
-		private object backupData;
+		private object? backupData;
 		//private string backupFormula;
 		//private string displayBackup;
 		private CellDataFormatFlag backupDataFormat;
-		private object backupDataFormatArgs;
+		private object? backupDataFormatArgs;
 		//private Core.ReoGridRenderHorAlign backupRenderAlign;
 		//private bool autoUpdateReferenceCells = false;
 		private ushort? backupRowHeight = 0;
@@ -67,7 +67,7 @@ namespace unvell.ReoGrid.Actions
 		/// <param name="row">index of row to set data.</param>
 		/// <param name="col">index of column to set data.</param>
 		/// <param name="data">data to be set.</param>
-		public SetCellDataAction(int row, int col, object data)
+		public SetCellDataAction(int row, int col, object? data)
 		{
 			this.row = row;
 			this.col = col;
@@ -79,7 +79,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		/// <param name="pos">position to locate the cell to be set.</param>
 		/// <param name="data">data to be set.</param>
-		public SetCellDataAction(CellPosition pos, object data)
+		public SetCellDataAction(CellPosition pos, object? data)
 			: this(pos.Row, pos.Col, data)
 		{
 		}
@@ -89,7 +89,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		/// <param name="address">address to locate specified cell.</param>
 		/// <param name="data">data to be set.</param>
-		public SetCellDataAction(string address, object data)
+		public SetCellDataAction(string address, object? data)
 		{
 			CellPosition pos = new CellPosition(address);
 			this.row = pos.Row;
@@ -116,7 +116,7 @@ namespace unvell.ReoGrid.Actions
 				var rowHeightSettings = WorksheetSettings.Edit_AutoExpandRowHeight
 					| WorksheetSettings.Edit_AllowAdjustRowHeight;
 
-				RowHeader rowHeader = this.Worksheet.GetRowHeader(cell.InternalRow);
+				RowHeader rowHeader = this.Worksheet.GetRowHeader(cell.InternalRow)!;
 
 				this.backupRowHeight = rowHeader.InnerHeight;
 
@@ -137,7 +137,7 @@ namespace unvell.ReoGrid.Actions
 		{
 			this.Do();
 
-			Cell cell = Worksheet.GetCell(row, col);
+			Cell? cell = Worksheet.GetCell(row, col);
 
 			if (cell != null)
 			{
@@ -152,7 +152,7 @@ namespace unvell.ReoGrid.Actions
 		{
 			if (this.backupRowHeight != null)
 			{
-				var rowHeader = this.Worksheet.GetRowHeader(this.row);
+				var rowHeader = this.Worksheet.GetRowHeader(this.row)!;
 
 				if (rowHeader.InnerHeight != this.backupRowHeight)
 				{
@@ -160,7 +160,7 @@ namespace unvell.ReoGrid.Actions
 				}
 			}
 
-			Cell cell = Worksheet.GetCell(row, col);
+			Cell? cell = Worksheet.GetCell(row, col);
 			if (cell != null)
 			{
 				cell.DataFormat = this.backupDataFormat;
@@ -178,7 +178,7 @@ namespace unvell.ReoGrid.Actions
 		/// <returns></returns>
 		public override string GetName()
 		{
-			string str = data == null ? "null" : data.ToString();
+			string str = data == null ? "null" : (data.ToString() ?? "null");
 			return "Set Cell Value: " + (str.Length > 10 ? (str.Substring(0, 7) + "...") : str);
 		}
 	}

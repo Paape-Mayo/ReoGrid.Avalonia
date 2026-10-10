@@ -107,7 +107,7 @@ namespace unvell.ReoGrid.Drawing.Shapes
 		internal LineCapStyles StartCap { get; set; }
 		internal LineCapStyles EndCap { get; set; }
 
-		private IDrawingLineObjectStyle lineStyleWrapper;
+		private IDrawingLineObjectStyle? lineStyleWrapper;
 
 		/// <summary>
 		/// Get line style object.

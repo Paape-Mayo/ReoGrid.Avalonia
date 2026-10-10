@@ -32,7 +32,7 @@ namespace unvell.ReoGrid.IO
 		private static Regex lineRegex = new Regex("\\s*(\\\"(?<item>[^\\\"]*)\\\"|(?<item>[^,]*))\\s*,?", RegexOptions.Compiled);
 
 		public static void Read(Stream stream, Worksheet sheet, RangePosition targetRange, 
-			Encoding encoding = null, int bufferLines = DEFAULT_READ_BUFFER_LINES, bool autoSpread = true)
+			Encoding? encoding = null, int bufferLines = DEFAULT_READ_BUFFER_LINES, bool autoSpread = true)
 		{
 			targetRange = sheet.FixRange(targetRange);
 
@@ -144,13 +144,13 @@ namespace unvell.ReoGrid.IO
 			throw new NotSupportedException();
 		}
 
-		public void Load(IWorkbook workbook, Stream stream, Encoding encoding, object arg)
+		public void Load(IWorkbook workbook, Stream stream, Encoding? encoding, object? arg)
 		{
 			bool autoSpread = true;
 			int bufferLines = CSVFormat.DEFAULT_READ_BUFFER_LINES;
 			RangePosition targetRange = RangePosition.EntireRange;
 
-			CSVFormatArgument csvArg = arg as CSVFormatArgument;
+			CSVFormatArgument? csvArg = arg as CSVFormatArgument;
 
 			if (csvArg != null)
 			{
@@ -159,7 +159,7 @@ namespace unvell.ReoGrid.IO
 				targetRange = csvArg.TargetRange;
 			}
 		
-			Worksheet sheet = null;
+			Worksheet? sheet = null;
 
 			if (workbook.Worksheets.Count == 0)
 			{
@@ -180,7 +180,7 @@ namespace unvell.ReoGrid.IO
 			CSVFormat.Read(stream, sheet, targetRange, encoding, bufferLines, autoSpread);
 		}
 
-		public void Save(IWorkbook workbook, Stream stream, Encoding encoding, object arg)
+		public void Save(IWorkbook workbook, Stream stream, Encoding? encoding, object? arg)
 		{
 			throw new NotSupportedException("Saving entire workbook as CSV is not supported, use Worksheet.ExportAsCSV instead.");
 			//int fromRow = 0, fromCol = 0, toRow = 0, toCol = 0;

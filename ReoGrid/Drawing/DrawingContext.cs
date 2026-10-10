@@ -35,7 +35,7 @@ namespace unvell.ReoGrid.Drawing
 		/// <summary>
 		/// Get the current drawing object.
 		/// </summary>
-		public DrawingObject CurrentObject { get; private set; }
+		public DrawingObject? CurrentObject { get; private set; }
 
 		internal FloatingDrawingContext(Worksheet worksheet, DrawMode drawMode, IRenderer r)
 			: base(worksheet, drawMode, r)

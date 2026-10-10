@@ -204,7 +204,7 @@ namespace unvell.ReoGrid
 
 			foreach (KeyValuePair<TKey, TValue> kvp in first)
 			{
-				TValue secondValue;
+				TValue? secondValue;
 				if (!second.TryGetValue(kvp.Key, out secondValue)) return false;
 				if (!comparer.Equals(kvp.Value, secondValue)) return false;
 			}

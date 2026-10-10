@@ -46,7 +46,7 @@ namespace unvell.ReoGrid
     {
         string SaveData(Cell cell);
 
-        object LoadData(Cell cell, string data);
+        object LoadData(Cell cell, string? data);
     }
 
     public static class RGFPersistenceProvider
@@ -71,7 +71,7 @@ namespace unvell.ReoGrid
 
         public void Remove(Type type)
         {
-            if (RGFPersistenceProvider.CustomBodyTypeIdentifiers.TryGetValue(type, out string identifer))
+            if (RGFPersistenceProvider.CustomBodyTypeIdentifiers.TryGetValue(type, out string? identifer))
             {
                 RGFPersistenceProvider.CustomBodyTypeHandlers.Remove(identifer);
             }
@@ -167,7 +167,7 @@ namespace unvell.ReoGrid
 
             try
             {
-                xmlSheet = xmlReader.Deserialize(s) as RGXmlSheet;
+                xmlSheet = (xmlReader.Deserialize(s) as RGXmlSheet)!;
             }
             catch (Exception ex)
             {
@@ -220,7 +220,7 @@ namespace unvell.ReoGrid
                 }
                 #endregion // Settings
 
-                string cultureName = head.meta == null ? null : head.meta.culture;
+                string? cultureName = head.meta == null ? null : head.meta.culture;
 
                 //#pragma warning disable 618
                 //				// back-forward compatible
@@ -383,6 +383,11 @@ namespace unvell.ReoGrid
             }
             #endregion // Root Style
 
+            if (xmlSheet.head == null)
+            {
+                throw new ReoGridLoadException("Read xml format error: head element not found.");
+            }
+
             // cols and rows
             Resize(xmlSheet.head.rows, xmlSheet.head.cols);
 
@@ -418,12 +423,12 @@ namespace unvell.ReoGrid
                     colhead.InnerStyle = new WorksheetRangeStyle(RootStyle);
 
                     StyleUtility.CopyStyle(StyleUtility.ConvertFromXmlStyle(
-                        this, xmlCol.style, culture), cols[xmlCol.col].InnerStyle);
+                        this, xmlCol.style, culture), colhead.InnerStyle);
                 }
 
                 if (!string.IsNullOrEmpty(xmlCol.defaultCellBody))
                 {
-                    Type type = null;
+                    Type? type = null;
 
                     if (unvell.ReoGrid.CellTypes.CellTypesManager.CellTypes.TryGetValue(xmlCol.defaultCellBody, out type))
                     {
@@ -465,7 +470,7 @@ namespace unvell.ReoGrid
                     rowhead.InnerStyle = new WorksheetRangeStyle(RootStyle);
 
                     StyleUtility.CopyStyle(StyleUtility.ConvertFromXmlStyle(
-                        this, row.style, culture), rows[row.row].InnerStyle);
+                        this, row.style, culture), rowhead.InnerStyle);
                 }
             }
             #endregion // Rows
@@ -496,7 +501,7 @@ namespace unvell.ReoGrid
                     foreach (var xmlRowOutline in xmlSheet.head.outlines.rowOutlines)
                     {
                         var outline = AddOutline(RowOrColumn.Row, xmlRowOutline.start, xmlRowOutline.count);
-                        if (xmlRowOutline.collapsed) outline.Collapse();
+                        if (xmlRowOutline.collapsed) outline?.Collapse();
                     }
                 }
 
@@ -505,7 +510,7 @@ namespace unvell.ReoGrid
                     foreach (var xmlColOutline in xmlSheet.head.outlines.colOutlines)
                     {
                         var outline = AddOutline(RowOrColumn.Column, xmlColOutline.start, xmlColOutline.count);
-                        if (xmlColOutline.collapsed) outline.Collapse();
+                        if (xmlColOutline.collapsed) outline?.Collapse();
                     }
                 }
             }
@@ -538,8 +543,8 @@ namespace unvell.ReoGrid
             }
             #endregion // Borders
 
-            List<Cell> cellsTracePrecedents = null;
-            List<Cell> cellsTraceDependents = null;
+            List<Cell>? cellsTracePrecedents = null;
+            List<Cell>? cellsTraceDependents = null;
             //List<ReoGridCell> cellsNeedRecalc = null; // TODO: how to recalc dependent cells
 
             suspendDataChangedEvent = true;
@@ -575,7 +580,7 @@ namespace unvell.ReoGrid
                 {
                     RGXmlCellDataFormatArgs xmlFormatArgs = xmlCell.dataFormatArgs;
 
-                    object formatArgs = null;
+                    object? formatArgs = null;
 
                     switch (cell.DataFormat)
                     {
@@ -598,9 +603,9 @@ namespace unvell.ReoGrid
 
                         case CellDataFormatFlag.Currency:
                             {
-                                var cptrn = xmlFormatArgs.pattern;
+                                var cptrn = xmlFormatArgs.pattern!;
 
-                                string prefix, postfix;
+                                string? prefix, postfix;
 
                                 var pindex = cptrn.IndexOf(',');
 
@@ -639,8 +644,8 @@ namespace unvell.ReoGrid
                 #endregion // Data Format
 
                 // formula
-                string formula = null;
-                string cellValue = null;
+                string? formula = null;
+                string? cellValue = null;
 
 #if FORMULA
                 if (xmlCell.formula != null && !string.IsNullOrEmpty(xmlCell.formula.val))
@@ -687,7 +692,7 @@ namespace unvell.ReoGrid
                             throw new ReoGridLoadException("Cannot create cell body instance from type: " + xmlCell.bodyType, ex);
                         }
 
-                        if (type == typeof(CellTypes.ImageCell))
+                        if (type == typeof(CellTypes.ImageCell) && xmlCell.data != null)
                         {
                             int leftIndex = xmlCell.data.IndexOf(',');
                             if (leftIndex > 0)
@@ -708,7 +713,7 @@ namespace unvell.ReoGrid
 									((CellTypes.ImageCell)cell.body).Image = img;
 #elif AVALONIA
                                         var img = new Avalonia.Media.Imaging.Bitmap(ms);
-                                        ((CellTypes.ImageCell)cell.body).Image = img;
+                                        ((CellTypes.ImageCell)cell.body!).Image = img;
 
 #else // WINFORM
 										var img = System.Drawing.Image.FromStream(ms);
@@ -880,7 +885,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when grid loaded from file.
         /// </summary>
-        public event EventHandler<FileLoadedEventArgs> FileLoaded;
+        public event EventHandler<FileLoadedEventArgs>? FileLoaded;
 
         #endregion // Load
 
@@ -1070,7 +1075,7 @@ namespace unvell.ReoGrid
                         controlVersion = fvi.FileVersion,
                     },
 
-                    script = new RGXmlScript() { content = this.workbook.Script },
+                    script = new RGXmlScript() { content = this.workbook?.Script },
                 },
 
                 style = StyleUtility.ConvertToXmlStyle(this.RootStyle),
@@ -1206,7 +1211,7 @@ namespace unvell.ReoGrid
                     || !r.IsAutoHeight || r.LastHeight != 0
                     || !string.IsNullOrEmpty(r.Text) || r.TextColor != null);
 
-                WorksheetRangeStyle checkedStyle = null;
+                WorksheetRangeStyle? checkedStyle = null;
 
                 checkedStyle = StyleUtility.DistinctStyle(r.InnerStyle, RootStyle);
 
@@ -1238,7 +1243,7 @@ namespace unvell.ReoGrid
                     || !string.IsNullOrEmpty(c.Text) || c.TextColor != null
                     || c.DefaultCellBody != null);
 
-                WorksheetRangeStyle checkedStyle = null;
+                WorksheetRangeStyle? checkedStyle = null;
 
                 checkedStyle = StyleUtility.DistinctStyle(c.InnerStyle, this.RootStyle);
 
@@ -1269,7 +1274,7 @@ namespace unvell.ReoGrid
             {
                 for (int c = 0; c <= maxCol;)
                 {
-                    ReoGridHBorder cellBorder = hBorders[r, c];
+                    ReoGridHBorder? cellBorder = hBorders[r, c];
 
                     if (cellBorder != null && cellBorder.Span > 0 && cellBorder.Style != null
                         && cellBorder.Style.Style != BorderLineStyle.None)
@@ -1287,7 +1292,7 @@ namespace unvell.ReoGrid
             {
                 for (int r = 0; r <= maxRow;)
                 {
-                    ReoGridVBorder cellBorder = vBorders[r, c];
+                    ReoGridVBorder? cellBorder = vBorders[r, c];
 
                     if (cellBorder != null && cellBorder.Span > 0 && cellBorder.Style != null
                         && cellBorder.Style.Style != BorderLineStyle.None)
@@ -1305,13 +1310,13 @@ namespace unvell.ReoGrid
             // cells
             this.cells.Iterate(0, 0, maxRow + 1, maxCol + 1, true, (r, c, cell) =>
             {
-                if (cell.IsValidCell || cell.IsStartMergedCell)
+                if (cell != null && (cell.IsValidCell || cell.IsStartMergedCell))
                 {
                     bool addCell = false;
 
                     if (cell.InnerData != null || cell.Rowspan > 1 || cell.Colspan > 1 || cell.body != null) addCell = true;
 
-                    RGXmlCellStyle xmlStyle = null;
+                    RGXmlCellStyle? xmlStyle = null;
 
                     if (cell.StyleParentKind == StyleParentKind.Own)
                     {
@@ -1322,14 +1327,14 @@ namespace unvell.ReoGrid
                     }
 
                     #region Data Format
-                    RGXmlCellDataFormatArgs xmlFormatArgs = null;
+                    RGXmlCellDataFormatArgs? xmlFormatArgs = null;
                     if (cell.DataFormat != CellDataFormatFlag.General)
                     {
                         addCell = true;
 
                         switch (cell.DataFormat)
                         {
-                            case CellDataFormatFlag.Number:
+                            case CellDataFormatFlag.Number when cell.DataFormatArgs != null:
                                 NumberDataFormatter.NumberFormatArgs nargs = (NumberDataFormatter.NumberFormatArgs)cell.DataFormatArgs;
                                 xmlFormatArgs = new RGXmlCellDataFormatArgs();
                                 xmlFormatArgs.decimalPlaces = nargs.DecimalPlaces.ToString();
@@ -1337,14 +1342,14 @@ namespace unvell.ReoGrid
                                 xmlFormatArgs.useSeparator = TextFormatHelper.EncodeBool(nargs.UseSeparator);
                                 break;
 
-                            case CellDataFormatFlag.DateTime:
+                            case CellDataFormatFlag.DateTime when cell.DataFormatArgs != null:
                                 DateTimeDataFormatter.DateTimeFormatArgs dargs = (DateTimeDataFormatter.DateTimeFormatArgs)cell.DataFormatArgs;
                                 xmlFormatArgs = new RGXmlCellDataFormatArgs();
                                 xmlFormatArgs.culture = dargs.CultureName;
                                 xmlFormatArgs.pattern = dargs.Format;
                                 break;
 
-                            case CellDataFormatFlag.Currency:
+                            case CellDataFormatFlag.Currency when cell.DataFormatArgs != null:
                                 CurrencyDataFormatter.CurrencyFormatArgs cargs = (CurrencyDataFormatter.CurrencyFormatArgs)cell.DataFormatArgs;
                                 xmlFormatArgs = new RGXmlCellDataFormatArgs();
                                 xmlFormatArgs.decimalPlaces = cargs.DecimalPlaces.ToString();
@@ -1353,7 +1358,7 @@ namespace unvell.ReoGrid
                                 xmlFormatArgs.pattern = cargs.PrefixSymbol + "," + cargs.PostfixSymbol;
                                 break;
 
-                            case CellDataFormatFlag.Percent:
+                            case CellDataFormatFlag.Percent when cell.DataFormatArgs != null:
                                 NumberDataFormatter.NumberFormatArgs pargs = (NumberDataFormatter.NumberFormatArgs)cell.DataFormatArgs;
                                 xmlFormatArgs = new RGXmlCellDataFormatArgs();
                                 xmlFormatArgs.decimalPlaces = pargs.DecimalPlaces.ToString();
@@ -1396,9 +1401,8 @@ namespace unvell.ReoGrid
 
                         if (cell.body != null)
                         {
-                            if (cell.body is CellTypes.ImageCell)
+                            if (cell.body is CellTypes.ImageCell imageBody && imageBody.Image != null)
                             {
-                                var imageBody = (CellTypes.ImageCell)cell.body;
                                 using (var ms = new MemoryStream(4096))
                                 {
 #if WPF
@@ -1446,7 +1450,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when worksheet saved into a file.
         /// </summary>
-        public event EventHandler<FileSavedEventArgs> FileSaved;
+        public event EventHandler<FileSavedEventArgs>? FileSaved;
         #endregion // Save
     }
 }

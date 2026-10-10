@@ -61,9 +61,9 @@ namespace unvell.ReoGrid
 	{
 		internal List<Worksheet> worksheets = new List<Worksheet>();
 
-		internal IControlAdapter controlAdapter;
+		internal IControlAdapter? controlAdapter;
 
-		public ReoGridControl ControlInstance { get { return (ReoGridControl)this.controlAdapter.ControlInstance; } }
+		public ReoGridControl ControlInstance { get { return (ReoGridControl)this.controlAdapter!.ControlInstance; } }
 
 		#region Readonly
 		private bool isReadonly = false;
@@ -90,7 +90,7 @@ namespace unvell.ReoGrid
 		/// Create workbook instance
 		/// </summary>
 		/// <param name="adapter">Control instance adapter</param>
-		public Workbook(IControlAdapter adapter)
+		public Workbook(IControlAdapter? adapter)
 		{
 
 #if DEBUG
@@ -145,7 +145,7 @@ namespace unvell.ReoGrid
 			this.Save(path, fileFormat, Encoding.Default);
 		}
 
-		public void Save(string path, IO.FileFormat fileFormat, Encoding encoding)
+		public void Save(string path, IO.FileFormat fileFormat, Encoding? encoding)
 		{
 			if (fileFormat == IO.FileFormat._Auto)
 			{
@@ -175,7 +175,7 @@ namespace unvell.ReoGrid
 			this.Save(stream, fileFormat, Encoding.Default);
 		}
 
-		public void Save(System.IO.Stream stream, IO.FileFormat fileFormat, Encoding encoding)
+		public void Save(System.IO.Stream stream, IO.FileFormat fileFormat, Encoding? encoding)
 		{
 			if (!FileFormatProviders.TryGetValue(fileFormat, out var provider))
 			{
@@ -200,7 +200,7 @@ namespace unvell.ReoGrid
 
 				if (this.WorkbookSaved != null)
 				{
-					this.WorkbookSaved(this, null);
+					this.WorkbookSaved(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -215,7 +215,7 @@ namespace unvell.ReoGrid
 			this.Load(path, fileFormat, Encoding.Default);
 		}
 
-		public void Load(string path, IO.FileFormat fileFormat, Encoding encoding)
+		public void Load(string path, IO.FileFormat fileFormat, Encoding? encoding)
 		{
 			if (fileFormat == IO.FileFormat._Auto)
 			{
@@ -254,7 +254,7 @@ namespace unvell.ReoGrid
 			this.Load(stream, fileFormat, Encoding.Default);
 		}
 
-		public void Load(System.IO.Stream stream, IO.FileFormat fileFormat, Encoding encoding)
+		public void Load(System.IO.Stream stream, IO.FileFormat fileFormat, Encoding? encoding)
 		{
 			if (fileFormat == FileFormat._Auto)
 			{
@@ -284,19 +284,19 @@ namespace unvell.ReoGrid
 					this.controlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
 				}
 
-				this.WorkbookLoaded?.Invoke(this, null);
+				this.WorkbookLoaded?.Invoke(this, EventArgs.Empty);
 			}
 		}
 
 		/// <summary>
 		/// Event raised when workbook loaded from stream or file
 		/// </summary>
-		public event EventHandler WorkbookLoaded;
+		public event EventHandler? WorkbookLoaded;
 
 		/// <summary>
 		/// Event raised when workbook saved into stream or file
 		/// </summary>
-		public event EventHandler WorkbookSaved;
+		public event EventHandler? WorkbookSaved;
 
 		#endregion // Save & Load
 
@@ -310,7 +310,7 @@ namespace unvell.ReoGrid
 			return name;
 		}
 
-		public Worksheet CreateWorksheet(string name = null)
+		public Worksheet CreateWorksheet(string? name = null)
 		{
 			if (string.IsNullOrEmpty(name))
 			{
@@ -333,7 +333,7 @@ namespace unvell.ReoGrid
 			this.InsertWorksheet(this.worksheets.Count, sheet);
 		}
 
-		public void NewWorksheet(string name = null)
+		public void NewWorksheet(string? name = null)
 		{
 			this.AddWorksheet(this.CreateWorksheet(name));
 		}
@@ -423,7 +423,7 @@ namespace unvell.ReoGrid
 		/// <param name="newIndex">position used to insert duplicated new instance</param>
 		/// <param name="newName">New name to be apply to copied worksheet</param>
 		/// <returns>instance of duplicated worksheet from specified worksheet</returns>
-		public Worksheet CopyWorksheet(int index, int newIndex, string newName = null)
+		public Worksheet CopyWorksheet(int index, int newIndex, string? newName = null)
 		{
 			if (newIndex < 0 || newIndex > this.worksheets.Count)
 			{
@@ -445,7 +445,7 @@ namespace unvell.ReoGrid
 		/// this workbook.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">when the position used to insert
 		/// duplicated instace of worksheet is out of valid range of this workbook.</exception>
-		public Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string newName = null)
+		public Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string? newName = null)
 		{
 			if (sheet.workbook != this)
 			{
@@ -492,7 +492,7 @@ namespace unvell.ReoGrid
 
 			if (index == newIndex) return sheet;
 
-			this.sheetTab.RemoveTab(index);
+			this.sheetTab?.RemoveTab(index);
 			this.worksheets.RemoveAt(index);
 
 			//if (newIndex > index) newIndex--;
@@ -500,7 +500,7 @@ namespace unvell.ReoGrid
 			this.worksheets.Insert(newIndex, sheet);
 
 			// sheet management
-			this.sheetTab.InsertTab(newIndex, sheet.Name);
+			this.sheetTab?.InsertTab(newIndex, sheet.Name);
 
 			return sheet;
 		}
@@ -549,13 +549,13 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Name to find worksheet</param>
 		/// <returns>Instance of worksheet that is found by specified name; otherwise return null</returns>
-		public Worksheet GetWorksheetByName(string name)
+		public Worksheet? GetWorksheetByName(string? name)
 		{
 			return this.worksheets.FirstOrDefault(w => string.Compare(w.Name, name, true) == 0);
 		}
 
 		#region Collection of worksheet
-		private WorksheetCollection worksheetCollection;
+		private WorksheetCollection? worksheetCollection;
 
 		/// <summary>
 		/// Collection of worksheets
@@ -578,37 +578,37 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when new worksheet is created
 		/// </summary>
-		public event EventHandler<WorksheetCreatedEventArgs> WorksheetCreated;
+		public event EventHandler<WorksheetCreatedEventArgs>? WorksheetCreated;
 
 		/// <summary>
 		/// Event raised when new worksheet is inserted
 		/// </summary>
-		public event EventHandler<WorksheetInsertedEventArgs> WorksheetInserted;
+		public event EventHandler<WorksheetInsertedEventArgs>? WorksheetInserted;
 
 		/// <summary>
 		/// Event raised when new worksheet is removed
 		/// </summary>
-		public event EventHandler<WorksheetRemovedEventArgs> WorksheetRemoved;
+		public event EventHandler<WorksheetRemovedEventArgs>? WorksheetRemoved;
 
 		/// <summary>
 		/// Event raised before name of worksheet changing
 		/// </summary>
-		public event EventHandler<WorksheetNameChangingEventArgs> BeforeWorksheetNameChange;
+		public event EventHandler<WorksheetNameChangingEventArgs>? BeforeWorksheetNameChange;
 
 		/// <summary>
 		/// Event raised when name of worksheet is changed
 		/// </summary>
-		public event EventHandler<WorksheetNameChangingEventArgs> WorksheetNameChanged;
+		public event EventHandler<WorksheetNameChangingEventArgs>? WorksheetNameChanged;
 
 		/// <summary>
 		/// Event raised when background color of worksheet name is changed.
 		/// </summary>
-		public event EventHandler<WorksheetEventArgs> WorksheetNameBackColorChanged;
+		public event EventHandler<WorksheetEventArgs>? WorksheetNameBackColorChanged;
 
 		/// <summary>
 		/// Event raised when text color of worksheet name is changed.
 		/// </summary>
-		public event EventHandler<WorksheetEventArgs> WorksheetNameTextColorChanged;
+		public event EventHandler<WorksheetEventArgs>? WorksheetNameTextColorChanged;
 
 		internal bool CheckWorksheetName(string name)
 		{
@@ -757,7 +757,7 @@ namespace unvell.ReoGrid
 
 		#region Sheet Tab Control Interaction
 
-		private ISheetTabControl sheetTab;
+		private ISheetTabControl? sheetTab;
 
 		internal void AttachSheetTabControl(ISheetTabControl sheetTab)
 		{
@@ -779,18 +779,18 @@ namespace unvell.ReoGrid
 		}
 
 		#region Sheet Tab Events
-		void sheetTab_NewSheetClick(object sender, EventArgs e)
+		void sheetTab_NewSheetClick(object? sender, EventArgs e)
 		{
 			var sheet = this.CreateWorksheet();
 
 			if (sheet != null)
 			{
 				this.AddWorksheet(sheet);
-				sheetTab.SelectedIndex = this.worksheets.Count - 1;
+				sheetTab!.SelectedIndex = this.worksheets.Count - 1;
 			}
 		}
 
-		void sheetTab_TabMoved(object sender, SheetTabMovedEventArgs e)
+		void sheetTab_TabMoved(object? sender, SheetTabMovedEventArgs e)
 		{
 			var sheet = this.worksheets[e.Index];
 			this.worksheets.RemoveAt(e.Index);
@@ -822,7 +822,7 @@ namespace unvell.ReoGrid
 
 					if (this.SettingsChanged != null)
 					{
-						this.SettingsChanged(this, null);
+						this.SettingsChanged(this, EventArgs.Empty);
 					}
 				}
 			}
@@ -834,7 +834,7 @@ namespace unvell.ReoGrid
 
 					if (this.SettingsChanged != null)
 					{
-						this.SettingsChanged(this, null);
+						this.SettingsChanged(this, EventArgs.Empty);
 					}
 				}
 			}
@@ -862,7 +862,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when workbook settings is changed
 		/// </summary>
-		public event EventHandler SettingsChanged;
+		public event EventHandler? SettingsChanged;
 		#endregion // Settings
 
 		#region Internal Exceptions
@@ -870,7 +870,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event is used to notify if there are any internal exceptions happen on worksheets
 		/// </summary>
-		public event EventHandler<ExceptionHappenEventArgs> ExceptionHappened;
+		public event EventHandler<ExceptionHappenEventArgs>? ExceptionHappened;
 
 		/// <summary>
 		/// Notify that there are exceptions happen on any worksheet. 
@@ -878,7 +878,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="sheet">Worksheet where the exception happened</param>
 		/// <param name="ex">Exception to describe the details of error information</param>
-		public void NotifyExceptionHappen(Worksheet sheet, Exception ex)
+		public void NotifyExceptionHappen(Worksheet? sheet, Exception ex)
 		{
 			Logger.Log("workbook", "internal exception: " + ex.Message);
 

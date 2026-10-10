@@ -40,7 +40,7 @@ namespace unvell.ReoGrid
       return false;
     }
 
-    public object[] GetValues(int iteration)
+    public object?[] GetValues(int iteration)
     {
       var baseValue = entries.First().Value;
       var incrementPerIteration = entries.Last().GetIncrementPerIteration(baseValue, entries.Count);

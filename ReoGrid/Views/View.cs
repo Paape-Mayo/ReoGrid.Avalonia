@@ -43,9 +43,9 @@ namespace unvell.ReoGrid.Views
 {
     internal class View : IView
 	{
-		private IViewportController viewportController;
+		private IViewportController? viewportController;
 
-		public IViewportController ViewportController
+		public IViewportController? ViewportController
 		{
 			get { return this.viewportController; }
 			set { this.viewportController = value; }
@@ -119,9 +119,9 @@ namespace unvell.ReoGrid.Views
 					p.Y * this.scaleFactor + bounds.Top);
 		}
 
-		public virtual IView GetViewByPoint(Point p)
+		public virtual IView? GetViewByPoint(Point p)
 		{
-			IView child = this.GetChildrenByPoint(p);
+			IView? child = this.GetChildrenByPoint(p);
 
 			if (child != null)
 			{
@@ -133,7 +133,7 @@ namespace unvell.ReoGrid.Views
 			}
 		}
 
-		public virtual IView GetChildrenByPoint(Point p)
+		public virtual IView? GetChildrenByPoint(Point p)
 		{
 			if (this.children != null
 				&& this.children.Count > 0)
@@ -184,13 +184,13 @@ namespace unvell.ReoGrid.Views
 			}
 		}
 
-		public virtual void SetFocus() { this.ViewportController.FocusView = this; }
-		public virtual void FreeFocus() { this.ViewportController.FocusView = null; }
-	
-		public IViewport Parent { get; set; }
+		public virtual void SetFocus() { this.ViewportController!.FocusView = this; }
+		public virtual void FreeFocus() { this.ViewportController!.FocusView = null; }
 
-		protected IList<IView> children = null;
-		public IList<IView> Children { get { return this.children; } set { this.children = value; } }
+		public IViewport? Parent { get; set; }
+
+		protected IList<IView>? children = null;
+		public IList<IView>? Children { get { return this.children; } set { this.children = value; } }
 	}
 }
 

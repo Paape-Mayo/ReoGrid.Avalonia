@@ -37,7 +37,7 @@ namespace unvell.ReoGrid.CellTypes
 	/// </summary>
 	public static class CellTypesManager
 	{
-		private static Dictionary<string, Type> cellTypes;
+		private static Dictionary<string, Type>? cellTypes;
 
 		/// <summary>
 		/// Get the available collection of cell types
@@ -52,7 +52,7 @@ namespace unvell.ReoGrid.CellTypes
 
 					try
 					{
-						var types = Assembly.GetAssembly(typeof(Worksheet)).GetTypes();
+						var types = Assembly.GetAssembly(typeof(Worksheet))!.GetTypes();
 
 						foreach (var type in types.OrderBy(t => t.Name))
 						{

@@ -36,7 +36,7 @@ namespace unvell.ReoGrid
 	{
 		#region Range Collection
 
-		private ReoGridRangeCollection rangeCollection;
+		private ReoGridRangeCollection? rangeCollection;
 
 		/// <summary>
 		/// Virtual collection range of spreadsheet
@@ -132,15 +132,15 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="range">Range to get data array</param>
 		/// <returns>Data array of range</returns>
-		public object[,] GetRangeData(RangePosition range)
+		public object?[,] GetRangeData(RangePosition range)
 		{
 			RangePosition fixedRange = FixRange(range);
-			object[,] data = new object[fixedRange.Rows, fixedRange.Cols];
+			object?[,] data = new object?[fixedRange.Rows, fixedRange.Cols];
 			for (int r = fixedRange.Row, r2 = 0; r <= fixedRange.EndRow; r++, r2++)
 			{
 				for (int c = fixedRange.Col, c2 = 0; c <= fixedRange.EndCol; c++, c2++)
 				{
-					data[r2, c2] = (cells[r, c] == null) ? null : cells[r, c].InnerData;
+					data[r2, c2] = (cells[r, c] == null) ? null : cells[r, c]!.InnerData;
 				}
 			}
 			return data;
@@ -262,7 +262,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="addressOrName">Address or name to locate range on worksheet.</param>
 		/// <param name="data">Data to be set.</param>
-		public void SetRangeData(string addressOrName, object data)
+		public void SetRangeData(string addressOrName, object? data)
 		{
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
@@ -286,7 +286,7 @@ namespace unvell.ReoGrid
 		/// <param name="rows">Number of rows in the range.</param>
 		/// <param name="cols">Number of columns in the range.</param>
 		/// <param name="data">Data to be set.</param>
-		public void SetRangeData(int row, int col, int rows, int cols, object data)
+		public void SetRangeData(int row, int col, int rows, int cols, object? data)
 		{
 			SetRangeData(new RangePosition(row, col, rows, cols), data);
 		}
@@ -296,7 +296,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="range">Range position on worksheet to set the data.</param>
 		/// <param name="data">Data to be set.</param>
-		public void SetRangeData(RangePosition range, object data)
+		public void SetRangeData(RangePosition range, object? data)
 		{
 			SetRangeData(range, data, false);
 		}
@@ -308,7 +308,7 @@ namespace unvell.ReoGrid
 		/// <param name="data">Data to be set into the range.</param>
 		/// <param name="checkReadonly">Ignore to update read-only cells if this flag is true; 
 		/// Set this flag as fasle to update all cells in specified range. (Default is true)</param>
-		public void SetRangeData(RangePosition range, object data, bool checkReadonly)
+		public void SetRangeData(RangePosition range, object? data, bool checkReadonly)
 		{
 			if (range.IsEmpty) return;
 
@@ -499,7 +499,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when entire data from a range is changed
 		/// </summary>
-		public event EventHandler<RangeEventArgs> RangeDataChanged;
+		public event EventHandler<RangeEventArgs>? RangeDataChanged;
 
 		#endregion // Event
 
@@ -886,22 +886,22 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised before move a range.
 		/// </summary>
-		public event EventHandler<BeforeCopyOrMoveRangeEventArgs> BeforeRangeMove;
+		public event EventHandler<BeforeCopyOrMoveRangeEventArgs>? BeforeRangeMove;
 
 		/// <summary>
 		/// Event raised before copy a range.
 		/// </summary>
-		public event EventHandler<BeforeCopyOrMoveRangeEventArgs> BeforeRangeCopy;
+		public event EventHandler<BeforeCopyOrMoveRangeEventArgs>? BeforeRangeCopy;
 
 		/// <summary>
 		/// Event raised after move a range.
 		/// </summary>
-		public event EventHandler<CopyOrMoveRangeEventArgs> AfterRangeMove;
+		public event EventHandler<CopyOrMoveRangeEventArgs>? AfterRangeMove;
 
 		/// <summary>
 		/// Event rasied after copy a range.
 		/// </summary>
-		public event EventHandler<CopyOrMoveRangeEventArgs> AfterRangeCopy;
+		public event EventHandler<CopyOrMoveRangeEventArgs>? AfterRangeCopy;
 
 		#endregion // Drag and drop Range
 
@@ -912,7 +912,7 @@ namespace unvell.ReoGrid
 		/// <param name="flags">Elements in cell specified by this flag to be removed.</param>
 		public void ClearRangeContent(string addressOrName, CellElementFlag flags)
 		{
-			NamedRange namedRange;
+			NamedRange? namedRange;
 
 			if (RangePosition.IsValidAddress(addressOrName))
 			{

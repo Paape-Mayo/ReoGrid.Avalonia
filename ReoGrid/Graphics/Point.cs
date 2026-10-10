@@ -62,7 +62,7 @@ namespace unvell.ReoGrid.Graphics
 		/// </summary>
 		/// <param name="obj">Another object to be compared with this point.</param>
 		/// <returns>True if two points are same; Otherwise return false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is Point)) return false;
 

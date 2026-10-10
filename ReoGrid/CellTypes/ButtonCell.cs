@@ -41,7 +41,7 @@ namespace unvell.ReoGrid.CellTypes
 	[Serializable]
 	public class ButtonCell : CellBody
 	{
-		private string defaultText;
+		private string? defaultText;
 
 		/// <summary>
 		/// Create button cell
@@ -54,7 +54,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// Create button cell with specified text.
 		/// </summary>
 		/// <param name="defaultText"></param>
-		public ButtonCell(string defaultText)
+		public ButtonCell(string? defaultText)
 		{
 			this.defaultText = defaultText;
 		}
@@ -250,13 +250,13 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		public virtual void PerformClick()
 		{
-			Click?.Invoke(this, null);
+			Click?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Click event raised when user clicked on the button.
 		/// </summary>
-		public event EventHandler Click;
+		public event EventHandler? Click;
 
 		/// <summary>
 		/// Clone a button cell from this object.

@@ -109,16 +109,16 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement(Namespace = OpenXMLNamespaces.DC___________)]
-		public InnerTextElement creator;
+		public InnerTextElement? creator;
 
 		[XmlElement(Namespace = OpenXMLNamespaces.CP___________)]
-		public InnerTextElement lastModifiedBy;
+		public InnerTextElement? lastModifiedBy;
 
 		[XmlElement(Namespace = OpenXMLNamespaces.DCTerms______)]
-		public OpenXMLDateTime created;
+		public OpenXMLDateTime? created;
 
 		[XmlElement(Namespace = OpenXMLNamespaces.DCTerms______)]
-		public OpenXMLDateTime modified;
+		public OpenXMLDateTime? modified;
 	}
 
 	[XmlRoot("Types", Namespace = OpenXMLNamespaces.ContentType__)]
@@ -131,10 +131,10 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement("Default")]
-		public List<ContentTypeDefaultItem> Defaults;
+		public List<ContentTypeDefaultItem> Defaults = null!;
 
 		[XmlElement("Override")]
-		public List<ContentTypeOverrideItem> Overrides;
+		public List<ContentTypeOverrideItem> Overrides = null!;
 
 		[XmlIgnore]
 		internal static readonly string _xmlTarget = "[Content_Types].xml";
@@ -143,19 +143,19 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ContentTypeDefaultItem
 	{
 		[XmlAttribute("Extension")]
-		public string Extension;
+		public string? Extension;
 
 		[XmlAttribute("ContentType")]
-		public string ContentType;
+		public string? ContentType;
 	}
 
 	public class ContentTypeOverrideItem
 	{
 		[XmlAttribute("PartName")]
-		public string PartName;
+		public string? PartName;
 
 		[XmlAttribute("ContentType")]
-		public string ContentType;
+		public string? ContentType;
 	}
 	#endregion // docProps/core.xml
 
@@ -179,13 +179,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		public string ScaleCrop = "false";
 
 		[XmlElement("HeadingPairs")]
-		public HeadingPairs headingPairs;
+		public HeadingPairs? headingPairs;
 
 		[XmlElement("TitlesOfParts")]
-		public TitlesOfParts titlesOfParts;
+		public TitlesOfParts? titlesOfParts;
 
 		[XmlElement("Company")]
-		public string Company = null;
+		public string? Company = null;
 
 		[XmlElement("LinksUpToDate")]
 		public string LinksUpToDate = "false";
@@ -200,40 +200,40 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		public string AppVersion = "0.9300"; // todo: get from assembly version
 
 		[XmlElement("AppHomepage")]
-		public string AppHomepage = null;// = "https://reogrid.net";
+		public string? AppHomepage = null;// = "https://reogrid.net";
 	}
 
 	public class HeadingPairs
 	{
 		[XmlElement("vector", Namespace = OpenXMLNamespaces.VTypes_______)]
-		public Vector vector;
+		public Vector? vector;
 	}
 
 	public class TitlesOfParts
 	{
 		[XmlElement("vector", Namespace = OpenXMLNamespaces.VTypes_______)]
-		public Vector vector;
+		public Vector? vector;
 	}
 
 	public class Vector : Variant
 	{
 		[XmlAttribute("size")]
-		public string size;
+		public string? size;
 
 		[XmlAttribute("baseType")]
-		public string baseType;
+		public string? baseType;
 
 		[XmlElement("variant")]
-		public List<Variant> variants;
+		public List<Variant>? variants;
 	}
 
 	public class Variant
 	{
 		[XmlElement("lpstr")]
-		public InnerTextElement lpstr;
+		public InnerTextElement? lpstr;
 
 		[XmlElement("i4")]
-		public InnerTextElement i4;
+		public InnerTextElement? i4;
 	}
 	#endregion // docProps/app.xml
 
@@ -254,22 +254,22 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		//public string Ignorable = "x15";
 
 		[XmlElement("fileVersion")]
-		public FileVersion fileVersion;
+		public FileVersion? fileVersion;
 
 		[XmlElement("workbookPr")]
-		public WorkbookProperties workbookPr;
+		public WorkbookProperties? workbookPr;
 
 		[XmlElement("bookViews")]
-		public BookViews bookViews;
+		public BookViews? bookViews;
 
 		[XmlElement("calcPr")]
-		public CalcProperties calcPr;
+		public CalcProperties? calcPr;
 
 		[XmlArray("sheets"), XmlArrayItem("sheet")]
-		public List<WorkbookSheet> sheets;
+		public List<WorkbookSheet> sheets = null!;
 
 		[XmlArray("definedNames"), XmlArrayItem("definedName")]
-		public List<DefinedName> definedNames;
+		public List<DefinedName> definedNames = null!;
 
 	}
 
@@ -277,19 +277,19 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class WorkbookProperties
 	{
 		[XmlAttribute("filterPrivacy")]
-		public string filterPrivacy;
+		public string? filterPrivacy;
 
 		[XmlAttribute("defaultThemeVersion")]
-		public string defaultThemeVersion;
+		public string? defaultThemeVersion;
 
 		[XmlAttribute("backupFile")]
-		public string backupFile;
+		public string? backupFile;
 
 		[XmlAttribute("showObjects")]
-		public string showObjects;
+		public string? showObjects;
 
 		[XmlAttribute("date1904")]
-		public string date1904;
+		public string? date1904;
 	}
 
 	// <fileVersion appName="xl" lastEdited="6" lowestEdited="6" rupBuild="14420"/>
@@ -299,96 +299,96 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		public string appName = "ReoGrid";
 
 		[XmlAttribute("lastEdited")]
-		public string lastEdited;
+		public string? lastEdited;
 
 		[XmlAttribute("lowestEdited")]
-		public string lowestEdited;
+		public string? lowestEdited;
 
 		[XmlAttribute("rupBuild")]
-		public string rupBuild;
+		public string? rupBuild;
 	}
 
 	public class BookViews
 	{
 		[XmlElement("workbookView")]
-		public WorkbookView workbookView;
+		public WorkbookView? workbookView;
 	}
 
 	// <workbookView showHorizontalScroll="true" showVerticalScroll="true" showSheetTabs="true" xWindow="0" yWindow="0" windowWidth="16384" windowHeight="8192" tabRatio="983" firstSheet="0" activeTab="0"/>
 	public class WorkbookView
 	{
 		[XmlAttribute("showHorizontalScroll")]
-		public string showHorizontalScroll;
+		public string? showHorizontalScroll;
 
 		[XmlAttribute("showVerticalScroll")]
-		public string showVerticalScroll;
+		public string? showVerticalScroll;
 
 		[XmlAttribute("showSheetTabs")]
-		public string showSheetTabs;
+		public string? showSheetTabs;
 
 		[XmlAttribute("xWindow")]
-		public string xWindow;
+		public string? xWindow;
 
 		[XmlAttribute("yWindow")]
-		public string yWindow;
+		public string? yWindow;
 
 		[XmlAttribute("windowWidth")]
-		public string windowWidth;
+		public string? windowWidth;
 
 		[XmlAttribute("windowHeight")]
-		public string windowHeight;
+		public string? windowHeight;
 
 		[XmlAttribute("tabRatio")]
-		public string tabRatio;
+		public string? tabRatio;
 
 		[XmlAttribute("firstSheet")]
-		public string firstSheet;
+		public string? firstSheet;
 
 		[XmlAttribute("activeTab")]
-		public string activeTab;
+		public string? activeTab;
 	}
 
 	// <calcPr iterateCount="100" refMode="A1" iterate="false" iterateDelta="0.001"/>
 	public class CalcProperties
 	{
 		[XmlAttribute("calcId")]
-		public string calcId;
+		public string? calcId;
 
 		[XmlAttribute("iterateCount")]
-		public string iterateCount;
+		public string? iterateCount;
 
 		[XmlAttribute("refMode")]
-		public string refMode;
+		public string? refMode;
 
 		[XmlAttribute("iterate")]
-		public string iterate;
+		public string? iterate;
 
 		[XmlAttribute("iterateDelta")]
-		public string iterateDelta;
+		public string? iterateDelta;
 	}
 
 	// <sheet name="Sheet1" sheetId="1" r:id="rId1"/>
 	public class WorkbookSheet
 	{
 		[XmlAttribute("name")]
-		public string name;
+		public string name = null!;
 		[XmlAttribute("sheetId")]
-		public string sheetId;
+		public string? sheetId;
 		[XmlAttribute("id", Namespace = OpenXMLNamespaces.R____________)]
-		public string resId;
+		public string resId = null!;
 
 		[XmlIgnore]
-		internal Worksheet _instance;
+		internal Worksheet _instance = null!;
 	}
 
 	public class DefinedName
 	{
 		[XmlAttribute]
-		public string name;
+		public string? name;
 		[XmlText]
-		public string address;
+		public string? address;
 		[XmlAttribute]
-		public string localSheetId;
+		public string? localSheetId;
 	}
 	#endregion // xl/workbook.xml
 
@@ -409,50 +409,50 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		//public string Ignorable = "x14ac";
 
 		[XmlElement("dimension")]
-		public Dimension dimension;
+		public Dimension? dimension;
 
 		[XmlArray("sheetViews"), XmlArrayItem("sheetView")]
-		public List<SheetView> sheetViews;
+		public List<SheetView> sheetViews = null!;
 
 		[XmlElement("sheetFormatPr")]
-		public SheetFormatProperty sheetFormatProperty;
+		public SheetFormatProperty? sheetFormatProperty;
 
 		[XmlArray("cols"), XmlArrayItem("col")]
-		public List<Column> cols;
+		public List<Column> cols = null!;
 
 		[XmlArray("sheetData"), XmlArrayItem("row")]
-		public List<Row> rows;
+		public List<Row> rows = null!;
 
 		[XmlArray("mergeCells"), XmlArrayItem("mergeCell")]
-		public List<MergeCell> mergeCells;
+		public List<MergeCell>? mergeCells;
 
 		[XmlElement("drawing")]
-		public SheetDrawing drawing;
+		public SheetDrawing? drawing;
 
 		[XmlElement("pageMargins")]
-		public PageMargins pageMargins;
+		public PageMargins? pageMargins;
 
 		[XmlElement("pageSetup")]
-		public PageSetup pageSetup;
+		public PageSetup? pageSetup;
 
 		[XmlElement("rowBreaks")]
-		public RowBreaks rowBreaks;
+		public RowBreaks? rowBreaks;
 
 		[XmlElement("colBreaks")]
-		public ColumnBreaks colBreaks;
+		public ColumnBreaks? colBreaks;
 	}
 
 	public class SheetProperty
 	{
 		[XmlElement("pageSetUpPr")]
-		public PageSetUpProperty pageSetUpPr;
+		public PageSetUpProperty? pageSetUpPr;
 	}
 
 	// <pageSetUpPr autoPageBreaks="0" fitToPage="1"/>
 	public class PageSetUpProperty
 	{
-		public string autoPageBreaks;
-		public string fitToPage;
+		public string? autoPageBreaks;
+		public string? fitToPage;
 	}
 
 	//<rowBreaks count="2" manualBreakCount="2">
@@ -462,7 +462,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class RowBreaks
 	{
 		[XmlElement("brk")]
-		public List<PageBreak> breaks;
+		public List<PageBreak>? breaks;
 	}
 
 	//<colBreaks count="1" manualBreakCount="1">
@@ -470,7 +470,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ColumnBreaks
 	{
 		[XmlElement("brk")]
-		public List<PageBreak> breaks;
+		public List<PageBreak>? breaks;
 	}
 
 	//<brk id = "4" max="1048575" man="1"/>
@@ -488,73 +488,73 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Dimension
 	{
 		[XmlAttribute("ref")]
-		public string address;
+		public string? address;
 	}
 
 	// <sheetView showGridLines="0" showRowColHeaders="0" tabSelected="1" zoomScaleNormal="100" workbookViewId="0">
 	public class SheetView
 	{
 		[XmlAttribute("showGridLines")]
-		public string showGridLines;
+		public string? showGridLines;
 		[XmlAttribute("showRowColHeaders")]
-		public string showRowColHeaders;
+		public string? showRowColHeaders;
 		[XmlAttribute("tabSelected")]
-		public string tabSelected;
+		public string? tabSelected;
 
 		[XmlAttribute("zoomScale")]
-		public string zoomScale;
+		public string? zoomScale;
 		[XmlAttribute("zoomScaleNormal")]
-		public string zoomScaleNormal;
+		public string? zoomScaleNormal;
 
 		[XmlAttribute("workbookViewId")]
-		public string workbookViewId;
+		public string? workbookViewId;
 
 		[XmlAttribute("view")]
-		public string view;
+		public string? view;
 
 		[XmlElement("pane")]
-		public Pane pane;
+		public Pane? pane;
 
 		[XmlElement("selection")]
-		public Selection selection;
+		public Selection? selection;
 	}
 
 	// <selection activeCell="C11" sqref="C11"/>
 	public class Selection
 	{
 		[XmlAttribute("activeCell")]
-		public string activeCell;
+		public string? activeCell;
 		[XmlAttribute("sqref")]
-		public string sqref;
+		public string? sqref;
 	}
 
 	// <pane xSplit="1" ySplit="3" topLeftCell="B4" activePane="bottomRight" state="frozen"/>
 	public class Pane
 	{
 		[XmlAttribute("xSplit")]
-		public string xSplit;
+		public string? xSplit;
 		[XmlAttribute("ySplit")]
-		public string ySplit;
+		public string? ySplit;
 		[XmlAttribute("topLeftCell")]
-		public string topLeftCell;
+		public string? topLeftCell;
 		[XmlAttribute("activePane")]
-		public string activePane;
+		public string? activePane;
 		[XmlAttribute("state")]
-		public string state;
+		public string? state;
 	}
 
 	// <sheetFormatPr defaultRowHeight="12.75"/>
 	public class SheetFormatProperty
 	{
 		[XmlAttribute("baseColWidth")]
-		public string baseColWidth;
+		public string? baseColWidth;
 		[XmlAttribute("defaultRowHeight")]
-		public string defaultRowHeight;
+		public string? defaultRowHeight;
 		[XmlAttribute("defaultColWidth")]
-		public string defaultColumnWidth;
+		public string? defaultColumnWidth;
 
 		[XmlAttribute("customHeight")]
-		public string customHeight;
+		public string? customHeight;
 
 		//[XmlAttribute("dyDescent", Namespace = OpenXMLNamespaces.X14AC________)]
 		//public string dyDescent;
@@ -570,11 +570,11 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlAttribute("width")]
 		public double width;
 		[XmlAttribute("style")]
-		public string style;
+		public string? style;
 		[XmlAttribute("customWidth")]
-		public string customWidth;
+		public string? customWidth;
 		[XmlAttribute("customFormat")]
-		public string customFormat;
+		public string? customFormat;
 	}
 
 	// <row r="3" spans="2:10" ht="33.75">
@@ -583,37 +583,37 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlAttribute("r")]
 		public int index;
 		[XmlAttribute("spans")]
-		public string spans;
+		public string? spans;
 		[XmlAttribute("hidden")]
-		public string hidden;
+		public string? hidden;
 		[XmlAttribute("s")]
-		public string styleIndex;
+		public string? styleIndex;
 		[XmlAttribute("ht")]
-		public string height;
+		public string? height;
 		[XmlAttribute("customHeight")]
-		public string customHeight;
+		public string? customHeight;
 		//[XmlAttribute("dyDescent", Namespace = OpenXMLNamespaces.X14AC________)]
 		//public string dyDescent;
 		[XmlAttribute("customFormat")]
-		public string customFormat;
+		public string? customFormat;
 
 		[XmlElement("c")]
-		public List<Cell> cells;
+		public List<Cell> cells = null!;
 	}
 
 	// <c r="B3" s="1" t="s">
 	public class Cell
 	{
 		[XmlAttribute("r")]
-		public string address;
+		public string address = null!;
 		[XmlAttribute("s")]
-		public string styleIndex;
+		public string? styleIndex;
 		[XmlAttribute("t")]
-		public string dataType;
+		public string? dataType;
 		[XmlElement("f")]
-		public Formula formula;
+		public Formula? formula;
 		[XmlElement("v")]
-		public ElementText value;
+		public ElementText? value;
 		//[XmlAttribute("spans")]
 		//public string spans;
 	}
@@ -621,23 +621,23 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Formula
 	{
 		[XmlAttribute("t")]
-		public string type;
+		public string? type;
 
 		[XmlAttribute("ref")]
-		public string @ref;
+		public string? @ref;
 
 		[XmlAttribute("si")]
-		public string sharedIndex;
+		public string? sharedIndex;
 
 		[XmlText]
-		public string val;
+		public string? val;
 	}
 
 	// <mergeCell ref="B43:J43"/>
 	public class MergeCell
 	{
 		[XmlAttribute("ref")]
-		public string address;
+		public string address = null!;
 	}
 
 	// <pageMargins left="0.23622047244094491" right="0.23622047244094491" top="0.74803149606299213"
@@ -662,14 +662,14 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class PageSetup
 	{
 		[XmlAttribute("orientation")]
-		public string orientation;
+		public string? orientation;
 
-		public string horizontalDpi;
-		public string verticalDpi;
+		public string? horizontalDpi;
+		public string? verticalDpi;
 
 		[XmlAttribute("id", Namespace = OpenXMLNamespaces.R____________,
 			Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
-		public string id;
+		public string? id;
 	}
 
 	// <drawing r:id="rId1"/>
@@ -677,11 +677,11 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	{
 		[XmlAttribute("id", Namespace = OpenXMLNamespaces.R____________,
 			Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
-		public string id;
+		public string id = null!;
 
 #if DRAWING
 		[XmlIgnore]
-		internal Drawing _instance;
+		internal Drawing? _instance;
 #endif // DRAWING
 
 	}
@@ -699,31 +699,31 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement("numFmts")]
-		public NumberFormatCollection numberFormats;
+		public NumberFormatCollection? numberFormats;
 
 		[XmlElement("fonts")]
-		public FontCollection fonts;
+		public FontCollection? fonts;
 
 		[XmlElement("fills")]
-		public FillCollection fills;
+		public FillCollection fills = null!;
 
 		[XmlElement("borders")]
-		public BorderCollection borders;
+		public BorderCollection borders = null!;
 
 		[XmlElement("cellStyleXfs")]
-		public CellFormatCollection cellStyleFormats;
+		public CellFormatCollection cellStyleFormats = null!;
 
 		[XmlElement("cellXfs")]
-		public CellFormatCollection cellFormats;
+		public CellFormatCollection cellFormats = null!;
 
 		[XmlElement("cellStyles")]
-		public CellStyleCollection cellStyles;
+		public CellStyleCollection cellStyles = null!;
 
 		[XmlElement("colors")]
-		public IndexedColors colors;
+		public IndexedColors? colors;
 
 		[XmlIgnore]
-		internal string _xmlTarget;
+		internal string _xmlTarget = null!;
 	}
 
 	public class NumberFormatCollection
@@ -799,30 +799,30 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlAttribute("numFmtId")]
 		public int formatId;
 		[XmlAttribute("formatCode")]
-		public string formatCode;
+		public string? formatCode;
 
 		[XmlIgnore]
-		internal object _iarg;
+		internal object _iarg = null!;
 	}
 
 	public class Font
 	{
 		[XmlElement("sz")]
-		public ElementValue<string> size;
+		public ElementValue<string>? size;
 		[XmlElement("b")]
-		public Bold bold;
+		public Bold? bold;
 		[XmlElement("i")]
-		public Italic italic;
+		public Italic? italic;
 		[XmlElement("strike")]
-		public Strikethrough strikethrough;
+		public Strikethrough? strikethrough;
 		[XmlElement("u")]
-		public Underline underline;
+		public Underline? underline;
 		[XmlElement("color")]
-		public ColorValue color;
+		public ColorValue? color;
 		[XmlElement("name")]
-		public ElementValue<string> name;
+		public ElementValue<string>? name;
 		[XmlElement("family")]
-		public ElementValue<string> family;
+		public ElementValue<string>? family;
 
 		public Font() { }
 
@@ -865,31 +865,31 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Fill
 	{
 		[XmlElement("patternFill")]
-		public PatternFill patternFill;
+		public PatternFill? patternFill;
 	}
 
 	public class PatternFill
 	{
 		[XmlAttribute("patternType")]
-		public string patternType;
+		public string? patternType;
 		[XmlElement("fgColor")]
-		public ColorValue foregroundColor;
+		public ColorValue? foregroundColor;
 		[XmlElement("bgColor")]
-		public ColorValue backgroundColor;
+		public ColorValue? backgroundColor;
 	}
 
 	public class Border
 	{
 		[XmlElement("left")]
-		public SideBorder left;
+		public SideBorder? left;
 		[XmlElement("right")]
-		public SideBorder right;
+		public SideBorder? right;
 		[XmlElement("top")]
-		public SideBorder top;
+		public SideBorder? top;
 		[XmlElement("bottom")]
-		public SideBorder bottom;
+		public SideBorder? bottom;
 		[XmlElement("diagonal")]
-		public SideBorder diagonal;
+		public SideBorder? diagonal;
 
 		[XmlIgnore]
 		internal RangeBorderStyle _left;
@@ -915,48 +915,48 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class SideBorder
 	{
 		[XmlAttribute("style")]
-		public string style;
+		public string? style;
 
 		[XmlElement("color")]
-		public ColorValue color;
+		public ColorValue? color;
 	}
 
 	// <xf numFmtId="0" fontId="25" fillId="2" borderId="0" applyNumberFormat="0" applyBorder="0" applyAlignment="0" applyProtection="0"/>
 	public class CellFormat
 	{
 		[XmlAttribute("numFmtId")]
-		public string numberFormatId;
+		public string? numberFormatId;
 		[XmlAttribute("fontId")]
-		public string fontId;
+		public string? fontId;
 		[XmlAttribute("fillId")]
-		public string fillId;
+		public string? fillId;
 		[XmlAttribute("borderId")]
-		public string borderId;
+		public string? borderId;
 		[XmlAttribute("xfId")]
-		public string xfId;
+		public string? xfId;
 
 		[XmlAttribute("applyNumberFormat")]
-		public string applyNumberFormat;
+		public string? applyNumberFormat;
 		[XmlAttribute("applyFill")]
-		public string applyFill;
+		public string? applyFill;
 		[XmlAttribute("applyFont")]
-		public string applyFont;
+		public string? applyFont;
 		[XmlAttribute("applyBorder")]
-		public string applyBorder;
+		public string? applyBorder;
 		[XmlAttribute("applyAlignment")]
-		public string applyAlignment;
+		public string? applyAlignment;
 		[XmlAttribute("applyProtection")]
-		public string applyProtection;
+		public string? applyProtection;
 
 		[XmlElement("alignment")]
-		public Alignment alignment;
+		public Alignment? alignment;
 		[XmlElement("protection")]
-		public Protection protection;
+		public Protection? protection;
 
 		[XmlIgnore]
 		internal bool _preprocessed = false;
 		[XmlIgnore]
-		internal WorksheetRangeStyle _cachedStyleSet;
+		internal WorksheetRangeStyle? _cachedStyleSet;
 		//[XmlIgnore]
 		//internal Font _cachedFont;
 	}
@@ -965,33 +965,33 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class CellStyle
 	{
 		[XmlAttribute("name")]
-		public string name;
+		public string? name;
 		[XmlAttribute("xfId")]
-		public string xfId;
+		public string? xfId;
 		[XmlAttribute("builtinId")]
-		public string builtinId;
+		public string? builtinId;
 		[XmlAttribute("customBuiltin")]
-		public string customBuiltin;
+		public string? customBuiltin;
 	}
 
 	public class IndexedColors
 	{
 		[XmlArray("indexedColors"), XmlArrayItem("rgbColor")]
-		public List<ColorValue> indexedColors;
+		public List<ColorValue>? indexedColors;
 	}
 
 	public class ColorValue
 	{
 		[XmlAttribute("indexed")]
-		public string indexed;
+		public string? indexed;
 		[XmlAttribute("rgb")]
-		public string rgb;
+		public string? rgb;
 		[XmlAttribute("auto")]
-		public string auto;
+		public string? auto;
 		[XmlAttribute("theme")]
-		public string theme;
+		public string? theme;
 		[XmlAttribute("tint")]
-		public string tint;
+		public string? tint;
 
 		public ColorValue() { }
 
@@ -1016,15 +1016,15 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Alignment
 	{
 		[XmlAttribute("horizontal")]
-		public string horizontal;
+		public string? horizontal;
 		[XmlAttribute("vertical")]
-		public string vertical;
+		public string? vertical;
 		[XmlAttribute("indent")]
-		public string indent;
+		public string? indent;
 		[XmlAttribute("textRotation")]
-		public string textRotation;
+		public string? textRotation;
 		[XmlAttribute("wrapText")]
-		public string wrapText;
+		public string? wrapText;
 
 		[XmlIgnore]
 		internal ReoGridHorAlign _horAlign;
@@ -1037,27 +1037,27 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Protection
 	{
 		[XmlAttribute("locked")]
-		public string locked;
+		public string? locked;
 	}
 
 	public class ElementValue<T>
 	{
 		[XmlAttribute("val")]
-		public T value;
+		public T? value;
 
 		public ElementValue() { }
 
-		internal ElementValue(T val)
+		internal ElementValue(T? val)
 		{
 			this.value = val;
 		}
 
-		public static implicit operator T(ElementValue<T> v)
+		public static implicit operator T?(ElementValue<T>? v)
 		{
 			return v == null ? default(T) : v.value;
 		}
 
-		public static implicit operator ElementValue<T>(T v)
+		public static implicit operator ElementValue<T>(T? v)
 		{
 			return new ElementValue<T>(v);
 		}
@@ -1066,10 +1066,10 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ElementText
 	{
 		[XmlText]
-		public string val;
+		public string? val;
 
 		[XmlAttribute("space", Namespace = OpenXMLNamespaces.NET_XML______)]
-		public string space;
+		public string? space;
 
 		public ElementText() { }
 
@@ -1082,7 +1082,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			}
 		}
 
-		public static implicit operator string(ElementText t)
+		public static implicit operator string?(ElementText? t)
 		{
 			return t == null ? null : t.val;
 		}
@@ -1106,16 +1106,16 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlAttribute("count")]
-		public string count;
+		public string? count;
 
 		[XmlAttribute("uniqueCount")]
-		public string uniqueCount;
+		public string? uniqueCount;
 
 		[XmlElement("si")]
-		public List<SharedStringItem> items;
+		public List<SharedStringItem> items = null!;
 
 		[XmlIgnore]
-		internal string _xmlTarget;
+		internal string _xmlTarget = null!;
 	}
 
 	public class SharedStringItem
@@ -1124,17 +1124,17 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		/// tag: t
 		/// </summary>
 		[XmlElement("t")]
-		public ElementText text;
+		public ElementText? text;
 
 		/// <summary>
 		/// tag: r
 		/// </summary>
 		[XmlElement("r")]
-		public List<Run> runs;
+		public List<Run>? runs;
 
 #if DRAWING
 		[XmlIgnore]
-		internal ReoGrid.Drawing.RichText _rt;
+		internal ReoGrid.Drawing.RichText? _rt;
 #endif // DRAWING
 	}
 
@@ -1155,43 +1155,43 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement("twoCellAnchor")]
-		public List<TwoCellAnchor> twoCellAnchors;
+		public List<TwoCellAnchor> twoCellAnchors = null!;
 
 		[XmlIgnore]
 		internal int _drawingObjectCount = 2;
 
 		[XmlIgnore]
-		internal Dictionary<string, int> _typeObjectCount;
+		internal Dictionary<string, int> _typeObjectCount = null!;
 
 		[XmlIgnore]
-		internal List<Blip> _images;
+		internal List<Blip>? _images;
 	}
 
 	public class TwoCellAnchor
 	{
 		[XmlElement("from")]
-		public CellAnchor from;
+		public CellAnchor from = null!;
 
 		[XmlElement("to")]
-		public CellAnchor to;
+		public CellAnchor to = null!;
 
 		[XmlElement("pic")]
-		public Pic pic;
+		public Pic? pic;
 
 		[XmlElement("sp")]
-		public Shape shape;
+		public Shape? shape;
 
 		[XmlElement("cxnSp")]
-		public Shape cxnShape;
+		public Shape? cxnShape;
 
 		[XmlElement("graphicFrame")]
-		public GraphicFrame graphcFrame;
+		public GraphicFrame? graphcFrame;
 
 		[XmlElement("clientData")]
-		public ClientData clientData;
+		public ClientData? clientData;
 
 		[XmlAttribute("editAs")]
-		public string editAs;
+		public string? editAs;
 	}
 
 	public class CellAnchor
@@ -1209,28 +1209,28 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Pic
 	{
 		[XmlElement("nvPicPr")]
-		public NvPicProperty nvPicPr;
+		public NvPicProperty? nvPicPr;
 
 		[XmlElement("blipFill")]
-		public BlipFill blipFill;
+		public BlipFill? blipFill;
 
 		[XmlElement("spPr")]
-		public ShapeProperty prop;
+		public ShapeProperty? prop;
 	}
 
 	public class NvPicProperty
 	{
 		[XmlElement("cNvPr")]
-		public NonVisualProp cNvPr;
+		public NonVisualProp? cNvPr;
 
 		[XmlElement("cNvPicPr")]
-		public CNvPicProperty cNvPicPr;
+		public CNvPicProperty? cNvPicPr;
 	}
 
 	public class CNvPicProperty
 	{
 		[XmlElement("picLocks", Namespace = OpenXMLNamespaces.Drawing______)]
-		public PicLocks picLocks;
+		public PicLocks? picLocks;
 	}
 
 	public class PicLocks
@@ -1242,16 +1242,16 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class BlipFill
 	{
 		[XmlElement("blip", Namespace = OpenXMLNamespaces.Drawing______)]
-		public Blip blip;
+		public Blip? blip;
 
 		[XmlElement("stretch", Namespace = OpenXMLNamespaces.Drawing______)]
-		public Stretch stretch;
+		public Stretch? stretch;
 	}
 
 	public class Blip
 	{
 		[XmlAttribute("embed", Namespace = OpenXMLNamespaces.R____________)]
-		public string embedId;
+		public string? embedId;
 
 		[XmlNamespaceDeclarations]
 		public XmlSerializerNamespaces xmlns = new XmlSerializerNamespaces(
@@ -1260,16 +1260,16 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlIgnore]
-		internal ReoGrid.Drawing.ImageObject _imageObject;
+		internal ReoGrid.Drawing.ImageObject _imageObject = null!;
 
 		[XmlIgnore]
-		internal string _imageFileName;
+		internal string _imageFileName = null!;
 	}
 
 	public class Stretch
 	{
 		[XmlElement("fillRect")]
-		public FillRect fillRect;
+		public FillRect? fillRect;
 	}
 
 	public class FillRect
@@ -1281,21 +1281,21 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Shape
 	{
 		[XmlAttribute("macro")]
-		public string macro;
+		public string? macro;
 		[XmlAttribute("textlink")]
-		public string textlink;
+		public string? textlink;
 
 		[XmlElement("nvSpPr")]
-		public NonVisualShapeProp nvSpPr;
+		public NonVisualShapeProp? nvSpPr;
 
 		[XmlElement("spPr")]
-		public ShapeProperty prop;
+		public ShapeProperty? prop;
 
 		[XmlElement("style")]
-		public ShapeStyle style;
+		public ShapeStyle? style;
 
 		[XmlElement("txBody")]
-		public TextBody textBody;
+		public TextBody? textBody;
 	}
 
 	public class NonVisualProp
@@ -1303,48 +1303,48 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlAttribute("id")]
 		public int id;
 		[XmlAttribute("name")]
-		public string name;
+		public string? name;
 	}
 
 	// <xdr:nvSpPr>
 	public class NonVisualShapeProp
 	{
 		[XmlElement("cNvPr")]
-		public NonVisualProp nvPr;
+		public NonVisualProp? nvPr;
 	}
 
 	public class ShapeProperty
 	{
 		[XmlElement("xfrm", Namespace = OpenXMLNamespaces.Drawing______)]
-		public Transform transform;
+		public Transform? transform;
 
 		[XmlElement("prstGeom", Namespace = OpenXMLNamespaces.Drawing______)]
-		public PresetGeometry prstGeom;
+		public PresetGeometry? prstGeom;
 
 		[XmlElement("solidFill", Namespace = OpenXMLNamespaces.Drawing______)]
-		public CompColor solidFill;
+		public CompColor? solidFill;
 
 		[XmlElement("noFill", Namespace = OpenXMLNamespaces.Drawing______)]
-		public NoFill noFill;
+		public NoFill? noFill;
 
 		[XmlElement("ln", Namespace = OpenXMLNamespaces.Drawing______)]
-		public Outline line;
+		public Outline? line;
 	}
 
 	public class Transform
 	{
 		[XmlAttribute("flipH")]
-		public string flipH;
+		public string? flipH;
 		[XmlAttribute("flipV")]
-		public string flipV;
+		public string? flipV;
 		[XmlAttribute("rot")]
-		public string rotation;
+		public string? rotation;
 
 		[XmlElement("off")]
-		public Offset offset;
+		public Offset offset = null!;
 
 		[XmlElement("ext")]
-		public Extents extents;
+		public Extents extents = null!;
 	}
 
 	public class Offset
@@ -1373,88 +1373,88 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class PresetGeometry
 	{
 		[XmlAttribute("prst")]
-		public string presetType;
+		public string? presetType;
 
 		[XmlArray("avLst"), XmlArrayItem("gd")]
-		public List<ShapeGuide> avList;
+		public List<ShapeGuide>? avList;
 	}
 
 	public class ShapeGuide
 	{
 		[XmlAttribute("name")]
-		public string name;
+		public string? name;
 
 		[XmlAttribute("fmla")]
-		public string formula;
+		public string formula = null!;
 	}
 
 	// <a:ln w="28575">
 	public class Outline
 	{
 		[XmlAttribute("w")]
-		public string weight;
+		public string? weight;
 
 		[XmlElement("headEnd")]
-		public HeadEnd headEnd;
+		public HeadEnd? headEnd;
 
 		[XmlElement("tailEnd")]
-		public HeadEnd tailEnd;
+		public HeadEnd? tailEnd;
 
 		[XmlElement("solidFill")]
-		public CompColor solidFill;
+		public CompColor? solidFill;
 
 		[XmlElement("prstDash")]
-		public ElementValue<string> prstDash;
+		public ElementValue<string>? prstDash;
 
 		[XmlElement("noFill")]
-		public NoFill noFill;
+		public NoFill? noFill;
 	}
 
 	public class HeadEnd
 	{
 		[XmlAttribute("type")]
-		public string type;
+		public string? type;
 	}
 
 	public class ShapeStyle
 	{
 		[XmlElement("lnRef", Namespace = OpenXMLNamespaces.Drawing______)]
-		public LineReference lnRef;
+		public LineReference? lnRef;
 
 		[XmlElement("fillRef", Namespace = OpenXMLNamespaces.Drawing______)]
-		public FillReference fillRef;
+		public FillReference? fillRef;
 
 		[XmlElement("effectRef", Namespace = OpenXMLNamespaces.Drawing______)]
-		public EffectReference effectRef;
+		public EffectReference? effectRef;
 
 		[XmlElement("fontRef", Namespace = OpenXMLNamespaces.Drawing______)]
-		public FontReference fontRef;
+		public FontReference? fontRef;
 	}
 
 	// <a:lnRef idx="2">
 	public class LineReference : CompColor
 	{
 		[XmlAttribute("idx")]
-		public string idx;
+		public string? idx;
 	}
 
 	public class FillReference : CompColor
 	{
 		[XmlAttribute("idx")]
-		public string idx;
+		public string? idx;
 	}
 
 	public class EffectReference : CompColor
 	{
 		[XmlAttribute("idx")]
-		public string idx;
+		public string? idx;
 	}
 #endif // DRAWING
 
 	public class FontReference : CompColor
 	{
 		[XmlAttribute("idx")]
-		public string idx;
+		public string? idx;
 
 		//[XmlElement("schemeClr")]
 		//public CompColorVar schemeClr;
@@ -1463,59 +1463,59 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class TextBody
 	{
 		[XmlElement("bodyPr")]
-		public BodyProperty bodyProperty;
+		public BodyProperty? bodyProperty;
 
 		[XmlElement("p", Namespace = OpenXMLNamespaces.Drawing______)]
-		public List<Paragraph> paragraphs;
+		public List<Paragraph>? paragraphs;
 	}
 
 	// <a:bodyPr vertOverflow="clip" horzOverflow="clip" rtlCol="0" anchor="t"/>
 	public class BodyProperty
 	{
 		[XmlAttribute("vertOverflow")]
-		public string vertOverflow;
+		public string? vertOverflow;
 
 		[XmlAttribute("horzOverflow")]
-		public string horzOverflow;
+		public string? horzOverflow;
 
 		[XmlAttribute("rtlCol")]
 		public int rtlCol;
 
 		[XmlAttribute("anchor")]
-		public string anchor;
+		public string? anchor;
 	}
 
 	public class Paragraph
 	{
 		[XmlElement("r")]
-		public List<Run> runs;
+		public List<Run> runs = null!;
 
 		[XmlElement("pPr")]
-		public ParagraphProp property;
+		public ParagraphProp? property;
 	}
 
 	public class ParagraphProp
 	{
 		[XmlAttribute("algn")]
-		public string align;
+		public string? align;
 	}
 
 	public class Run
 	{
 		[XmlElement("rPr")]
-		public RunProperty property;
+		public RunProperty? property;
 
 		[XmlElement("t")]
-		public Text text;
+		public Text text = null!;
 	}
 
 	public class Text
 	{
 		[XmlAttribute("space", Namespace = "http://www.w3.org/XML/1998/namespace")]
-		public string space;
+		public string? space;
 
 		[XmlText]
-		public string innerText;
+		public string? innerText;
 	}
 
 	public class RunProperty
@@ -1527,70 +1527,70 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		//<family val = "2" />
 		//< scheme val="minor"/>
 		[XmlElement("vertAlign")]
-		public ElementValue<string> vertAlign;
+		public ElementValue<string>? vertAlign;
 
 		[XmlElement("sz")]
-		public ElementValue<string> size;
+		public ElementValue<string>? size;
 
 		[XmlElement("strike")]
-		public ElementValue<string> strike;
+		public ElementValue<string>? strike;
 
 		[XmlElement("b")]
-		public ElementValue<string> b;
+		public ElementValue<string>? b;
 
 		[XmlElement("i")]
-		public ElementValue<string> i;
+		public ElementValue<string>? i;
 
 		[XmlElement("u")]
-		public ElementValue<string> u;
+		public ElementValue<string>? u;
 
 		[XmlElement("color")]
-		public ColorValue color;
+		public ColorValue? color;
 
 		[XmlElement("rFont")]
-		public ElementValue<string> font;
+		public ElementValue<string>? font;
 
 		[XmlElement("family")]
-		public ElementValue<string> family;
+		public ElementValue<string>? family;
 
 		[XmlElement("schema")]
-		public ElementValue<string> schema;
+		public ElementValue<string>? schema;
 
 		//////////////////////////////////////////
 
 		[XmlAttribute("sz")]
-		public string sizeAttr;
+		public string? sizeAttr;
 
 		[XmlElement("solidFill")]
-		public CompColor solidFill;
+		public CompColor? solidFill;
 
 	}
 
 	public class GraphicFrame
 	{
 		[XmlElement("graphic", Namespace = OpenXMLNamespaces.Drawing______)]
-		public Graphic graphic;
+		public Graphic? graphic;
 	}
 
 	public class Graphic
 	{
 		[XmlElement("graphicData")]
-		public GraphicData data;
+		public GraphicData? data;
 	}
 
 	public class GraphicData
 	{
 		[XmlAttribute("uri")]
-		public string uri;
+		public string? uri;
 
 		[XmlElement("chart", Namespace = OpenXMLNamespaces.Chart________)]
-		public GraphicChartRelation chart;
+		public GraphicChartRelation? chart;
 	}
 
 	public class GraphicChartRelation
 	{
 		[XmlAttribute("id", Namespace = OpenXMLNamespaces.R____________)]
-		public string id;
+		public string? id;
 	}
 
 	public class ClientData
@@ -1613,95 +1613,95 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement("chart")]
-		public Chart chart;
+		public Chart? chart;
 	}
 
 	public class Chart
 	{
 		[XmlElement("plotArea")]
-		public PlotArea plotArea;
+		public PlotArea? plotArea;
 
 		[XmlElement("legend")]
-		public Legend legend;
+		public Legend? legend;
 	}
 
 	public class PlotArea
 	{
 		[XmlElement("lineChart")]
-		public LineChart lineChart;
+		public LineChart? lineChart;
 
 		[XmlElement("barChart")]
-		public BarChart barChart;
+		public BarChart? barChart;
 
 		[XmlElement("pieChart")]
-		public PieChart pieChart;
+		public PieChart? pieChart;
 
 		[XmlElement("doughnutChart")]
-		public PieChart doughnutChart;
+		public PieChart? doughnutChart;
 
 		[XmlElement("areaChart")]
-		public AreaChart areaChart;
+		public AreaChart? areaChart;
 
 		[XmlElement("valAx")]
-		public ValueAxis valueAxis;
+		public ValueAxis? valueAxis;
 	}
 
 #region PlotArea
 	public class LineChart
 	{
 		[XmlElement("ser")]
-		public List<LineChartSerial> serials;
+		public List<LineChartSerial>? serials;
 
 		[XmlElement("dLbls")]
-		public DataLabels labels;
+		public DataLabels? labels;
 	}
 
 	public class BarChart
 	{
 		[XmlElement("barDir")]
-		public ElementValue<string> barDir;
+		public ElementValue<string>? barDir;
 
 		[XmlElement("ser")]
-		public List<BarChartSerial> serials;
+		public List<BarChartSerial>? serials;
 
 		[XmlElement("dLbls")]
-		public DataLabels labels;
+		public DataLabels? labels;
 	}
 
 	public class PieChart
 	{
 		[XmlElement("ser")]
-		public List<PieChartSerial> serials;
+		public List<PieChartSerial>? serials;
 
 		[XmlElement("dLbls")]
-		public DataLabels labels;
+		public DataLabels? labels;
 	}
 
 	public class AreaChart
 	{
 		[XmlElement("ser")]
-		public List<AreaChartSerial> serials;
+		public List<AreaChartSerial>? serials;
 
 		[XmlElement("dLbls")]
-		public DataLabels labels;
+		public DataLabels? labels;
 	}
 
 	internal interface IChartSerial
 	{
-		ChartText ChartLabel { get; }
+		ChartText? ChartLabel { get; }
 		ChartDataValues Values { get; }
 	}
 
 	public class LineChartSerial : IChartSerial
 	{
 		[XmlElement("tx")]
-		public ChartText chartLabel;
+		public ChartText? chartLabel;
 
 		[XmlElement("val")]
-		public ChartDataValues values;
+		public ChartDataValues values = null!;
 
 		[XmlIgnore]
-		public ChartText ChartLabel { get { return this.chartLabel; } }
+		public ChartText? ChartLabel { get { return this.chartLabel; } }
 
 		[XmlIgnore]
 		public ChartDataValues Values { get { return this.values; } }
@@ -1710,13 +1710,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class BarChartSerial : IChartSerial
 	{
 		[XmlElement("tx")]
-		public ChartText chartLabel;
+		public ChartText? chartLabel;
 
 		[XmlElement("val")]
-		public ChartDataValues values;
+		public ChartDataValues values = null!;
 
 		[XmlIgnore]
-		public ChartText ChartLabel { get { return this.chartLabel; } }
+		public ChartText? ChartLabel { get { return this.chartLabel; } }
 
 		[XmlIgnore]
 		public ChartDataValues Values { get { return this.values; } }
@@ -1725,13 +1725,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class PieChartSerial : IChartSerial
 	{
 		[XmlElement("tx")]
-		public ChartText chartLabel;
+		public ChartText? chartLabel;
 
 		[XmlElement("val")]
-		public ChartDataValues values;
+		public ChartDataValues values = null!;
 
 		[XmlIgnore]
-		public ChartText ChartLabel { get { return this.chartLabel; } }
+		public ChartText? ChartLabel { get { return this.chartLabel; } }
 
 		[XmlIgnore]
 		public ChartDataValues Values { get { return this.values; } }
@@ -1740,13 +1740,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class AreaChartSerial : IChartSerial
 	{
 		[XmlElement("tx")]
-		public ChartText chartLabel;
+		public ChartText? chartLabel;
 
 		[XmlElement("val")]
-		public ChartDataValues values;
+		public ChartDataValues values = null!;
 
 		[XmlIgnore]
-		public ChartText ChartLabel { get { return this.chartLabel; } }
+		public ChartText? ChartLabel { get { return this.chartLabel; } }
 
 		[XmlIgnore]
 		public ChartDataValues Values { get { return this.values; } }
@@ -1755,25 +1755,25 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ChartText
 	{
 		[XmlElement("strRef")]
-		public StringReference strRef;
+		public StringReference? strRef;
 	}
 
 	public class StringReference
 	{
 		[XmlElement("f")]
-		public ElementText formula;
+		public ElementText? formula;
 
 		[XmlElement("strCache")]
-		public StringCache strCache;
+		public StringCache? strCache;
 	}
 
 	public class StringCache
 	{
 		[XmlElement("ptCount")]
-		public ElementValue<int> ptCount;
+		public ElementValue<int>? ptCount;
 
 		[XmlElement("pt")]
-		public List<NumericPoint> ptList;
+		public List<NumericPoint>? ptList;
 	}
 
 	public class CategoryAxis
@@ -1787,19 +1787,19 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ValueAxis
 	{
 		[XmlElement("scaling")]
-		public Scaling scaling;
+		public Scaling? scaling;
 	}
 
 	public class ChartDataValues
 	{
 		[XmlElement("numRef")]
-		public NumberReference numRef;
+		public NumberReference? numRef;
 	}
 
 	public class NumberReference
 	{
 		[XmlElement("f")]
-		public ElementText formula;
+		public ElementText? formula;
 	}
 
 	public class NumericPoint
@@ -1808,41 +1808,41 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		public int index;
 
 		[XmlElement("v")]
-		public ElementText value;
+		public ElementText? value;
 	}
 
 	public class DataLabels
 	{
 		[XmlElement("showLegendKey")]
-		public ElementValue<int> ShowLegendKey;
+		public ElementValue<int>? ShowLegendKey;
 
 		[XmlElement("showVal")]
-		public ElementValue<int> showVal;
+		public ElementValue<int>? showVal;
 
 		[XmlElement("showCatName")]
-		public ElementValue<int> showCatName;
+		public ElementValue<int>? showCatName;
 
 		[XmlElement("showSerName")]
-		public ElementValue<int> showSerName;
+		public ElementValue<int>? showSerName;
 
 		[XmlElement("showPercent")]
-		public ElementValue<int> showPercent;
+		public ElementValue<int>? showPercent;
 
 		[XmlElement("showBubbleSize")]
-		public ElementValue<int> showBubbleSize;
+		public ElementValue<int>? showBubbleSize;
 	}
 
 	public class Scaling
 	{
 		// <c:orientation val="minMax"/>
 		[XmlElement("orientation")]
-		public ElementValue<string> orientation;
+		public ElementValue<string>? orientation;
 
 		[XmlElement("max")]
-		public ElementValue<int> max;
+		public ElementValue<int>? max;
 
 		[XmlElement("min")]
-		public ElementValue<int> min;
+		public ElementValue<int>? min;
 	}
 #endregion // PlotArea
 
@@ -1850,7 +1850,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Legend
 	{
 		[XmlElement("legendPos")]
-		public ElementValue<string> legendPos;
+		public ElementValue<string>? legendPos;
 	}
 #endregion // Legend
 
@@ -1861,22 +1861,22 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Theme
 	{
 		[XmlAttribute("name")]
-		public string name;
+		public string? name;
 
 		[XmlElement("themeElements")]
-		public ThemeElements elements;
+		public ThemeElements? elements;
 	}
 
 	public class ThemeElements
 	{
 		[XmlElement("clrScheme")]
-		public ClrScheme clrScheme;
+		public ClrScheme? clrScheme;
 
 		//[XmlArray("themeElements"), XmlArrayItem("fontScheme")]
 		//public ThemeElement fontScheme;
 
 		[XmlElement("fmtScheme")]
-		public FormatScheme fmtScheme;
+		public FormatScheme? fmtScheme;
 
 
 	}
@@ -1887,29 +1887,29 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class ClrScheme
 	{
 		[XmlElement("dk1")]
-		public CompColor dk1;
+		public CompColor dk1 = null!;
 		[XmlElement("lt1")]
-		public CompColor lt1;
+		public CompColor lt1 = null!;
 		[XmlElement("dk2")]
-		public CompColor dk2;
+		public CompColor dk2 = null!;
 		[XmlElement("lt2")]
-		public CompColor lt2;
+		public CompColor lt2 = null!;
 		[XmlElement("accent1")]
-		public CompColor accent1;
+		public CompColor accent1 = null!;
 		[XmlElement("accent2")]
-		public CompColor accent2;
+		public CompColor accent2 = null!;
 		[XmlElement("accent3")]
-		public CompColor accent3;
+		public CompColor accent3 = null!;
 		[XmlElement("accent4")]
-		public CompColor accent4;
+		public CompColor accent4 = null!;
 		[XmlElement("accent5")]
-		public CompColor accent5;
+		public CompColor accent5 = null!;
 		[XmlElement("accent6")]
-		public CompColor accent6;
+		public CompColor accent6 = null!;
 		[XmlElement("hlink")]
-		public CompColor hlink;
+		public CompColor hlink = null!;
 		[XmlElement("folHlink")]
-		public CompColor folHlink;
+		public CompColor folHlink = null!;
 
 		//[XmlIgnore]
 		//internal List<SolidColor> _colorPallate;
@@ -1918,13 +1918,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class CompColor
 	{
 		[XmlElement("sysClr")]
-		public CompColorVar sysColor;
+		public CompColorVar? sysColor;
 
 		[XmlElement("srgbClr")]
-		public CompColorVar srgbColor;
+		public CompColorVar? srgbColor;
 
 		[XmlElement("schemeClr")]
-		public CompColorVar schemeColor;
+		public CompColorVar? schemeColor;
 
 		[XmlIgnore]
 		internal SolidColor _solidColor;
@@ -1933,22 +1933,22 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class CompColorVar
 	{
 		[XmlAttribute("val")]
-		public string val;
+		public string? val;
 		[XmlAttribute("lastClr")]
-		public string lastClr;
+		public string? lastClr;
 
 		[XmlElement("lumMod")]
-		public ElementValue<int> lumMod;
+		public ElementValue<int>? lumMod;
 		[XmlElement("lumOff")]
-		public ElementValue<int> lumOff;
+		public ElementValue<int>? lumOff;
 		[XmlElement("satMod")]
-		public ElementValue<int> satMod;
+		public ElementValue<int>? satMod;
 		[XmlElement("tint")]
-		public ElementValue<int> tint;
+		public ElementValue<int>? tint;
 		[XmlElement("shade")]
-		public ElementValue<int> shade;
+		public ElementValue<int>? shade;
 		[XmlElement("alpha")]
-		public ElementValue<int> alpha;
+		public ElementValue<int>? alpha;
 	}
 
 #endregion // Theme Colors
@@ -1959,18 +1959,18 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlArray("fillStyleLst")]
 		[XmlArrayItem("solidFill", Type = typeof(CompColor))]
 		[XmlArrayItem("gradFill", Type = typeof(GradientFill))]
-		public List<object> fillStyles;
+		public List<object>? fillStyles;
 
 		[XmlArray("lnStyleLst"), XmlArrayItem("ln")]
-		public List<LineStyle> lineStyles;
+		public List<LineStyle>? lineStyles;
 
 		[XmlArray("effectStyleLst"), XmlArrayItem("effectStyle")]
-		public List<EffectStyle> effectStyles;
+		public List<EffectStyle>? effectStyles;
 
 		[XmlArray("bgFillStyleLst")]
 		[XmlArrayItem("solidFill", Type = typeof(CompColor))]
 		[XmlArrayItem("gradFill", Type = typeof(GradientFill))]
-		public List<object> bgFillStyleLst;
+		public List<object>? bgFillStyleLst;
 	}
 
 	//public class SolidFill : AbstractFillStyle
@@ -1989,7 +1989,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		public byte rotWithShape;
 
 		[XmlArray("gsLst"), XmlArrayItem("gs")]
-		public List<GradientStop> gsLst;
+		public List<GradientStop> gsLst = null!;
 	}
 
 	public class GradientStop : CompColor
@@ -2005,20 +2005,20 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 		[XmlAttribute("w")]
 		public int weight;
 		[XmlAttribute("cap")]
-		public string cap;
+		public string? cap;
 		[XmlAttribute("cmpd")]
-		public string cmpd;
+		public string? cmpd;
 		[XmlAttribute("algn")]
-		public string algn;
+		public string? algn;
 
 		[XmlElement("solidFill")]
-		public CompColor solidFill;
+		public CompColor? solidFill;
 
 		[XmlElement("prstDash")]
-		public ElementValue<string> prstDash;
+		public ElementValue<string>? prstDash;
 
 		[XmlElement("miter")]
-		public string miter;
+		public string? miter;
 	}
 
 	public class MiterLineJoin
@@ -2032,14 +2032,14 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class EffectStyle
 	{
 		[XmlArray("effectLst"), XmlArrayItem("outerShdw")]
-		public List<OuterShadow> outerShadow;
+		public List<OuterShadow>? outerShadow;
 	}
 
 	// <a:outerShdw blurRad="57150" dist="19050" dir="5400000" algn="ctr" rotWithShape="0">
 	public class OuterShadow
 	{
 		[XmlElement("srgbClr")]
-		public CompColorVar srgbClr;
+		public CompColorVar? srgbClr;
 	}
 #endregion // Effect Style
 
@@ -2057,10 +2057,10 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 			});
 
 		[XmlElement("Relationship")]
-		public List<Relationship> relations;
+		public List<Relationship> relations = null!;
 
 		[XmlIgnore]
-		internal string _xmlTarget;
+		internal string _xmlTarget = null!;
 
 		public Relationships() { }
 
@@ -2073,26 +2073,26 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class Relationship
 	{
 		[XmlAttribute("Id")]
-		public string id;
+		public string id = null!;
 		[XmlAttribute("Type")]
-		public string type;
+		public string? type;
 		[XmlAttribute("Target")]
-		public string target;
+		public string target = null!;
 	}
 
 	public partial class OpenXMLFile
 	{
 		[XmlIgnore]
-		internal Relationships _relationFile;
+		internal Relationships? _relationFile;
 
 		[XmlIgnore]
-		internal string _resId;
+		internal string? _resId;
 		[XmlIgnore]
-		internal string _xmlTarget;
+		internal string _xmlTarget = null!;
 		[XmlIgnore]
-		internal string _path;
+		internal string _path = null!;
 		[XmlIgnore]
-		internal string _rsTarget;
+		internal string _rsTarget = null!;
 	}
 #endregion // Relationships
 
@@ -2100,7 +2100,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class InnerTextElement
 	{
 		[XmlText]
-		public string value;
+		public string? value;
 
 		public InnerTextElement() { }
 
@@ -2113,13 +2113,13 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 	public class OpenXMLTypedElement<T>
 	{
 		[XmlAttribute("type", Namespace = OpenXMLNamespaces.NET_XSI______)]
-		public string type;
+		public string? type;
 	}
 
 	public class OpenXMLDateTime : OpenXMLTypedElement<DateTime>
 	{
 		[XmlText]
-		public string value;
+		public string? value;
 
 		public OpenXMLDateTime() { }
 

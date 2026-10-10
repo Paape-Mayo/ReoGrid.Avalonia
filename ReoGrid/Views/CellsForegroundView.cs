@@ -53,7 +53,7 @@ namespace unvell.ReoGrid.Views
 	{
 		public CellsForegroundView(IViewportController vc) : base(vc) { }
 
-		public override IView GetViewByPoint(Point p)
+		public override IView? GetViewByPoint(Point p)
 		{
 			// return null to always avoid making this view actived
 			return null;
@@ -61,11 +61,11 @@ namespace unvell.ReoGrid.Views
 
 		public override void Draw(CellDrawingContext dc)
 		{
-			var sheet = this.ViewportController.Worksheet;
+			var sheet = this.ViewportController!.Worksheet;
 			if (sheet == null || sheet.controlAdapter == null) return;
 
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			switch (sheet.operationStatus)
 			{

@@ -57,7 +57,7 @@ namespace unvell.ReoGrid
 
 		void grid_CellDataChanged(object sender, CellEventArgs e)
 		{
-			OnCellDataChanged(e.Cell);
+			OnCellDataChanged(e.Cell!);
 		}
 
 		protected virtual void OnCellDataChanged(ReoGridCell cell)

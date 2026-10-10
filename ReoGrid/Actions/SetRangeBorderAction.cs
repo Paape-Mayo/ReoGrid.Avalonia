@@ -33,7 +33,7 @@ namespace unvell.ReoGrid.Actions
 			set { borders = value; }
 		}
 
-		private PartialGrid backupData;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Create action that perform setting border to a range

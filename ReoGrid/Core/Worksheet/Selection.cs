@@ -124,7 +124,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Raise when focus cell is changed
 		/// </summary>
-		public event EventHandler<CellPosEventArgs> FocusPosChanged;
+		public event EventHandler<CellPosEventArgs>? FocusPosChanged;
 
 		private FocusPosStyle focusPosStyle = FocusPosStyle.Default;
 
@@ -145,7 +145,7 @@ namespace unvell.ReoGrid
 
 					this.focusPosStyle = value;
 
-					FocusPosStyleChanged?.Invoke(this, null);
+					FocusPosStyleChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Focus position style changed.
 		/// </summary>
-		public event EventHandler<EventArgs> FocusPosStyleChanged;
+		public event EventHandler<EventArgs>? FocusPosStyleChanged;
 
 		internal CellPosition hoverPos;
 
@@ -174,7 +174,7 @@ namespace unvell.ReoGrid
 					// raise cell mouse enter
 					if (!hoverPos.IsEmpty)
 					{
-						CellMouseEventArgs evtArg = null;
+						CellMouseEventArgs? evtArg = null;
 
 						if (CellMouseLeave != null)
 						{
@@ -209,7 +209,7 @@ namespace unvell.ReoGrid
 					// raise cell mouse leave
 					if (!hoverPos.IsEmpty)
 					{
-						CellMouseEventArgs evtArg = null;
+						CellMouseEventArgs? evtArg = null;
 
 						if (CellMouseEnter != null)
 						{
@@ -248,7 +248,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Raise when hover cell is changed
 		/// </summary>
-		public event EventHandler<CellPosEventArgs> HoverPosChanged;
+		public event EventHandler<CellPosEventArgs>? HoverPosChanged;
 
 		#endregion // Focus & Hover
 
@@ -348,7 +348,7 @@ namespace unvell.ReoGrid
 
 					if (SelectionModeChanged != null)
 					{
-						SelectionModeChanged(this, null);
+						SelectionModeChanged(this, EventArgs.Empty);
 					}
 				}
 			}
@@ -373,7 +373,7 @@ namespace unvell.ReoGrid
 					selectionStyle = value;
 					RequestInvalidate();
 
-					SelectionStyleChanged?.Invoke(this, null);
+					SelectionStyleChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -396,7 +396,7 @@ namespace unvell.ReoGrid
 				{
 					this.selectionForwardDirection = value;
 
-					this.SelectionForwardDirectionChanged?.Invoke(this, null);
+					this.SelectionForwardDirectionChanged?.Invoke(this, EventArgs.Empty);
 				}
 			}
 		}
@@ -748,7 +748,7 @@ namespace unvell.ReoGrid
 			// named range
 			else if (RGUtility.IsValidName(address))
 			{
-				NamedRange refRange;
+				NamedRange? refRange;
 				if (registeredNamedRanges.TryGetValue(address, out refRange))
 				{
 					SelectRange(refRange);
@@ -799,7 +799,7 @@ namespace unvell.ReoGrid
 		{
 			if (IsEditing)
 			{
-				this.controlAdapter.EditControlSelectAll();
+				this.controlAdapter!.EditControlSelectAll();
 			}
 			else
 			{
@@ -1388,11 +1388,11 @@ namespace unvell.ReoGrid
 
 			int row = selEnd.Row;
 
-			NormalViewportController nvc = viewportController as NormalViewportController;
+			NormalViewportController? nvc = viewportController as NormalViewportController;
 
 			if (nvc != null)
 			{
-				IViewport viewport = nvc.FocusView as IViewport;
+				IViewport? viewport = nvc.FocusView as IViewport;
 
 				if (viewport != null)
 				{
@@ -1426,11 +1426,11 @@ namespace unvell.ReoGrid
 
 			int row = selEnd.Row;
 
-			NormalViewportController nvc = viewportController as NormalViewportController;
+			NormalViewportController? nvc = viewportController as NormalViewportController;
 
 			if (nvc != null)
 			{
-				IViewport viewport = nvc.FocusView as IViewport;
+				IViewport? viewport = nvc.FocusView as IViewport;
 
 				if (viewport != null)
 				{
@@ -1458,37 +1458,37 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised before selection range changing
 		/// </summary>
-		public event EventHandler<BeforeSelectionChangeEventArgs> BeforeSelectionRangeChange;
+		public event EventHandler<BeforeSelectionChangeEventArgs>? BeforeSelectionRangeChange;
 		/// <summary>
 		/// Event raised on focus-selection-range changed
 		/// </summary>
-		public event EventHandler<RangeEventArgs> SelectionRangeChanged;
+		public event EventHandler<RangeEventArgs>? SelectionRangeChanged;
 		/// <summary>
 		/// Event raised on focus-selection-range is changing by mouse move
 		/// </summary>
-		public event EventHandler<RangeEventArgs> SelectionRangeChanging;
+		public event EventHandler<RangeEventArgs>? SelectionRangeChanging;
 		/// <summary>
 		/// Event raised on Selection-Mode change
 		/// </summary>
-		public event EventHandler SelectionModeChanged;
+		public event EventHandler? SelectionModeChanged;
 		/// <summary>
 		/// Event raised on Selection-Style change
 		/// </summary>
-		public event EventHandler SelectionStyleChanged;
+		public event EventHandler? SelectionStyleChanged;
 		/// <summary>
 		/// Event raised on SelectionForwardDirection change
 		/// </summary>
-		public event EventHandler SelectionForwardDirectionChanged;
+		public event EventHandler? SelectionForwardDirectionChanged;
 
 		/// <summary>
 		/// Event raised when focus-selection move to next position
 		/// </summary>
-		public event EventHandler<SelectionMovedForwardEventArgs> SelectionMovedForward;
+		public event EventHandler<SelectionMovedForwardEventArgs>? SelectionMovedForward;
 
 		/// <summary>
 		/// Event raised when focus-selection move to previous position
 		/// </summary>
-		public event EventHandler<SelectionMovedBackwardEventArgs> SelectionMovedBackward;
+		public event EventHandler<SelectionMovedBackwardEventArgs>? SelectionMovedBackward;
 
 		#endregion // Events
 	}

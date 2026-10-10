@@ -32,17 +32,17 @@ namespace unvell.ReoGrid.Actions
 	public class RemoveColumnsAction : WorksheetReusableAction
 	{
 		// main backups
-		private PartialGrid backupData = null;
-		private int[] backupWidths;
+		private PartialGrid? backupData = null;
+		private int[] backupWidths = null!;
 
 		// additional backups
-		internal List<NamedRange> deletedNamedRanges;
-		internal List<HighlightRange> deletedHighlightRanges;
-		internal Dictionary<NamedRange, BackupRangeInfo> changedNamedRange;
-		internal Dictionary<HighlightRange, BackupRangeInfo> changedHighlightRanges;
+		internal List<NamedRange>? deletedNamedRanges;
+		internal List<HighlightRange>? deletedHighlightRanges;
+		internal Dictionary<NamedRange, BackupRangeInfo>? changedNamedRange;
+		internal Dictionary<HighlightRange, BackupRangeInfo>? changedHighlightRanges;
 #if OUTLINE
-		internal List<IReoGridOutline> deletedOutlines;
-		internal Dictionary<IReoGridOutline, BackupRangeInfo> changedOutlines;
+		internal List<IReoGridOutline>? deletedOutlines;
+		internal Dictionary<IReoGridOutline, BackupRangeInfo>? changedOutlines;
 #endif // OUTLINE
 
 		/// <summary>

@@ -203,11 +203,11 @@ namespace unvell.ReoGrid
         {
             if (IsEditing)
             {
-                this.controlAdapter.EditControlCopy();
+                this.controlAdapter!.EditControlCopy();
             }
             else
             {
-                this.controlAdapter.ChangeCursor(CursorStyle.Busy);
+                this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
 
                 try
                 {
@@ -256,8 +256,8 @@ namespace unvell.ReoGrid
                     data.Add(item);
 
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
-                    var Clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
-                    Clipboard.SetDataAsync(data).Wait();
+                    var Clipboard = TopLevel.GetTopLevel(adapter!.ControlInstance as Control)?.Clipboard;
+                    Clipboard!.SetDataAsync(data).Wait();
 
 #endif // WINFORM || WPF
 
@@ -303,7 +303,7 @@ namespace unvell.ReoGrid
         {
             if (IsEditing)
             {
-                this.controlAdapter.EditControlPaste();
+                this.controlAdapter!.EditControlPaste();
             }
             else
             {
@@ -319,10 +319,10 @@ namespace unvell.ReoGrid
 
                 try
                 {
-                    this.controlAdapter.ChangeCursor(CursorStyle.Busy);
+                    this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
 
-                    PartialGrid partialGrid = null;
-                    string clipboardText = null;
+                    PartialGrid? partialGrid = null;
+                    string? clipboardText = null;
 
 #if WINFORM || WPF
                     DataObject data = Clipboard.GetDataObject() as DataObject;
@@ -337,10 +337,10 @@ namespace unvell.ReoGrid
                     }
 #elif AVALONIA
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
-                    var clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
+                    var clipboard = TopLevel.GetTopLevel(adapter!.ControlInstance as Control)?.Clipboard;
                     // In-process formats can only be read back from the DataTransfer
                     // instance still owned by this process; do not dispose it.
-                    var inProcessData = clipboard.TryGetInProcessDataAsync().Result;
+                    var inProcessData = clipboard!.TryGetInProcessDataAsync().Result;
                     partialGrid = inProcessData?.TryGetValueAsync(ClipBoardPartialGridFormat).Result;
                     clipboardText = clipboard.TryGetTextAsync().Result;
 #elif ANDROID
@@ -407,7 +407,7 @@ namespace unvell.ReoGrid
                                     {
                                         partialGrid.Cells.Iterate((row, col, cell) =>
                                         {
-                                            if (cell.IsMergedCell)
+                                            if (cell!.IsMergedCell)
                                             {
                                                 for (int r = startRow; r < cell.MergeEndPos.Row - cell.InternalRow + startRow + 1; r++)
                                                 {
@@ -501,7 +501,7 @@ namespace unvell.ReoGrid
                 }
                 finally
                 {
-                    this.controlAdapter.ChangeCursor(CursorStyle.Selection);
+                    this.controlAdapter!.ChangeCursor(CursorStyle.Selection);
 
                     RequestInvalidate();
                 }
@@ -528,7 +528,7 @@ namespace unvell.ReoGrid
             }
 
 #if EX_SCRIPT
-            object scriptReturn = RaiseScriptEvent("onpaste", new RSRangeObject(this, range));
+            object? scriptReturn = RaiseScriptEvent("onpaste", new RSRangeObject(this, range));
             if (scriptReturn != null && !ScriptRunningMachine.GetBoolValue(scriptReturn))
             {
                 return false;
@@ -550,7 +550,7 @@ namespace unvell.ReoGrid
         {
             if (IsEditing)
             {
-                this.controlAdapter.EditControlCut();
+                this.controlAdapter!.EditControlCut();
             }
             else
             {
@@ -569,7 +569,7 @@ namespace unvell.ReoGrid
                 }
 
 #if EX_SCRIPT
-                object scriptReturn = RaiseScriptEvent("oncut");
+                object? scriptReturn = RaiseScriptEvent("oncut");
                 if (scriptReturn != null && !ScriptRunningMachine.GetBoolValue(scriptReturn))
                 {
                     return false;
@@ -580,10 +580,10 @@ namespace unvell.ReoGrid
                 {
 #if AVALONIA
                     var adapter = this.controlAdapter as ReoGridControl.ReoGridAvaloniaControlAdapter;
-                    var clipboard = TopLevel.GetTopLevel(adapter.ControlInstance as Control)?.Clipboard;
+                    var clipboard = TopLevel.GetTopLevel(adapter!.ControlInstance as Control)?.Clipboard;
                     // In-process formats can only be read back from the DataTransfer
                     // instance still owned by this process; do not dispose it.
-                    var inProcessData = clipboard.TryGetInProcessDataAsync().Result;
+                    var inProcessData = clipboard!.TryGetInProcessDataAsync().Result;
                     var partialGrid = inProcessData?.TryGetValueAsync(ClipBoardPartialGridFormat).Result;
 #else
 					DataObject data = Clipboard.GetDataObject() as DataObject;
@@ -593,7 +593,7 @@ namespace unvell.ReoGrid
                     int startRow = selectionRange.Row;
                     int startCol = selectionRange.Col;
 
-                    int rows = partialGrid.Rows;
+                    int rows = partialGrid!.Rows;
                     int cols = partialGrid.Columns;
 
                     var range = new RangePosition(startRow, startCol, rows, cols);
@@ -669,38 +669,38 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Before a range will be pasted from Clipboard
         /// </summary>
-        public event EventHandler<BeforeRangeOperationEventArgs> BeforePaste;
+        public event EventHandler<BeforeRangeOperationEventArgs>? BeforePaste;
 
         /// <summary>
         /// When a range has been pasted into grid
         /// </summary>
-        public event EventHandler<RangeEventArgs> AfterPaste;
+        public event EventHandler<RangeEventArgs>? AfterPaste;
 
         /// <summary>
         /// When an error happened during perform paste
         /// </summary>
         [Obsolete("use ReoGridControl.ErrorHappened instead")]
-        public event EventHandler<RangeOperationErrorEventArgs> OnPasteError;
+        public event EventHandler<RangeOperationErrorEventArgs>? OnPasteError;
 
         /// <summary>
         /// Before a range to be copied into Clipboard
         /// </summary>
-        public event EventHandler<BeforeRangeOperationEventArgs> BeforeCopy;
+        public event EventHandler<BeforeRangeOperationEventArgs>? BeforeCopy;
 
         /// <summary>
         /// When a range has been copied into Clipboard
         /// </summary>
-        public event EventHandler<RangeEventArgs> AfterCopy;
+        public event EventHandler<RangeEventArgs>? AfterCopy;
 
         /// <summary>
         /// Before a range to be moved into Clipboard
         /// </summary>
-        public event EventHandler<BeforeRangeOperationEventArgs> BeforeCut;
+        public event EventHandler<BeforeRangeOperationEventArgs>? BeforeCut;
 
         /// <summary>
         /// After a range to be moved into Clipboard
         /// </summary>
-        public event EventHandler<RangeEventArgs> AfterCut;
+        public event EventHandler<RangeEventArgs>? AfterCut;
 
         #endregion // Events
     }

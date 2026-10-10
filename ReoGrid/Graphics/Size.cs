@@ -69,7 +69,7 @@ namespace unvell.ReoGrid.Graphics
 		/// </summary>
 		/// <param name="obj">Another object to be compared.</param>
 		/// <returns>True if specified object is size, and its width and height are same with this object.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is Size)) return false;
 

@@ -60,7 +60,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <summary>
 		/// Get or set the navigation url. (Redirected when AutoNavigation property is true)
 		/// </summary>
-		public string LinkURL { get; set; }
+		public string? LinkURL { get; set; }
 
 		/// <summary>
 		/// Create hyperlink cell body instance.
@@ -74,7 +74,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// Create instane of hyperlink cell body with specified navigation url and AutoNavigate property.
 		/// </summary>
 		/// <param name="navigationURL">Navigation url redirected to when hyperlink clicked. (Default is emtpy)</param>
-		public HyperlinkCell(string navigationURL)
+		public HyperlinkCell(string? navigationURL)
 			: this(navigationURL, true)
 		{
 		}
@@ -85,7 +85,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <param name="navigationURL">Navigation url redirected to when hyperlink clicked. (Default is emtpy)</param>
 		/// <param name="autoNavigate">Determine whether or not redirect to specified url 
 		/// when hyperlink clicked automatically. (Default is true)</param>
-		public HyperlinkCell(string navigationURL, bool autoNavigate)
+		public HyperlinkCell(string? navigationURL, bool autoNavigate)
 		{
 			this.ActivateColor = SolidColor.Red;
 			this.LinkColor = SolidColor.Blue;
@@ -139,7 +139,7 @@ namespace unvell.ReoGrid.CellTypes
 		{
 			this.IsPressed = true;
 
-			e.Cell.Style.TextColor = ActivateColor;
+			e.Cell!.Style.TextColor = ActivateColor;
 
 			return true;
 		}
@@ -161,7 +161,7 @@ namespace unvell.ReoGrid.CellTypes
 
 			this.IsPressed = false;
 
-			e.Cell.Style.TextColor = VisitedColor;
+			e.Cell!.Style.TextColor = VisitedColor;
 
 			return true;
 		}
@@ -173,7 +173,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <returns>True if event has been handled.</returns>
 		public override bool OnMouseEnter(CellMouseEventArgs e)
 		{
-			e.Worksheet.controlAdapter.ChangeSelectionCursor(CursorStyle.Hand);
+			e.Worksheet!.controlAdapter!.ChangeSelectionCursor(CursorStyle.Hand);
 			return false;
 		}
 
@@ -185,7 +185,7 @@ namespace unvell.ReoGrid.CellTypes
 		public override bool OnMouseLeave(CellMouseEventArgs e)
 		{
 			// change current cursor to hand
-			e.Worksheet.ControlAdapter.ChangeSelectionCursor(CursorStyle.PlatformDefault);
+			e.Worksheet!.ControlAdapter!.ChangeSelectionCursor(CursorStyle.PlatformDefault);
 			return false;
 		}
 
@@ -261,7 +261,7 @@ namespace unvell.ReoGrid.CellTypes
 				}
 			}
 
-			Click?.Invoke(this, null);
+			Click?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -269,7 +269,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">New data to be set</param>
 		/// <returns>Replacement data if needed</returns>
-		public override object OnSetData(object data)
+		public override object? OnSetData(object? data)
 		{
 			LinkURL = Convert.ToString(data);
 			return data;
@@ -278,7 +278,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <summary>
 		/// Event raised when hyperlink was preseed
 		/// </summary>
-		public event EventHandler Click;
+		public event EventHandler? Click;
 
 		/// <summary>
 		/// Determine whether or not redirect to navigation url when hyperlink was pressed

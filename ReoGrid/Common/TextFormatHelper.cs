@@ -162,7 +162,7 @@ namespace unvell.Common
 		/// <param name="p">boolean value to be encoded</param>
 		/// <param name="def">default boolean value used to compare whether the value is same as default</param>
 		/// <returns>encoded string of boolean value</returns>
-		public static string EncodeBool(bool p, bool def)
+		public static string? EncodeBool(bool p, bool def)
 		{
 			return p == def ? null : EncodeBool(p);
 		}
@@ -232,7 +232,7 @@ namespace unvell.Common
 			return WebColorRegex.IsMatch(data);
 		}
 
-		public static bool DecodeColor(string data, out SolidColor color)
+		public static bool DecodeColor(string? data, out SolidColor color)
 		{
 			if (!string.IsNullOrEmpty(data) && !data.Equals("none", StringComparison.InvariantCultureIgnoreCase))
 			{
@@ -394,21 +394,21 @@ namespace unvell.Common
 		}
 #endregion
 
-		public static float GetFloatValue(string str, float def)
+		public static float GetFloatValue(string? str, float def)
 		{
 			float.TryParse(str, out def);
 			return def;
 		}
-		public static float GetFloatValue(string str, float def, CultureInfo culture)
+		public static float GetFloatValue(string? str, float def, CultureInfo culture)
 		{
 			float.TryParse(str, NumberStyles.Any, culture, out def);
 			return def;
 		}
-		public static float GetFloatPixelValue(string str, float def)
+		public static float GetFloatPixelValue(string? str, float def)
 		{
 			return GetFloatPixelValue(str, def, CultureInfo.CurrentCulture);
 		}
-		public static float GetFloatPixelValue(string str, float def, CultureInfo culture)
+		public static float GetFloatPixelValue(string? str, float def, CultureInfo culture)
 		{
 			if (str == null) return def;
 			str = str.Trim();
@@ -419,24 +419,24 @@ namespace unvell.Common
 
 			return v;
 		}
-		public static int GetPixelValue(string str)
+		public static int GetPixelValue(string? str)
 		{
 			return (int)GetPixelValue(str, 0);
 		}
-		public static int GetPixelValue(string str, CultureInfo culture)
+		public static int GetPixelValue(string? str, CultureInfo culture)
 		{
 			return (int)GetPixelValue(str, 0, culture);
 		}
-		public static int GetPixelValue(string str, int def)
+		public static int GetPixelValue(string? str, int def)
 		{
 			return (int)GetFloatPixelValue(str, (float)def, CultureInfo.CurrentCulture);
 		}
-		public static int GetPixelValue(string str, int def, CultureInfo culture)
+		public static int GetPixelValue(string? str, int def, CultureInfo culture)
 		{
 			return (int)GetFloatPixelValue(str, (float)def, culture);
 		}
 
-		public static float GetPercentValue(string str, float def)
+		public static float GetPercentValue(string? str, float def)
 		{
 			if(string.IsNullOrEmpty(str)) return def;
 			string p = str.Substring(0, str.Length - 1).Trim();
@@ -445,7 +445,7 @@ namespace unvell.Common
 
 		public static readonly Regex AttrRegex
 			= new Regex(@"\s*([-_\w.]+)\s*:\s*((\'([^\']*)\')|([^;]*))\s*;?");
-		public static void ParseDataAttribute(string attr, Action<string, string> a)
+		public static void ParseDataAttribute(string? attr, Action<string, string> a)
 		{
 			if (attr != null)
 			{
@@ -467,7 +467,7 @@ namespace unvell.Common
 			{
 				if (key.Length > 0 && value != null)
 				{
-					FieldInfo fi = t.GetType().GetField(key);
+					FieldInfo? fi = t.GetType().GetField(key);
 					if (fi != null)
 					{
 						fi.SetValue(t, value);
@@ -476,12 +476,12 @@ namespace unvell.Common
 					{
 						key = key.Substring(0, 1).ToUpper() + key.Substring(1);
 
-						PropertyInfo pi = t.GetType().GetProperty(key);
+						PropertyInfo? pi = t.GetType().GetProperty(key);
 						if (pi == null)
 						{
 							pi = t.GetType().GetProperties().FirstOrDefault(p =>
 							{
-								XmlAttributeAttribute[] attrs
+								XmlAttributeAttribute[]? attrs
 									= p.GetCustomAttributes(typeof(XmlAttributeAttribute), true)
 									as XmlAttributeAttribute[];
 								return (attrs != null && attrs.Length > 0 && attrs[0] != null
@@ -518,7 +518,7 @@ namespace unvell.Common
 			return sb.ToString();
 		}
 
-		public static bool IsSwitchOn(string value)
+		public static bool IsSwitchOn(string? value)
 		{
 			return !string.IsNullOrEmpty(value)
 				&& (string.Equals(value, "1", StringComparison.CurrentCultureIgnoreCase)
@@ -527,12 +527,12 @@ namespace unvell.Common
 				|| string.Equals(value, "on", StringComparison.CurrentCultureIgnoreCase));
 		}
 
-		public static T LoadXml<T>(string filepath)
+		public static T? LoadXml<T>(string filepath)
 		{
 			XmlSerializer xmlReader = new XmlSerializer(typeof(T));
 			using (FileStream fs = new FileStream(filepath, FileMode.Open))
 			{
-				T t = (T)xmlReader.Deserialize(fs);
+				T? t = (T?)xmlReader.Deserialize(fs);
 				return t;
 			}
 		}

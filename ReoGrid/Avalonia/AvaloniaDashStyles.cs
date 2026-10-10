@@ -3,7 +3,7 @@ using Avalonia.Media;
 namespace unvell.ReoGrid.AvaloniaPlatform;
 class DashStyles
 {
-    public static RGDashStyle Solid => null;
+    public static RGDashStyle? Solid => null;
     public static RGDashStyle Dash => DashStyle.Dash;
     public static RGDashStyle Dot => DashStyle.DashDot;
     public static RGDashStyle DashDotDot => DashStyle.DashDotDot;

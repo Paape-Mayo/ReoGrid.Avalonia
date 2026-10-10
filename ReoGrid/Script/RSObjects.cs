@@ -35,9 +35,9 @@ namespace unvell.ReoGrid.Script
 	{
 		public IWorkbook workbook { get; set; }
 
-		public IVisualWorkbook ControlInstance { get; set; }
+		public IVisualWorkbook? ControlInstance { get; set; }
 
-		private RSWorksheetCollection worksheetCollection;
+		private RSWorksheetCollection? worksheetCollection;
 
 		public RSWorkbook(IWorkbook workbook)
 		{
@@ -57,12 +57,12 @@ namespace unvell.ReoGrid.Script
 			{
 				if (ControlInstance != null)
 				{
-					var rsWorksheet = ControlInstance.CurrentWorksheet.worksheetObj;
+					var rsWorksheet = ControlInstance.CurrentWorksheet!.worksheetObj;
 
 					if (rsWorksheet == null)
 					{
-						rsWorksheet = new RSWorksheet(ControlInstance.CurrentWorksheet);
-						ControlInstance.CurrentWorksheet.worksheetObj = rsWorksheet;
+						rsWorksheet = new RSWorksheet(ControlInstance.CurrentWorksheet!);
+						ControlInstance.CurrentWorksheet!.worksheetObj = rsWorksheet;
 					}
 
 					return rsWorksheet;
@@ -75,7 +75,7 @@ namespace unvell.ReoGrid.Script
 			{
 				if (obj is RSWorksheet rsSheet)
 				{
-					ControlInstance.CurrentWorksheet = rsSheet.Worksheet;
+					ControlInstance!.CurrentWorksheet = rsSheet.Worksheet;
 				}
 			});
 
@@ -88,7 +88,7 @@ namespace unvell.ReoGrid.Script
 			{
 				if (args.Length < 1) return null;
 
-				workbook.AddWorksheet(RSWorksheet.Unbox(args[0]));
+				workbook.AddWorksheet(RSWorksheet.Unbox(args[0])!);
 
 				return null;
 			});
@@ -97,7 +97,7 @@ namespace unvell.ReoGrid.Script
 			{
 				if (args.Length < 2) return null;
 
-				workbook.InsertWorksheet(ScriptRunningMachine.GetIntValue(args[0]), RSWorksheet.Unbox(args[1]));
+				workbook.InsertWorksheet(ScriptRunningMachine.GetIntValue(args[0]), RSWorksheet.Unbox(args[1])!);
 
 				return null;
 			});
@@ -106,7 +106,7 @@ namespace unvell.ReoGrid.Script
 			{
 				if (args.Length < 1) return null;
 
-				Worksheet sheet = RSWorksheet.Unbox(args[0]);
+				Worksheet? sheet = RSWorksheet.Unbox(args[0]);
 
 				if (sheet != null)
 				{
@@ -134,7 +134,7 @@ namespace unvell.ReoGrid.Script
 		{
 			foreach (var sheet in workbook.Worksheets)
 			{
-				yield return RSWorksheet.Box(sheet);
+				yield return RSWorksheet.Box(sheet)!;
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace unvell.ReoGrid.Script
 
 		public Worksheet Worksheet { get => sheet; private set => sheet = value; }
 
-		private RSSelectionObject selection;
+		private RSSelectionObject? selection;
 
 		public RSWorksheet(Worksheet sheet)
 		{
@@ -205,11 +205,11 @@ namespace unvell.ReoGrid.Script
 			this["cols"] = new ExternalProperty(() => { return sheet.ColumnCount; }, (v) => { sheet.SetCols(ScriptRunningMachine.GetIntValue(v)); });
 			this["getRow"] = new NativeFunctionObject("getRow", (srm, owner, args) =>
 			{
-				return args.Length == 0 ? null : new RSRowObject(sheet, sheet.GetRowHeader(ScriptRunningMachine.GetIntValue(args[0])));
+				return args.Length == 0 ? null : sheet.GetRowHeader(ScriptRunningMachine.GetIntValue(args[0])) is RowHeader row ? new RSRowObject(sheet, row) : null;
 			});
 			this["getCol"] = new NativeFunctionObject("getCol", (srm, owner, args) =>
 			{
-				return args.Length == 0 ? null : new RSColumnObject(sheet, sheet.GetColumnHeader(ScriptRunningMachine.GetIntValue(args[0])));
+				return args.Length == 0 ? null : sheet.GetColumnHeader(ScriptRunningMachine.GetIntValue(args[0])) is ColumnHeader col ? new RSColumnObject(sheet, col) : null;
 			});
 			#endregion
 
@@ -219,9 +219,9 @@ namespace unvell.ReoGrid.Script
 				if (args.Length < 1) return false;
 
 				RangePosition range = RSUtility.GetRangeFromValue(sheet, args[0]);
-				WorksheetRangeStyle styleObj = RSUtility.GetRangeStyleObject(args[0]);
+				WorksheetRangeStyle? styleObj = RSUtility.GetRangeStyleObject(args[0]);
 
-				sheet.SetRangeStyles(range, styleObj);
+				sheet.SetRangeStyles(range, styleObj!);
 
 				return styleObj;
 			});
@@ -302,7 +302,7 @@ namespace unvell.ReoGrid.Script
 
 		}
 
-		internal static RSWorksheet Box(object obj)
+		internal static RSWorksheet? Box(object obj)
 		{
 			if (obj is RSWorksheet)
 				return ((RSWorksheet)obj);
@@ -319,7 +319,7 @@ namespace unvell.ReoGrid.Script
 				return null;
 		}
 
-		internal static Worksheet Unbox(object obj)
+		internal static Worksheet? Unbox(object obj)
 		{
 			if (obj is RSWorksheet)
 				return ((RSWorksheet)obj).sheet;
@@ -336,7 +336,7 @@ namespace unvell.ReoGrid.Script
 	{
 		public RangePosition Range { get; set; }
 
-		public WorksheetRangeStyle Style { get; set; }
+		public WorksheetRangeStyle? Style { get; set; }
 
 		public RSRangeObject(Worksheet sheet)
 			: this(sheet, RangePosition.Empty)
@@ -359,7 +359,7 @@ namespace unvell.ReoGrid.Script
 				},
 				(v) =>
 				{
-					sheet.SetRangeStyles(this.Range, RSUtility.GetRangeStyleObject(v));
+					sheet.SetRangeStyles(this.Range, RSUtility.GetRangeStyleObject(v)!);
 				}
 			);
 
@@ -488,7 +488,7 @@ namespace unvell.ReoGrid.Script
 	{
 		private Worksheet sheet;
 
-		public RSCellStyleObject Style { get; set; }
+		public RSCellStyleObject? Style { get; set; }
 
 		private RowHeader rowHeader;
 
@@ -532,10 +532,10 @@ namespace unvell.ReoGrid.Script
 	{
 		private Worksheet sheet;
 		public CellPosition Pos { get; set; }
-		public Cell Cell { get; set; }
-		public RSCellStyleObject Style { get; set; }
+		public Cell? Cell { get; set; }
+		public RSCellStyleObject? Style { get; set; }
 
-		public RSCellObject(Worksheet sheet, CellPosition pos, Cell cell)
+		public RSCellObject(Worksheet sheet, CellPosition pos, Cell? cell)
 		{
 			this.sheet = sheet;
 			this.Pos = pos;
@@ -582,7 +582,7 @@ namespace unvell.ReoGrid.Script
 			this["row"] = new ExternalProperty(() => cell == null ? Pos.Row : cell.InternalRow);
 			this["col"] = new ExternalProperty(() => cell == null ? Pos.Col : cell.InternalCol);
 
-			this["address"] = new ExternalProperty(() => cell.Position.ToAddress());
+			this["address"] = new ExternalProperty(() => cell!.Position.ToAddress());
 		}
 
 		public override string Name
@@ -744,7 +744,7 @@ namespace unvell.ReoGrid.Script
 			else if (arg is string)
 			{
 				var addr = (string)arg;
-				NamedRange namedRange;
+				NamedRange? namedRange;
 				if (RangePosition.IsValidAddress(addr))
 				{
 					return new RangePosition(addr);
@@ -770,7 +770,7 @@ namespace unvell.ReoGrid.Script
 				return ((RSRangeObject)arg).Range;
 			}
 
-			ObjectValue obj = arg as ObjectValue;
+			ObjectValue? obj = arg as ObjectValue;
 			if (obj == null) return RangePosition.Empty;
 
 			RangePosition range = RangePosition.Empty;
@@ -878,7 +878,7 @@ namespace unvell.ReoGrid.Script
 					}
 					else if (args[0] is string || args[0] is System.Text.StringBuilder)
 					{
-						var addressOrName = Convert.ToString(args[0]);
+						var addressOrName = Convert.ToString(args[0])!;
 
 						if (CellPosition.IsValidAddress(addressOrName))
 						{
@@ -886,7 +886,7 @@ namespace unvell.ReoGrid.Script
 							return true;
 						}
 
-						NamedRange namedRange;
+						NamedRange? namedRange;
 						if (sheet.TryGetNamedRange(addressOrName, out namedRange))
 						{
 							pos = namedRange.StartPos;
@@ -937,12 +937,12 @@ namespace unvell.ReoGrid.Script
 
 		public static T DecodeSelectionMode<T>(object obj)
 		{
-			return (T)Enum.Parse(typeof(T), Convert.ToString(obj));
+			return (T)Enum.Parse(typeof(T), Convert.ToString(obj)!);
 		}
 
 		public static string EncodeSelectionMode(object enm)
 		{
-			string str = Convert.ToString(enm);
+			string str = Convert.ToString(enm)!;
 			if (!string.IsNullOrEmpty(str))
 			{
 				str = char.ToLower(str[0]).ToString() + str.Substring(1);
@@ -950,7 +950,7 @@ namespace unvell.ReoGrid.Script
 			return str;
 		}
 
-		internal static WorksheetRangeStyle GetRangeStyleObject(object p)
+		internal static WorksheetRangeStyle? GetRangeStyleObject(object p)
 		{
 			if (p is WorksheetRangeStyle)
 			{

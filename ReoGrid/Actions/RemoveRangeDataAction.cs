@@ -22,7 +22,7 @@ namespace unvell.ReoGrid.Actions
 	/// </summary>
 	public class RemoveRangeDataAction : WorksheetReusableAction
 	{
-		private object[,] backupData;
+		private object?[,] backupData = null!;
 
 		/// <summary>
 		/// Create action to remove data from specified range.

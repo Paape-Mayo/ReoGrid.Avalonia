@@ -39,9 +39,9 @@ namespace unvell.ReoGrid.DataFormat
 		/// </summary>
 		/// <param name="cell">Instance of cell to be formatted</param>
 		/// <returns></returns>
-		public string FormatCell(Cell cell)
+		public string? FormatCell(Cell cell)
 		{
-			object data = cell.InnerData;
+			object? data = cell.InnerData;
 
 			// check numeric
 			bool isNumeric = false;
@@ -74,7 +74,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 			else if (data is string)
 			{
-				string strdata = (data as string).Trim();
+				string strdata = (data as string)!.Trim();
 
 				isNumeric = double.TryParse(strdata, out value);
 
@@ -90,16 +90,16 @@ namespace unvell.ReoGrid.DataFormat
 
 			if (isNumeric)
 			{
-				string prefix = null;
-				string postfix = null;
+				string? prefix = null;
+				string? postfix = null;
 
-				INumberFormatArgs arg = cell.DataFormatArgs as INumberFormatArgs;
+				INumberFormatArgs? arg = cell.DataFormatArgs as INumberFormatArgs;
 
 				var numberPart = FormatNumberCellAndGetPattern(cell, ref value, arg);
 
 				if (arg is NumberFormatArgs)
 				{
-					NumberFormatArgs nargs = (NumberFormatArgs)cell.DataFormatArgs;
+					NumberFormatArgs nargs = (NumberFormatArgs)cell.DataFormatArgs!;
 					prefix = nargs.CustomNegativePrefix;
 					postfix = nargs.CustomNegativePostfix;
 				}
@@ -118,7 +118,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 		}
 
-		internal static string FormatNumberCellAndGetPattern(Cell cell, ref double value, INumberFormatArgs arg)
+		internal static string FormatNumberCellAndGetPattern(Cell cell, ref double value, INumberFormatArgs? arg)
 		{
 			if (cell.InnerStyle.HAlign == ReoGridHorAlign.General)
 			{
@@ -224,12 +224,12 @@ namespace unvell.ReoGrid.DataFormat
 			/// <summary>
 			/// Prefix symbol before negative numbers. (Requires that <code>NegativeStyle</code> set to <code>Custom</code>)
 			/// </summary>
-			string CustomNegativePrefix { get; set; }
+			string? CustomNegativePrefix { get; set; }
 
 			/// <summary>
 			/// Postfix symbol after negative numbers. (Requires that <code>NegativeStyle</code> set to <code>Custom</code>)
 			/// </summary>
-			string CustomNegativePostfix { get; set; }
+			string? CustomNegativePostfix { get; set; }
 		}
 
 		/// <summary>
@@ -265,19 +265,19 @@ namespace unvell.ReoGrid.DataFormat
 			/// <summary>
 			/// Prefix symbol before negative numbers. (Requires that <code>NegativeStyle</code> set to <code>Custom</code>)
 			/// </summary>
-			public string CustomNegativePrefix { get; set; }
+			public string? CustomNegativePrefix { get; set; }
 
 			/// <summary>
 			/// Postfix symbol after negative numbers. (Requires that <code>NegativeStyle</code> set to <code>Custom</code>)
 			/// </summary>
-			public string CustomNegativePostfix { get; set; }
+			public string? CustomNegativePostfix { get; set; }
 
 			/// <summary>
 			/// Compare to another argument instance of NumberFormatArgs.
 			/// </summary>
 			/// <param name="obj">Another instance to be compared.</param>
 			/// <returns>true if two argument object are same.</returns>
-			public override bool Equals(object obj)
+			public override bool Equals(object? obj)
 			{
 				if (!(obj is NumberFormatArgs)) return false;
 				NumberFormatArgs o = (NumberFormatArgs)obj;

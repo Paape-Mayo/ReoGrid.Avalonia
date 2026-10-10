@@ -45,9 +45,9 @@ namespace unvell.ReoGrid.Views
 
 		public override void Draw(CellDrawingContext dc)
 		{
-			var sheet = this.ViewportController.Worksheet;
+			var sheet = this.ViewportController!.Worksheet;
 
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			var linePen = dc.Renderer.GetPen(
 				controlStyle[ControlAppearanceColors.OutlinePanelBorder]);
@@ -77,9 +77,9 @@ namespace unvell.ReoGrid.Views
 		public override void Draw(CellDrawingContext dc)
 		{
 			var g = dc.Renderer;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
-			var outlines = sheet.outlines[Flag];
+			var outlines = sheet.GetOutlines(Flag);
 
 			g.BeginDrawHeaderText(1f);
 
@@ -123,7 +123,7 @@ namespace unvell.ReoGrid.Views
 		{
 			if (bounds.Contains(location))
 			{
-				var outlines = sheet.outlines[Flag];
+				var outlines = sheet.GetOutlines(Flag);
 
 				if (outlines != null)
 				{
@@ -184,7 +184,7 @@ namespace unvell.ReoGrid.Views
 
 		public override void UpdateView()
 		{
-			var outlines = sheet.outlines[RowOrColumn.Row];
+			var outlines = sheet.GetOutlines(RowOrColumn.Row);
 
 			if (outlines != null)
 			{
@@ -211,7 +211,7 @@ namespace unvell.ReoGrid.Views
 
 		public override void UpdateView()
 		{
-			var outlines = sheet.outlines[RowOrColumn.Column];
+			var outlines = sheet.GetOutlines(RowOrColumn.Column);
 
 			if (outlines != null)
 			{
@@ -242,7 +242,7 @@ namespace unvell.ReoGrid.Views
 			this.Flag = flag;
 		}
 
-		protected ReoGridOutline OutlineButtonHittest(OutlineCollection<ReoGridOutline> outlines, Point location)
+		protected ReoGridOutline? OutlineButtonHittest(OutlineCollection<ReoGridOutline> outlines, Point location)
 		{
 			foreach (var g in outlines)
 			{
@@ -273,7 +273,7 @@ namespace unvell.ReoGrid.Views
 
 				if (outlines != null)
 				{
-					ReoGridOutline outline = OutlineButtonHittest(outlines, location);
+					ReoGridOutline? outline = OutlineButtonHittest(outlines, location);
 
 					if (outline != null)
 					{
@@ -340,7 +340,7 @@ namespace unvell.ReoGrid.Views
 		public override void Draw(CellDrawingContext dc)
 		{
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			g.FillRectangle(bounds.X, bounds.Y, bounds.Width, bounds.Height + 1,
 				controlStyle[ControlAppearanceColors.OutlinePanelBackground]);
@@ -354,12 +354,12 @@ namespace unvell.ReoGrid.Views
 		public override void DrawView(CellDrawingContext dc)
 		{
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 #if DEBUG
 			Stopwatch sw = Stopwatch.StartNew();
 #endif
-			var outlines = sheet.outlines[RowOrColumn.Row];
+			var outlines = sheet.GetOutlines(RowOrColumn.Row);
 
 			if (outlines != null)
 			{
@@ -370,7 +370,7 @@ namespace unvell.ReoGrid.Views
 
 				for (int idx = 0; idx < outlines.Count; idx++)
 				{
-					OutlineGroup<ReoGridOutline> line = null;
+					OutlineGroup<ReoGridOutline>? line = null;
 
 					if (idx < outlines.Count - 1)
 					{
@@ -387,7 +387,7 @@ namespace unvell.ReoGrid.Views
 #if WINFORM
 								p.Width = 2;
 #elif WPF || AVALONIA
-								p.Thickness = 2;
+								if (p != null) p.Thickness = 2;
 #endif
 							}
 
@@ -416,7 +416,7 @@ namespace unvell.ReoGrid.Views
 #if WINFORM
 							p.Width = 1;
 #elif WPF || AVALONIA
-								p.Thickness = 1;
+								if (p != null) p.Thickness = 1;
 #endif
 							g.DrawRectangle(p, bbRect.X, bbRect.Y, bbRect.Width, bbRect.Height);
 						}
@@ -488,7 +488,7 @@ namespace unvell.ReoGrid.Views
 		public override void Draw(CellDrawingContext dc)
 		{
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			g.FillRectangle(bounds.X, bounds.Y, bounds.Width + 1, bounds.Height,
 				controlStyle[ControlAppearanceColors.OutlinePanelBackground]);
@@ -502,12 +502,12 @@ namespace unvell.ReoGrid.Views
 		public override void DrawView(CellDrawingContext dc)
 		{
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 #if DEBUG
 			Stopwatch sw = Stopwatch.StartNew();
 #endif
-			var outlines = sheet.outlines[RowOrColumn.Column];
+			var outlines = sheet.GetOutlines(RowOrColumn.Column);
 
 			if (outlines != null)
 			{
@@ -518,7 +518,7 @@ namespace unvell.ReoGrid.Views
 
 				for (int idx = 0; idx < outlines.Count; idx++)
 				{
-					OutlineGroup<ReoGridOutline> line = null;
+					OutlineGroup<ReoGridOutline>? line = null;
 
 					if (idx < outlines.Count - 1)
 					{
@@ -535,7 +535,7 @@ namespace unvell.ReoGrid.Views
 #if WINFORM
 								p.Width = 2;
 #elif WPF || AVALONIA
-								p.Thickness = 2;
+								if (p != null) p.Thickness = 2;
 #endif
 							}
 
@@ -566,7 +566,7 @@ namespace unvell.ReoGrid.Views
 #if WINFORM
 							p.Width = 1;
 #elif WPF || AVALONIA
-								p.Thickness = 1;
+								if (p != null) p.Thickness = 1;
 #endif
 							g.DrawRectangle(p, bbRect.X, bbRect.Y, bbRect.Width, bbRect.Height);
 						}

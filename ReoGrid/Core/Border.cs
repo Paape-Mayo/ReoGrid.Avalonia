@@ -46,7 +46,7 @@ namespace unvell.ReoGrid.Core
 			set { pos = value; }
 		}
 
-		public static ReoGridHBorder Clone(ReoGridHBorder source)
+		public static ReoGridHBorder? Clone(ReoGridHBorder? source)
 		{
 			return source == null ? null : new ReoGridHBorder
 			{
@@ -68,7 +68,7 @@ namespace unvell.ReoGrid.Core
 			set { pos = value; }
 		}
 
-		public static ReoGridVBorder Clone(ReoGridVBorder source)
+		public static ReoGridVBorder? Clone(ReoGridVBorder? source)
 		{
 			return source == null ? null : new ReoGridVBorder
 			{
@@ -261,12 +261,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event fired when any border styles be setted.
 		/// </summary>
-		public event EventHandler<BorderAddedEventArgs> BorderAdded;
+		public event EventHandler<BorderAddedEventArgs>? BorderAdded;
 
 		/// <summary>
 		/// Event fired when any border styles be removed.
 		/// </summary>
-		public event EventHandler<BorderRemovedEventArgs> BorderRemoved;
+		public event EventHandler<BorderRemovedEventArgs>? BorderRemoved;
 		#endregion
 
 		#region Get Border
@@ -300,7 +300,7 @@ namespace unvell.ReoGrid
 		/// <returns>Borders information object.</returns>
 		public RangeBorderInfoSet GetRangeBorders(string addressOrName, BorderPositions pos = BorderPositions.All, bool onlyCellsOwn = true)
 		{
-			NamedRange namedRange;
+			NamedRange? namedRange;
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
 				return GetRangeBorders(new RangePosition(addressOrName), pos, onlyCellsOwn);
@@ -340,8 +340,8 @@ namespace unvell.ReoGrid
 					if (borderInfo.Top != null)
 					{
 						if (hBorders[fixedRange.Row, c] == null
-							|| hBorders[fixedRange.Row, c].Style != null
-							&& !hBorders[fixedRange.Row, c].Style.Equals(borderInfo.Top))
+							|| hBorders[fixedRange.Row, c]!.Style != null
+							&& !hBorders[fixedRange.Row, c]!.Style.Equals(borderInfo.Top))
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Top;
 							break;
@@ -350,7 +350,7 @@ namespace unvell.ReoGrid
 					else
 					{
 						if (hBorders[fixedRange.Row, c] != null
-							&& hBorders[fixedRange.Row, c].Style != null)
+							&& hBorders[fixedRange.Row, c]!.Style != null)
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Top;
 							break;
@@ -368,8 +368,8 @@ namespace unvell.ReoGrid
 					for (int c = fixedRange.Col + 1; c <= fixedRange.EndCol; c++)
 					{
 						if (hBorders[fixedRange.EndRow + 1, c] == null
-							|| hBorders[fixedRange.EndRow + 1, c].Style != null
-							&& !hBorders[fixedRange.EndRow + 1, c].Style.Equals(borderInfo.Bottom))
+							|| hBorders[fixedRange.EndRow + 1, c]!.Style != null
+							&& !hBorders[fixedRange.EndRow + 1, c]!.Style.Equals(borderInfo.Bottom))
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Bottom;
 							break;
@@ -381,7 +381,7 @@ namespace unvell.ReoGrid
 					for (int c = fixedRange.Col + 1; c <= fixedRange.EndCol; c++)
 					{
 						if (hBorders[fixedRange.EndRow + 1, c] != null
-							&& hBorders[fixedRange.EndRow + 1, c].Style != null)
+							&& hBorders[fixedRange.EndRow + 1, c]!.Style != null)
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Bottom;
 							break;
@@ -399,8 +399,8 @@ namespace unvell.ReoGrid
 					for (int r = fixedRange.Row + 1; r < fixedRange.EndRow; r++)
 					{
 						if (vBorders[r, fixedRange.Col] == null
-							|| vBorders[r, fixedRange.Col].Style != null
-							&& !vBorders[r, fixedRange.Col].Style.Equals(borderInfo.Left))
+							|| vBorders[r, fixedRange.Col]!.Style != null
+							&& !vBorders[r, fixedRange.Col]!.Style.Equals(borderInfo.Left))
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Left;
 							break;
@@ -412,7 +412,7 @@ namespace unvell.ReoGrid
 					for (int r = fixedRange.Row + 1; r <= fixedRange.EndRow; r++)
 					{
 						if (vBorders[r, fixedRange.Col] != null
-							&& vBorders[r, fixedRange.Col].Style != null)
+							&& vBorders[r, fixedRange.Col]!.Style != null)
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Left;
 							break;
@@ -430,8 +430,8 @@ namespace unvell.ReoGrid
 					for (int r = fixedRange.Row + 1; r < fixedRange.EndRow; r++)
 					{
 						if (vBorders[r, fixedRange.EndCol + 1] == null
-							|| vBorders[r, fixedRange.EndCol + 1].Style != null
-							&& !vBorders[r, fixedRange.EndCol + 1].Style.Equals(borderInfo.Right))
+							|| vBorders[r, fixedRange.EndCol + 1]!.Style != null
+							&& !vBorders[r, fixedRange.EndCol + 1]!.Style.Equals(borderInfo.Right))
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Right;
 							break;
@@ -443,7 +443,7 @@ namespace unvell.ReoGrid
 					for (int r = fixedRange.Row + 1; r < fixedRange.EndRow; r++)
 					{
 						if (vBorders[r, fixedRange.EndCol + 1] != null
-							&& vBorders[r, fixedRange.EndCol + 1].Style != null)
+							&& vBorders[r, fixedRange.EndCol + 1]!.Style != null)
 						{
 							borderInfo.NonUniformPos |= BorderPositions.Right;
 							break;
@@ -464,7 +464,7 @@ namespace unvell.ReoGrid
 				{
 					for (int c = fixedRange.Col; c <= hbEndCol;)
 					{
-						ReoGridHBorder hBorder = hBorders[r, c];
+						ReoGridHBorder? hBorder = hBorders[r, c];
 						if (hBorder != null)
 						{
 							if (hBorder.Span == 0)
@@ -513,7 +513,7 @@ namespace unvell.ReoGrid
 				{
 					for (int r = fixedRange.Row; r <= vbEndRow;)
 					{
-						ReoGridVBorder vBorder = vBorders[r, c];
+						ReoGridVBorder? vBorder = vBorders[r, c];
 						if (vBorder != null)
 						{
 							if (vBorder.Span == 0)
@@ -558,30 +558,30 @@ namespace unvell.ReoGrid
 			if (pos == BorderPositions.Top
 				&& hBorders[row, col] != null
 				&& (!onlyGridOwn
-				|| (hBorders[row, col].Pos & HBorderOwnerPosition.Top) == HBorderOwnerPosition.Top))
+				|| (hBorders[row, col]!.Pos & HBorderOwnerPosition.Top) == HBorderOwnerPosition.Top))
 			{
-				return hBorders[row, col].Style;
+				return hBorders[row, col]!.Style;
 			}
 			else if (pos == BorderPositions.Bottom
 				&& hBorders[row + 1, col] != null
 				&& (!onlyGridOwn
-				|| (hBorders[row + 1, col].Pos & HBorderOwnerPosition.Bottom) == HBorderOwnerPosition.Bottom))
+				|| (hBorders[row + 1, col]!.Pos & HBorderOwnerPosition.Bottom) == HBorderOwnerPosition.Bottom))
 			{
-				return hBorders[row + 1, col].Style;
+				return hBorders[row + 1, col]!.Style;
 			}
 			else if (pos == BorderPositions.Left
 				&& vBorders[row, col] != null
 				&& (!onlyGridOwn
-				|| (vBorders[row, col].Pos & VBorderOwnerPosition.Left) == VBorderOwnerPosition.Left))
+				|| (vBorders[row, col]!.Pos & VBorderOwnerPosition.Left) == VBorderOwnerPosition.Left))
 			{
-				return vBorders[row, col].Style;
+				return vBorders[row, col]!.Style;
 			}
 			else if (pos == BorderPositions.Right
 				&& vBorders[row, col + 1] != null
 				&& (!onlyGridOwn
-				|| (vBorders[row, col + 1].Pos & VBorderOwnerPosition.Right) == VBorderOwnerPosition.Right))
+				|| (vBorders[row, col + 1]!.Pos & VBorderOwnerPosition.Right) == VBorderOwnerPosition.Right))
 			{
-				return vBorders[row, col + 1].Style;
+				return vBorders[row, col + 1]!.Style;
 			}
 			else
 				return RangeBorderStyle.Empty;
@@ -665,7 +665,7 @@ namespace unvell.ReoGrid
 
 		internal ReoGridHBorder GetHBorder(int row, int col)
 		{
-			ReoGridHBorder border = hBorders[row, col];
+			ReoGridHBorder? border = hBorders[row, col];
 			if (border == null)
 			{
 				border = hBorders[row, col] = new ReoGridHBorder();
@@ -674,7 +674,7 @@ namespace unvell.ReoGrid
 		}
 		internal ReoGridVBorder GetVBorder(int row, int col)
 		{
-			ReoGridVBorder border = vBorders[row, col];
+			ReoGridVBorder? border = vBorders[row, col];
 			if (border == null)
 			{
 				border = vBorders[row, col] = new ReoGridVBorder();
@@ -682,18 +682,18 @@ namespace unvell.ReoGrid
 			return border;
 		}
 
-		internal ReoGridHBorder RetrieveHBorder(int row, int col)
+		internal ReoGridHBorder? RetrieveHBorder(int row, int col)
 		{
 			return hBorders[row, col];
 		}
-		internal ReoGridVBorder RetrieveVBorder(int row, int col)
+		internal ReoGridVBorder? RetrieveVBorder(int row, int col)
 		{
 			return vBorders[row, col];
 		}
 
-		internal ReoGridHBorder GetValidHBorderByPos(int row, int col, HBorderOwnerPosition pos)
+		internal ReoGridHBorder? GetValidHBorderByPos(int row, int col, HBorderOwnerPosition pos)
 		{
-			Core.ReoGridHBorder b = hBorders[row, col];
+			Core.ReoGridHBorder? b = hBorders[row, col];
 			if (b == null || b.Span == 0)
 				return null;
 			else if ((b.Pos & pos) == pos)
@@ -701,9 +701,9 @@ namespace unvell.ReoGrid
 			else
 				return null;
 		}
-		internal ReoGridVBorder GetValidVBorderByPos(int row, int col, VBorderOwnerPosition pos)
+		internal ReoGridVBorder? GetValidVBorderByPos(int row, int col, VBorderOwnerPosition pos)
 		{
-			Core.ReoGridVBorder b = vBorders[row, col];
+			Core.ReoGridVBorder? b = vBorders[row, col];
 			if (b == null || b.Span == 0)
 				return null;
 			else if ((b.Pos & pos) == pos)
@@ -719,15 +719,15 @@ namespace unvell.ReoGrid
 		{
 			if (col < 1) return;
 
-			ReoGridHBorder prevBorder = hBorders[row, col - 1];
+			ReoGridHBorder? prevBorder = hBorders[row, col - 1];
 			if (prevBorder != null && prevBorder.Span > 1)
 			{
 				int c = col - 1;
 				int offset = prevBorder.Span;
 				while (c >= 0)
 				{
-					if (hBorders[row, c] == null || hBorders[row, c].Span <= 1) break;
-					hBorders[row, c].Span -= offset - 1;
+					if (hBorders[row, c] == null || hBorders[row, c]!.Span <= 1) break;
+					hBorders[row, c]!.Span -= offset - 1;
 					c--;
 				}
 			}
@@ -765,7 +765,7 @@ namespace unvell.ReoGrid
 					return c - 1;
 				else if (hb == null && borderStyle != null)
 					return c - 1;
-				else if (!hb.Style.Equals(borderStyle))
+				else if (!hb!.Style.Equals(borderStyle))
 					return c - 1;
 			}
 
@@ -815,8 +815,8 @@ namespace unvell.ReoGrid
 			{
 				if (row > 0)
 				{
-					Cell cell1 = cells[row - 1, k];
-					Cell cell2 = cells[row, k];
+					Cell? cell1 = cells[row - 1, k];
+					Cell? cell2 = cells[row, k];
 
 					if (cell1 != null && cell2 != null
 						&& !cell1.MergeEndPos.IsEmpty
@@ -916,15 +916,15 @@ namespace unvell.ReoGrid
 		{
 			if (row < 1) return;
 
-			ReoGridVBorder prevBorder = vBorders[row - 1, col];
+			ReoGridVBorder? prevBorder = vBorders[row - 1, col];
 			if (prevBorder != null && prevBorder.Span > 1)
 			{
 				int r = row - 1;
 				int offset = prevBorder.Span;
 				while (r >= 0)
 				{
-					if (vBorders[r, col] == null || vBorders[r, col].Span <= 1) break;
-					vBorders[r, col].Span -= offset - 1;
+					if (vBorders[r, col] == null || vBorders[r, col]!.Span <= 1) break;
+					vBorders[r, col]!.Span -= offset - 1;
 					r--;
 				}
 			}
@@ -952,8 +952,8 @@ namespace unvell.ReoGrid
 			{
 				if (col > 0)
 				{
-					Cell cell1 = cells[k, col - 1];
-					Cell cell2 = cells[k, col];
+					Cell? cell1 = cells[k, col - 1];
+					Cell? cell2 = cells[k, col];
 
 					if (cell1 != null && cell2 != null
 												&& !cell1.MergeStartPos.IsEmpty
@@ -1214,7 +1214,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">Object to be compared</param>
 		/// <returns>True if two object are same; otherwise return false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj == null && this.IsEmpty) return true;
 			if (!(obj is RangeBorderStyle)) return false;
@@ -1229,7 +1229,7 @@ namespace unvell.ReoGrid
 		/// <param name="s1">First style to be compared.</param>
 		/// <param name="s2">Second style to be compared.</param>
 		/// <returns>Return true if two styles are same; Otherwise return false.</returns>
-		public static bool operator ==(RangeBorderStyle s1, object s2)
+		public static bool operator ==(RangeBorderStyle s1, object? s2)
 		{
 			return s1.Equals(s2);
 		}
@@ -1240,7 +1240,7 @@ namespace unvell.ReoGrid
 		/// <param name="s1">First style to be compared.</param>
 		/// <param name="s2">Second style to be compared.</param>
 		/// <returns>Return true if two styles are same; Otherwise return false.</returns>
-		public static bool operator !=(RangeBorderStyle s1, object s2)
+		public static bool operator !=(RangeBorderStyle s1, object? s2)
 		{
 			return !s1.Equals(s2);
 		}
@@ -1519,13 +1519,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Left, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Left, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Left, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Left, value);
 			}
 		}
 
@@ -1538,13 +1538,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Top, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Top, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Top, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Top, value);
 			}
 		}
 
@@ -1557,13 +1557,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Right, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Right, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Right, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Right, value);
 			}
 		}
 
@@ -1576,13 +1576,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Bottom, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Bottom, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Bottom, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Bottom, value);
 			}
 		}
 
@@ -1595,13 +1595,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Outside, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.Outside, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Outside, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.PositionAsRange, BorderPositions.Outside, value);
 			}
 		}
 
@@ -1614,13 +1614,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.cell.Worksheet.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.All, true);
+				return this.cell.Worksheet!.GetGridBorder(this.cell.Row, this.cell.Column, BorderPositions.All, true);
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.cell.Worksheet.SetRangeBorders(this.cell.Row, this.cell.Column, 1, 1, BorderPositions.All, value);
+				this.cell.Worksheet!.SetRangeBorders(this.cell.Row, this.cell.Column, 1, 1, BorderPositions.All, value);
 			}
 		}
 	}
@@ -1656,13 +1656,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.Left, true).Left;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.Left, true).Left;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.Left, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.Left, value);
 			}
 		}
 
@@ -1675,13 +1675,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.Top, true).Top;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.Top, true).Top;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.Top, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.Top, value);
 			}
 		}
 
@@ -1694,13 +1694,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.Right, true).Right;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.Right, true).Right;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.Right, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.Right, value);
 			}
 		}
 
@@ -1713,13 +1713,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.Bottom, true).Bottom;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.Bottom, true).Bottom;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.Bottom, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.Bottom, value);
 			}
 		}
 
@@ -1732,13 +1732,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.InsideAll, true).InsideHorizontal; // TODO: no outline available here
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.InsideAll, true).InsideHorizontal; // TODO: no outline available here
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.InsideAll, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.InsideAll, value);
 			}
 		}
 
@@ -1751,13 +1751,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.InsideHorizontal, true).InsideHorizontal;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.InsideHorizontal, true).InsideHorizontal;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.InsideHorizontal, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.InsideHorizontal, value);
 			}
 		}
 
@@ -1770,13 +1770,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.InsideVertical, true).InsideVertical;
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.InsideVertical, true).InsideVertical;
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.InsideVertical, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.InsideVertical, value);
 			}
 		}
 
@@ -1789,13 +1789,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.Outside, true).Left; // TODO: no outline available here
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.Outside, true).Left; // TODO: no outline available here
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.Outside, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.Outside, value);
 			}
 		}
 
@@ -1808,13 +1808,13 @@ namespace unvell.ReoGrid
 			{
 				CheckForOwnerAssociated();
 
-				return this.range.Worksheet.GetRangeBorders(this.Position, BorderPositions.All, true).Left; // TODO: no outline available here
+				return this.range.Worksheet!.GetRangeBorders(this.Position, BorderPositions.All, true).Left; // TODO: no outline available here
 			}
 			set
 			{
 				CheckForOwnerAssociated();
 
-				this.range.Worksheet.SetRangeBorders(this.Position, BorderPositions.All, value);
+				this.range.Worksheet!.SetRangeBorders(this.Position, BorderPositions.All, value);
 			}
 		}
 

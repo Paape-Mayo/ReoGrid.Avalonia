@@ -29,12 +29,12 @@ namespace unvell.ReoGrid
 				SolidColor.Brown, SolidColor.SeaGreen, SolidColor.Orange,
 				SolidColor.IndianRed };
 
-		internal HighlightRange focusHighlightRange;
+		internal HighlightRange? focusHighlightRange;
 
 		/// <summary>
 		/// Get or set the focus highlight range
 		/// </summary>
-		public HighlightRange FocusHighlightRange
+		public HighlightRange? FocusHighlightRange
 		{
 			get
 			{
@@ -46,7 +46,7 @@ namespace unvell.ReoGrid
 
 				if (this.focusHighlightRange != null)
 				{
-					this.controlAdapter.StartTimer();
+					this.controlAdapter!.StartTimer();
 				}
 			}
 		}
@@ -57,7 +57,7 @@ namespace unvell.ReoGrid
 
 		internal List<HighlightRange> highlightRanges = new List<HighlightRange>();
 
-		private HighlightRangeCollection highlightRangeCollection;
+		private HighlightRangeCollection? highlightRangeCollection;
 
 		/// <summary>
 		/// Collection of highlighted ranges
@@ -142,7 +142,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="address">Address or name to locate a range on worksheet</param>
 		/// <returns>Instance of highlight range on worksheet</returns>
-		public HighlightRange AddHighlightRange(string address)
+		public HighlightRange? AddHighlightRange(string address)
 		{
 			if (RangePosition.IsValidAddress(address))
 			{
@@ -277,7 +277,7 @@ namespace unvell.ReoGrid
 		{
 			if (focusHighlightRange == null)
 			{
-				this.controlAdapter.StopTimer();
+				this.controlAdapter!.StopTimer();
 			}
 			else
 			{
@@ -299,7 +299,7 @@ namespace unvell.ReoGrid
 				this.Worksheet = grid;
 			}
 
-			public HighlightRange Add(string address)
+			public HighlightRange? Add(string address)
 			{
 				return Worksheet.AddHighlightRange(address);
 			}
@@ -374,7 +374,7 @@ namespace unvell.ReoGrid
 			{
 				this.highlightColor = value;
 
-				this.Worksheet.RequestInvalidate();
+				this.Worksheet!.RequestInvalidate();
 			}
 		}
 

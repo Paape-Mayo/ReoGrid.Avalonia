@@ -110,7 +110,7 @@ namespace unvell.ReoGrid.Views
 
                 for (int c = visibleRegion.startCol; c < toCol;)
                 {
-                    Cell cell = sheet.cells[r, c];
+                    Cell? cell = sheet.cells[r, c];
 
                     if (cell == null)
                     {
@@ -146,7 +146,7 @@ namespace unvell.ReoGrid.Views
                             || cell.MergeStartPos.Col < visibleRegion.startCol
                             && cell.MergeEndPos.Col > visibleRegion.endCol))
                         {
-                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos);
+                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos)!;
 
                             if (!drawedCells.Contains(mergedStartCell))
                             {
@@ -181,7 +181,7 @@ namespace unvell.ReoGrid.Views
 
                 for (int c = visibleRegion.startCol; c < toCol && c <= sheet.cells.MaxCol;)
                 {
-                    Cell cell = sheet.cells[r, c];
+                    Cell? cell = sheet.cells[r, c];
 
                     // draw cell onyl when cell's instance existing
                     // and bounds of cell must be > 1 (minimum is 1, including one pixel border)
@@ -211,11 +211,11 @@ namespace unvell.ReoGrid.Views
                             //&& hasContent
                             )
                         {
-                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos);
+                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos)!;
 
                             if (!string.IsNullOrEmpty(mergedStartCell.DisplayText) || mergedStartCell.body != null)
                             {
-                                DrawCell(dc, sheet.GetCell(cell.MergeStartPos));
+                                DrawCell(dc, sheet.GetCell(cell.MergeStartPos)!);
                             }
                             c = cell.MergeEndPos.Col + 1;
                         }
@@ -229,7 +229,7 @@ namespace unvell.ReoGrid.Views
                             || cell.MergeStartPos.Col < visibleRegion.startCol
                             && cell.MergeEndPos.Col > visibleRegion.endCol))
                         {
-                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos);
+                            var mergedStartCell = sheet.GetCell(cell.MergeStartPos)!;
 
                             if (!drawedCells.Contains(mergedStartCell))
                             {
@@ -276,7 +276,7 @@ namespace unvell.ReoGrid.Views
                 {
                     int y = r == sheet.rows.Count ? sheet.rows[r - 1].Bottom : sheet.rows[r].Top;
 
-                    ReoGridVBorder cellBorder = sheet.vBorders[r, c];
+                    ReoGridVBorder? cellBorder = sheet.vBorders[r, c];
                     if (cellBorder != null && cellBorder.Span > 0 && cellBorder.Style != null)
                     {
                         int endRow = r + Math.Min(cellBorder.Span - 1, visibleRegion.endRow);
@@ -314,7 +314,7 @@ namespace unvell.ReoGrid.Views
                 {
                     int x = c == sheet.cols.Count ? sheet.cols[c - 1].Right : sheet.cols[c].Left;
 
-                    ReoGridHBorder cellBorder = sheet.hBorders[r, c];
+                    ReoGridHBorder? cellBorder = sheet.hBorders[r, c];
                     if (cellBorder != null && cellBorder.Span > 0 && cellBorder.Style != null)
                     {
                         int endCol = c + Math.Min(cellBorder.Span - 1, visibleRegion.endCol);
@@ -506,7 +506,7 @@ namespace unvell.ReoGrid.Views
 
         internal static Rectangle GetScaledAndClippedRangeRect(IViewport view, CellPosition startPos, CellPosition endPos, float borderWidth)
         {
-            var sheet = view.ViewportController.Worksheet;
+            var sheet = view.ViewportController!.Worksheet;
             Rectangle rangeRect = sheet.GetRangeBounds(startPos, endPos);
 
             var rowHead = sheet.rows[startPos.Row];
@@ -602,7 +602,7 @@ namespace unvell.ReoGrid.Views
             int endRow = visibleRegion.endRow + (dc.FullCellClip ? 0 : 1);
             int endCol = visibleRegion.endCol + (dc.FullCellClip ? 0 : 1);
 
-            render.BeginDrawLine(1, sheet.controlAdapter.ControlStyle.Colors[ControlAppearanceColors.GridLine]);
+            render.BeginDrawLine(1, sheet.controlAdapter!.ControlStyle.Colors[ControlAppearanceColors.GridLine]);
 
             #region Horizontal line
             // horizontal line
@@ -614,7 +614,7 @@ namespace unvell.ReoGrid.Views
                 for (int c = visibleRegion.startCol; c < endCol; c++)
                 {
                     // skip horizontal border - line start
-                    ReoGridHBorder cellBorder = null;
+                    ReoGridHBorder? cellBorder = null;
 
                     int x = sheet.cols[c].Left;
                     int x2 = x;// sheet.cols[c].Right;
@@ -631,7 +631,7 @@ namespace unvell.ReoGrid.Views
 
                         if (r > 0)
                         {
-                            Cell cell = this.sheet.cells[r, c];
+                            Cell? cell = this.sheet.cells[r, c];
 
                             if (cell != null && cell.InnerStyle.BackColor.A > 0)
                             {
@@ -657,7 +657,7 @@ namespace unvell.ReoGrid.Views
 
                 for (int r = visibleRegion.startRow; r < endRow; r++)
                 {
-                    ReoGridVBorder cellBorder = null;
+                    ReoGridVBorder? cellBorder = null;
 
                     int y = sheet.rows[r].Top;
                     int y2 = y;// sheet.rows[r].Bottom;
@@ -673,7 +673,7 @@ namespace unvell.ReoGrid.Views
 
                         if (c > 0)
                         {
-                            Cell cell = this.sheet.cells[r, c];
+                            Cell? cell = this.sheet.cells[r, c];
                             if (cell != null && cell.InnerStyle.BackColor.A > 0)
                             {
                                 break;
@@ -830,7 +830,7 @@ namespace unvell.ReoGrid.Views
                     textColor = cell.InnerStyle.TextColor;
                 }
                 // default cell text color
-                else if (!sheet.controlAdapter.ControlStyle.TryGetColor(ControlAppearanceColors.GridText, out textColor))
+                else if (!sheet.controlAdapter!.ControlStyle.TryGetColor(ControlAppearanceColors.GridText, out textColor))
                 {
                     // default built-in text
                     textColor = SolidColor.Black;
@@ -917,7 +917,7 @@ namespace unvell.ReoGrid.Views
         #endregion // DrawCell Text
 
         #region DrawCell Background
-        internal void DrawCellBackground(CellDrawingContext dc, int row, int col, Cell cell, bool refPosition = false)
+        internal void DrawCellBackground(CellDrawingContext dc, int row, int col, Cell? cell, bool refPosition = false)
         {
             WorksheetRangeStyle style;
 
@@ -973,7 +973,7 @@ namespace unvell.ReoGrid.Views
                 && sheet.SelectionStyle != WorksheetSelectionStyle.None)
             {
                 var g = dc.Graphics;
-                var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+                var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
                 var selectionBorderWidth = controlStyle.SelectionBorderWidth;
 
@@ -1208,7 +1208,7 @@ namespace unvell.ReoGrid.Views
                         }
 
 #if EX_SCRIPT
-                        object scriptReturn = sheet.RaiseScriptEvent("onmousedown", RSUtility.CreatePosObject(pos));
+                        object? scriptReturn = sheet.RaiseScriptEvent("onmousedown", RSUtility.CreatePosObject(pos));
                         if (scriptReturn != null && !ScriptRunningMachine.GetBoolValue(scriptReturn))
                         {
                             return true;
@@ -1261,7 +1261,7 @@ namespace unvell.ReoGrid.Views
 
                             if (buttons == MouseButtons.Right)
                             {
-                                sheet.controlAdapter.ShowContextMenuStrip(ViewTypes.None, PointToController(location));
+                                sheet.controlAdapter!.ShowContextMenuStrip(ViewTypes.None, PointToController(location));
                             }
 
                             // block other processes
@@ -1310,7 +1310,7 @@ namespace unvell.ReoGrid.Views
                             {
                                 if (CellsViewport.SelectDragCornerHitTest(this.sheet, location))
                                 {
-                                    sheet.controlAdapter.ChangeCursor(CursorStyle.Cross);
+                                    sheet.controlAdapter!.ChangeCursor(CursorStyle.Cross);
                                     cursorChanged = true;
                                     isProcessed = true;
                                 }
@@ -1329,7 +1329,7 @@ namespace unvell.ReoGrid.Views
 
                                 if (selHover)
                                 {
-                                    sheet.controlAdapter.ChangeCursor(CursorStyle.Move);
+                                    sheet.controlAdapter!.ChangeCursor(CursorStyle.Move);
                                     cursorChanged = true;
                                     isProcessed = true;
                                 }
@@ -1351,7 +1351,7 @@ namespace unvell.ReoGrid.Views
 
                                     if (hover)
                                     {
-                                        sheet.controlAdapter.ChangeCursor(CursorStyle.Move);
+                                        sheet.controlAdapter!.ChangeCursor(CursorStyle.Move);
                                         cursorChanged = true;
                                     }
 
@@ -1437,7 +1437,7 @@ namespace unvell.ReoGrid.Views
                                         if (evtArg.CursorStyle != CursorStyle.PlatformDefault)
                                         {
                                             cursorChanged = true;
-                                            sheet.controlAdapter.ChangeCursor(evtArg.CursorStyle);
+                                            sheet.controlAdapter!.ChangeCursor(evtArg.CursorStyle);
                                         }
                                     }
                                 }
@@ -1445,7 +1445,7 @@ namespace unvell.ReoGrid.Views
 
                             if (!cursorChanged)
                             {
-                                sheet.controlAdapter.ChangeCursor(CursorStyle.Selection);
+                                sheet.controlAdapter!.ChangeCursor(CursorStyle.Selection);
                             }
                         }
                         #endregion // Cell Hover - Cells
@@ -1639,7 +1639,7 @@ namespace unvell.ReoGrid.Views
                     break;
 
                 default:
-                    sheet.controlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
+                    sheet.controlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
                     break;
             }
 
@@ -1727,7 +1727,7 @@ namespace unvell.ReoGrid.Views
                     sheet.focusMovingRangeOffset = CellPosition.Empty;
                     sheet.draggingSelectionRange = RangePosition.Empty;
                     sheet.operationStatus = OperationStatus.Default;
-                    sheet.controlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
+                    sheet.controlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
                     sheet.RequestInvalidate();
                     isProcessed = true;
                     #endregion // Submit Selection Range Move
@@ -1800,7 +1800,7 @@ namespace unvell.ReoGrid.Views
                             sheet.RaiseSelectionRangeChanged(new RangeEventArgs(sheet.selectionRange));
 
 #if EX_SCRIPT
-                            object scriptReturn = sheet.RaiseScriptEvent("onmouseup", RSUtility.CreatePosObject(sheet.selEnd));
+                            object? scriptReturn = sheet.RaiseScriptEvent("onmouseup", RSUtility.CreatePosObject(sheet.selEnd));
 
                             // run if script return true or nothing
                             if (scriptReturn == null || ScriptRunningMachine.GetBoolValue(scriptReturn))
@@ -1951,7 +1951,7 @@ namespace unvell.ReoGrid.Views
                 {
                     this.sheet.StartEdit();
 
-                    this.sheet.controlAdapter.EditControlApplySystemMouseDown();
+                    this.sheet.controlAdapter!.EditControlApplySystemMouseDown();
 
                     return true;
                 }
@@ -1966,7 +1966,7 @@ namespace unvell.ReoGrid.Views
         #region Utility
         internal static int GetColByPoint(IViewport view, RGFloat x)
         {
-            Worksheet sheet = view.ViewportController.Worksheet;
+            Worksheet sheet = view.ViewportController!.Worksheet;
 
             if (sheet.cols.Count <= 0 || x < sheet.cols[0].Right) return 0;
 
@@ -1995,7 +1995,7 @@ namespace unvell.ReoGrid.Views
 
         internal static int GetRowByPoint(IViewport view, RGFloat y)
         {
-            Worksheet sheet = view.ViewportController.Worksheet;
+            Worksheet sheet = view.ViewportController!.Worksheet;
 
             if (sheet.rows.Count <= 0 || y < sheet.rows[0].Bottom) return 0;
 
@@ -2052,7 +2052,7 @@ namespace unvell.ReoGrid.Views
         /// <param name="pos">Cell position to be converted.</param>
         /// <param name="p">Output point of the cell position related to grid control.</param>
         /// <returns>True if conversion is successful; Otherwise return false.</returns>
-        public static bool TryGetCellPositionToControl(IView view, CellPosition pos, out Point p)
+        public static bool TryGetCellPositionToControl(IView? view, CellPosition pos, out Point p)
         {
             if (view == null)
             {
@@ -2060,7 +2060,7 @@ namespace unvell.ReoGrid.Views
                 return false;
             }
 
-            var sheet = view.ViewportController.Worksheet;
+            var sheet = view.ViewportController!.Worksheet;
 
             if (sheet == null)
             {
@@ -2070,7 +2070,7 @@ namespace unvell.ReoGrid.Views
 
             pos = sheet.FixPos(pos);
 
-            IViewport viewport = view as IViewport;
+            IViewport? viewport = view as IViewport;
 
             if (viewport == null)
             {
@@ -2092,7 +2092,7 @@ namespace unvell.ReoGrid.Views
             selBounds.Width--;
             selBounds.Height--;
 
-            var selectionBorderWidth = sheet.controlAdapter.ControlStyle.SelectionBorderWidth;
+            var selectionBorderWidth = sheet.controlAdapter!.ControlStyle.SelectionBorderWidth;
 
             var thumbRect = new Rectangle(selBounds.Right - selectionBorderWidth,
                 selBounds.Bottom - selectionBorderWidth,

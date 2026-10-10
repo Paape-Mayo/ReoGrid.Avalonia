@@ -139,27 +139,27 @@ namespace unvell.ReoGrid
 			set { cols = value; }
 		}
 
-		private CellArray cells;
+		private CellArray? cells;
 #if DEBUG
 		public
 #else
 		internal
 #endif
-		CellArray Cells
+		CellArray? Cells
 		{
 			get { return cells; }
 			set { cells = value; }
 		}
 
-		private HBorderArray hBorders;
-		internal HBorderArray HBorders
+		private HBorderArray? hBorders;
+		internal HBorderArray? HBorders
 		{
 			get { return hBorders; }
 			set { hBorders = value; }
 		}
 
-		private VBorderArray vBorders;
-		internal VBorderArray VBorders
+		private VBorderArray? vBorders;
+		internal VBorderArray? VBorders
 		{
 			get { return vBorders; }
 			set { vBorders = value; }
@@ -214,7 +214,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">object to be compared</param>
 		/// <returns>true if the object is same as this partial grid, otherwise false</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is PartialGrid)
 				return Equals((PartialGrid)obj, PartialGridCopyFlag.All);
@@ -238,14 +238,14 @@ namespace unvell.ReoGrid
 			{
 				for (int c = 0; c < cols; c++)
 				{
-					var a = cells[r, c];
-					var b = anotherPartialGrid.cells[r, c];
+					var a = cells![r, c];
+					var b = anotherPartialGrid.cells![r, c];
 
 					if ((flag & PartialGridCopyFlag.CellData) == PartialGridCopyFlag.CellData)
 					{
 						if (a == null && b != null
 							|| b == null && a != null
-							|| a.InnerData == null || b.InnerData != null
+							|| a!.InnerData == null || b!.InnerData != null
 							|| b.InnerData == null || a.InnerData != null)
 							return false;
 
@@ -262,24 +262,24 @@ namespace unvell.ReoGrid
 							|| a.DataFormatArgs != null && b.DataFormatArgs == null)
 							return false;
 
-						if (!a.DataFormatArgs.Equals(b.DataFormatArgs))
+						if (!a.DataFormatArgs!.Equals(b.DataFormatArgs))
 							return false;
 					}
 
 					if ((flag & PartialGridCopyFlag.CellStyle) == PartialGridCopyFlag.CellStyle
-						&& WorksheetRangeStyle.Equals(a.InnerStyle, b.InnerStyle))
+						&& WorksheetRangeStyle.Equals(a!.InnerStyle, b!.InnerStyle))
 						return false;
 
 					if ((flag & PartialGridCopyFlag.HBorder) == PartialGridCopyFlag.HBorder)
 					{
-						var ba = hBorders[r, c];
-						var bb = anotherPartialGrid.hBorders[r, c];
+						var ba = hBorders![r, c];
+						var bb = anotherPartialGrid.hBorders![r, c];
 
 						if (ba == null && bb != null
 							|| bb == null && ba != null)
 							return false;
 
-						if (ba.Span != bb.Span
+						if (ba!.Span != bb!.Span
 							|| !ba.Style.Equals(bb.Style)
 							|| !ba.Pos.Equals(bb.Pos))
 							return false;
@@ -287,14 +287,14 @@ namespace unvell.ReoGrid
 
 					if ((flag & PartialGridCopyFlag.VBorder) == PartialGridCopyFlag.VBorder)
 					{
-						var ba = vBorders[r, c];
-						var bb = anotherPartialGrid.vBorders[r, c];
+						var ba = vBorders![r, c];
+						var bb = anotherPartialGrid.vBorders![r, c];
 
 						if (ba == null && bb != null
 							|| bb == null && ba != null)
 							return false;
 
-						if (ba.Span != bb.Span
+						if (ba!.Span != bb!.Span
 							|| !ba.Style.Equals(bb.Style)
 							|| !ba.Pos.Equals(bb.Pos))
 							return false;
@@ -405,7 +405,7 @@ namespace unvell.ReoGrid
 						//	continue;
 						//}
 
-						Cell toCell = null;
+						Cell? toCell = null;
 
 						if (cell != null)
 						{
@@ -459,7 +459,7 @@ namespace unvell.ReoGrid
 					)
 					{
 						int toCol = c - range.Col;
-						ReoGridHBorder thBorder = ReoGridHBorder.Clone(hBorder);
+						ReoGridHBorder? thBorder = ReoGridHBorder.Clone(hBorder);
 						if (thBorder != null && thBorder.Span > cols - toCol) thBorder.Span = cols - toCol;
 						data.HBorders[r - range.Row, toCol] = thBorder;
 					}
@@ -487,7 +487,7 @@ namespace unvell.ReoGrid
 					)
 					{
 						int toRow = r - range.Row;
-						ReoGridVBorder tvBorder = ReoGridVBorder.Clone(vBorder);
+						ReoGridVBorder? tvBorder = ReoGridVBorder.Clone(vBorder);
 						if (tvBorder != null && tvBorder.Span > rows - toRow) tvBorder.Span = rows - toRow;
 						data.VBorders[toRow, c - range.Col] = tvBorder;
 					}
@@ -555,7 +555,7 @@ namespace unvell.ReoGrid
 				{
 					for (int c = 0; c < cols; c++)
 					{
-						Cell fromCell = data.Cells == null ? null : data.Cells[r, c];
+						Cell? fromCell = data.Cells == null ? null : data.Cells[r, c];
 
 						int tr = toRange.Row + r;
 						int tc = toRange.Col + c;
@@ -858,7 +858,7 @@ namespace unvell.ReoGrid
 
 								if (toCell.IsEndMergedCell)
 								{
-									Cell cell = GetCell(toCell.MergeStartPos);
+									Cell? cell = GetCell(toCell.MergeStartPos);
 									Debug.Assert(cell != null);
 
 									UpdateCellBounds(cell);
@@ -926,7 +926,7 @@ namespace unvell.ReoGrid
 
 								this.GetHBorder(tr, tc).Span = hcols;
 
-								if (data.HBorders[r, c].Style != null)
+								if (data.HBorders[r, c]!.Style != null)
 								{
 									// in last col
 									//if (c == cols - 1)
@@ -938,7 +938,7 @@ namespace unvell.ReoGrid
 								}
 								else
 								{
-									hBorders[tr, tc].Style = RangeBorderStyle.Empty;
+									hBorders[tr, tc]!.Style = RangeBorderStyle.Empty;
 								}
 							}
 						}
@@ -994,7 +994,7 @@ namespace unvell.ReoGrid
 								if (vrows > rows - r) vrows = rows - r;
 								GetVBorder(tr, tc).Span = vrows;
 
-								if (data.VBorders[r, c].Style != null)
+								if (data.VBorders[r, c]!.Style != null)
 								{
 									// is last row
 									//if (r == rows - 1)
@@ -1005,7 +1005,7 @@ namespace unvell.ReoGrid
 								}
 								else
 								{
-									this.vBorders[tr, tc].Style = RangeBorderStyle.Empty;
+									this.vBorders[tr, tc]!.Style = RangeBorderStyle.Empty;
 								}
 							}
 						}
@@ -1018,7 +1018,7 @@ namespace unvell.ReoGrid
 
 		public RangePosition SetPartialGridRepeatly(string addressOrName, PartialGrid grid)
 		{
-			NamedRange namedRange;
+			NamedRange? namedRange;
 
 			if (RangePosition.IsValidAddress(addressOrName))
 			{

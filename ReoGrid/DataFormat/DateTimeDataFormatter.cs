@@ -45,14 +45,14 @@ namespace unvell.ReoGrid.DataFormat
 		/// </summary>
 		/// <param name="cell">cell to be formatted</param>
 		/// <returns>Formatted text used to display as cell content</returns>
-		public string FormatCell(Cell cell)
+		public string? FormatCell(Cell cell)
 		{
-			object data = cell.InnerData;
+			object? data = cell.InnerData;
 
 			bool isFormat = false;
 			double number;
 			DateTime value = baseStartDate;
-			string formattedText = null;
+			string? formattedText = null;
 
 			if (data is DateTime)
 			{
@@ -73,7 +73,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 			else
 			{
-				string strdata = (data is string ? (string)data : Convert.ToString(data));
+				string? strdata = (data is string ? (string)data : Convert.ToString(data));
 
 				double days = 0;
 				if (double.TryParse(strdata, out days))
@@ -98,7 +98,7 @@ namespace unvell.ReoGrid.DataFormat
 					cell.RenderHorAlign = ReoGridRenderHorAlign.Right;
 				}
 
-				CultureInfo culture = null;
+				CultureInfo? culture = null;
 
 				string pattern = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
@@ -156,29 +156,29 @@ namespace unvell.ReoGrid.DataFormat
 		[Serializable]
 		public struct DateTimeFormatArgs
 		{
-			private string format;
+			private string? format;
 			/// <summary>
 			/// Get or set the date time pattern. (Standard .NET datetime pattern is supported, e.g.: yyyy/MM/dd)
 			/// </summary>
-			public string Format { get { return format; } set { format = value; } }
+			public string? Format { get { return format; } set { format = value; } }
 
-			private string cultureName;
+			private string? cultureName;
 			/// <summary>
 			/// Get or set the culture name that is used to format datetime according to localization settings.
 			/// </summary>
-			public string CultureName { get { return cultureName; } set { cultureName = value; } }
+			public string? CultureName { get { return cultureName; } set { cultureName = value; } }
 
 			/// <summary>
 			/// Compare to another object, check whether or not two objects are same.
 			/// </summary>
 			/// <param name="obj">Another object to be compared.</param>
 			/// <returns>True if two objects are same; Otherwise return false.</returns>
-			public override bool Equals(object obj)
+			public override bool Equals(object? obj)
 			{
 				if (!(obj is DateTimeFormatArgs)) return false;
 				DateTimeFormatArgs o = (DateTimeFormatArgs)obj;
-				return format.Equals(o.format)
-					&& cultureName.Equals(o.cultureName);
+				return string.Equals(format, o.format)
+					&& string.Equals(cultureName, o.cultureName);
 			}
 
 			/// <summary>
@@ -187,7 +187,7 @@ namespace unvell.ReoGrid.DataFormat
 			/// <returns>Hash code of argument object.</returns>
 			public override int GetHashCode()
 			{
-				return format.GetHashCode() ^ cultureName.GetHashCode();
+				return (format == null ? 0 : format.GetHashCode()) ^ (cultureName == null ? 0 : cultureName.GetHashCode());
 			}
 		}
 

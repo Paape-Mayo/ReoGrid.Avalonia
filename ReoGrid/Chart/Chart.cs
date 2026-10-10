@@ -244,12 +244,12 @@ namespace unvell.ReoGrid.Chart
 		///// </summary>
 		//public virtual bool SwapDataRowColumn { get; set; }
 
-		private WorksheetChartDataSource dataSource;
+		private WorksheetChartDataSource? dataSource;
 
 		/// <summary>
 		/// Get or set chart data source.
 		/// </summary>
-		public virtual WorksheetChartDataSource DataSource
+		public virtual WorksheetChartDataSource? DataSource
 		{
 			get { return this.dataSource; }
 			set
@@ -273,7 +273,7 @@ namespace unvell.ReoGrid.Chart
 			}
 		}
 
-		void dataSource_DataChanged(object sender, EventArgs e)
+		void dataSource_DataChanged(object? sender, EventArgs e)
 		{
 			this.OnDataChanged();
 		}
@@ -294,14 +294,14 @@ namespace unvell.ReoGrid.Chart
 
 			if (this.ChartDataChanged != null)
 			{
-				this.ChartDataChanged(this, null);
+				this.ChartDataChanged(this, EventArgs.Empty);
 			}
 		}
 
 		/// <summary>
 		/// This event will be invoked when chart data from data source is changed.
 		/// </summary>
-		public event EventHandler ChartDataChanged;
+		public event EventHandler? ChartDataChanged;
 
 		/// <summary>
 		/// This method will be invoked when chart data source is changed.
@@ -314,14 +314,14 @@ namespace unvell.ReoGrid.Chart
 
 			if (this.DataSourceChanged != null)
 			{
-				this.DataSourceChanged(this, null);
+				this.DataSourceChanged(this, EventArgs.Empty);
 			}
 		}
 
 		/// <summary>
 		/// This event will be invoked when chart data source is changed.
 		/// </summary>
-		public event EventHandler DataSourceChanged;
+		public event EventHandler? DataSourceChanged;
 
 		/// <summary>
 		/// Update chart when data source or data range has been changed.
@@ -433,7 +433,7 @@ namespace unvell.ReoGrid.Chart
 			var ds = this.dataSource;
 			if (ds == null) return;
 
-			int dataSerialCount = this.dataSource.SerialCount;
+			int dataSerialCount = ds.SerialCount;
 
 			if (this.dataSource == null || dataSerialCount <= 0)
 			{
@@ -460,7 +460,7 @@ namespace unvell.ReoGrid.Chart
 		//	return this.dataSource.SerialCount;
 		//}
 
-		private DataSerialStyleCollection dataSerialStyleCollection = null;
+		private DataSerialStyleCollection? dataSerialStyleCollection = null;
 
 		/// <summary>
 		/// Get data serial styles.
@@ -529,7 +529,7 @@ namespace unvell.ReoGrid.Chart
 		/// <summary>
 		/// Get or set the secondary axis information set.
 		/// </summary>
-		public virtual AxisDataInfo SecondaryAxisInfo
+		public virtual AxisDataInfo? SecondaryAxisInfo
 		{ get; set; }
 
 		/// <summary>
@@ -817,11 +817,11 @@ namespace unvell.ReoGrid.Chart
 		/// </summary>
 		public RGFloat ZeroHeight { get; protected set; }
 
-		private PlotPointRow[] platRowPoints = null;
-		internal PlotPointRow[] PlotDataPoints { get { return this.platRowPoints; } }
+		private PlotPointRow[]? platRowPoints = null;
+		internal PlotPointRow[]? PlotDataPoints { get { return this.platRowPoints; } }
 
-		private RGFloat[] platColPoints = null;
-		internal RGFloat[] PlotColumnPoints { get { return this.platColPoints; } }
+		private RGFloat[]? platColPoints = null;
+		internal RGFloat[]? PlotColumnPoints { get { return this.platColPoints; } }
 
 		/// <summary>
 		/// Reset plot drawing points.
@@ -877,19 +877,25 @@ namespace unvell.ReoGrid.Chart
 			else
 			{
 				#region Reset
-				for (int r = 0; r < this.platRowPoints.Length; r++)
+				if (this.platRowPoints != null)
 				{
-					var row = this.platRowPoints[r];
-
-					for (int c = 0; c < row.Length; c++)
+					for (int r = 0; r < this.platRowPoints.Length; r++)
 					{
-						this.platRowPoints[r][c] = 0;
+						var row = this.platRowPoints[r];
+
+						for (int c = 0; c < row.Length; c++)
+						{
+							this.platRowPoints[r][c] = 0;
+						}
 					}
 				}
 
-				for (int i = 0; i < this.platColPoints.Length; i++)
+				if (this.platColPoints != null)
 				{
-					this.platColPoints[i] = 0;
+					for (int i = 0; i < this.platColPoints.Length; i++)
+					{
+						this.platColPoints[i] = 0;
+					}
 				}
 				#endregion // Reset
 			}
@@ -932,18 +938,18 @@ namespace unvell.ReoGrid.Chart
 						{
 							if (r == 0)
 							{
-								this.platColPoints[c] = colHalf + (float)c * scaleX;
+								this.platColPoints![c] = colHalf + (float)c * scaleX;
 							}
 
 							var data = serial[c];
 
 							if (data == null)
 							{
-								this.platRowPoints[r][c] = PlotPointColumn.Nil;
+								this.platRowPoints![r][c] = PlotPointColumn.Nil;
 							}
 							else
 							{
-								this.platRowPoints[r][c] = (RGFloat)((data) * scaleY);
+								this.platRowPoints![r][c] = (RGFloat)((data) * scaleY);
 							}
 						}
 					}

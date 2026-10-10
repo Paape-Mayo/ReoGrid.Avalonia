@@ -44,7 +44,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <summary>
 		/// Image that displayed on button.
 		/// </summary>
-		public RGImage Image { get; set; }
+		public RGImage? Image { get; set; }
 
 		/// <summary>
 		/// Create image button cell without image specified.
@@ -58,7 +58,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// Create image button cell with specified image.
 		/// </summary>
 		/// <param name="image"></param>
-		public ImageButtonCell(RGImage image)
+		public ImageButtonCell(RGImage? image)
 		{
 			this.Image = image;
 		}

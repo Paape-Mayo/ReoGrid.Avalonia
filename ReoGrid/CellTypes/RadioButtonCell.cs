@@ -91,12 +91,12 @@ namespace unvell.ReoGrid.CellTypes
 		}
 
 		#region Group
-		private RadioButtonGroup radioGroup;
+		private RadioButtonGroup? radioGroup;
 
 		/// <summary>
 		/// Radio groups for toggling other radios inside same group.
 		/// </summary>
-		public virtual RadioButtonGroup RadioGroup
+		public virtual RadioButtonGroup? RadioGroup
 		{
 			get { return radioGroup; }
 			set

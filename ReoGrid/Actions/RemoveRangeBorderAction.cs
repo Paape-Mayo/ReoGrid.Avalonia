@@ -27,7 +27,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public BorderPositions BorderPos { get; set; }
 
-		private PartialGrid backupData;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Create instance for SetRangeBorderAction with specified range and border styles.

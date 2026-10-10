@@ -28,7 +28,7 @@ namespace unvell.ReoGrid.Utility
 			return (style.Flag & flag) == flag;
 		}
 
-		internal static PlainStyleFlag CheckDistinctStyle(WorksheetRangeStyle style, WorksheetRangeStyle referStyle)
+		internal static PlainStyleFlag CheckDistinctStyle(WorksheetRangeStyle? style, WorksheetRangeStyle? referStyle)
 		{
 			if (style == null || style.Flag == PlainStyleFlag.None) return PlainStyleFlag.None;
 			if (referStyle == null || referStyle.Flag == PlainStyleFlag.None) return PlainStyleFlag.None;
@@ -131,7 +131,7 @@ namespace unvell.ReoGrid.Utility
 			return distinctedFlag;
 		}
 
-		internal static WorksheetRangeStyle DistinctStyle(WorksheetRangeStyle style, WorksheetRangeStyle referStyle)
+		internal static WorksheetRangeStyle? DistinctStyle(WorksheetRangeStyle? style, WorksheetRangeStyle? referStyle)
 		{
 			if (style == null || style.Flag == PlainStyleFlag.None) return null;
 			if (referStyle == null || referStyle.Flag == PlainStyleFlag.None) return new WorksheetRangeStyle(style);
@@ -158,7 +158,7 @@ namespace unvell.ReoGrid.Utility
 		/// <param name="grid">Instance of worksheet.</param>
 		/// <param name="cell">The style from this cell will be checked.</param>
 		/// <returns>Checked style, null if given cell or style of cell is null.</returns>
-		internal static WorksheetRangeStyle CheckAndRemoveCellStyle(Worksheet grid, Cell cell)
+		internal static WorksheetRangeStyle? CheckAndRemoveCellStyle(Worksheet grid, Cell cell)
 		{
 			if (cell.InnerStyle == null || cell.InnerStyle == null) return null;
 
@@ -387,7 +387,7 @@ namespace unvell.ReoGrid.Utility
 			}
 		}
 
-		internal static RGXmlCellStyle ConvertToXmlStyle(WorksheetRangeStyle style)
+		internal static RGXmlCellStyle? ConvertToXmlStyle(WorksheetRangeStyle? style)
 		{
 			if (style == null || style.Flag == PlainStyleFlag.None) return null;
 
@@ -588,10 +588,11 @@ namespace unvell.ReoGrid.Utility
 			}
 		}
 
-		internal bool Equals(WorksheetRangeStyle styleA, WorksheetRangeStyle styleB)
+		internal bool Equals(WorksheetRangeStyle? styleA, WorksheetRangeStyle? styleB)
 		{
 			if (styleA == null && styleB != null
 				|| styleA != null && styleB == null
+				|| styleA == null || styleB == null
 				|| styleA.Flag != styleB.Flag)
 				return false;
 
@@ -668,7 +669,7 @@ namespace unvell.ReoGrid.Utility
 		/// <param name="style">style set to find specified single style</param>
 		/// <param name="flag">single style specifeid by this flag to be get</param>
 		/// <returns>single style as object returned from style set</returns>
-		public static object GetStyleItem(WorksheetRangeStyle style, PlainStyleFlag flag)
+		public static object? GetStyleItem(WorksheetRangeStyle style, PlainStyleFlag flag)
 		{
 			switch (flag)
 			{

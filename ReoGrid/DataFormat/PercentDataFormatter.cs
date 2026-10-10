@@ -13,14 +13,14 @@ namespace unvell.ReoGrid.DataFormat
 	/// </summary>
 	public class PercentDataFormatter : IDataFormatter
 	{
-		public string FormatCell(Cell cell)
+		public string? FormatCell(Cell cell)
 		{
-			object data = cell.InnerData;
+			object? data = cell.InnerData;
 
 			double percent = 0;
 			bool isFormat = false;
 			short digits = 0;
-			string formattedText = null;
+			string? formattedText = null;
 
 			if (data is double)
 			{
@@ -36,7 +36,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 			else
 			{
-				string str = Convert.ToString(data);
+				string str = Convert.ToString(data)!;
 				if (str.Length > 1 && str.EndsWith("%"))
 				{
 					// string ends with "%"

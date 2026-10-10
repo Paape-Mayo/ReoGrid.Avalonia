@@ -11,7 +11,7 @@ namespace unvell.ReoGrid
 	/// </summary>
 	public class WorksheetCollection : IList<Worksheet>
 	{
-		private IControlAdapter adapter;
+		private IControlAdapter? adapter;
 		private Workbook workbook;
 
 		internal WorksheetCollection(Workbook workbook)
@@ -25,7 +25,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Unique name used to identify the worksheet</param>
 		/// <returns>Instance of worksheet created by specified name</returns>
-		public Worksheet Create(string name = null)
+		public Worksheet Create(string? name = null)
 		{
 			return this.workbook.CreateWorksheet(name);
 		}
@@ -143,7 +143,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Name to find worksheet</param>
 		/// <returns>Instacne of worksheet found by specified name</returns>
-		public Worksheet this[string name]
+		public Worksheet? this[string name]
 		{
 			get
 			{

@@ -45,7 +45,7 @@ namespace unvell.ReoGrid.Views
 	/// </summary>
 	interface IView : IUserVisual
 	{
-		IViewportController ViewportController { get; set; }
+		IViewportController? ViewportController { get; set; }
 
 		Rectangle Bounds { get; set; }
 		RGFloat Left { get; }
@@ -66,9 +66,9 @@ namespace unvell.ReoGrid.Views
 
 		Point PointToView(Point p);
 		Point PointToController(Point p);
-		IView GetViewByPoint(Point p);
+		IView? GetViewByPoint(Point p);
 
-		IList<IView> Children { get; set; }
+		IList<IView>? Children { get; set; }
 	}
 
 }

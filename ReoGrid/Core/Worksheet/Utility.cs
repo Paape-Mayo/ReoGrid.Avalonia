@@ -33,7 +33,7 @@ namespace unvell.ReoGrid
 		/// Clone this worksheet, create a new instance.
 		/// </summary>
 		/// <returns>New instance cloned from current worksheet.</returns>
-		public Worksheet Clone(string newName = null)
+		public Worksheet Clone(string? newName = null)
 		{
 			if (workbook == null)
 			{
@@ -45,7 +45,7 @@ namespace unvell.ReoGrid
 				newName = this.workbook.GetAvailableWorksheetName();
 			}
 
-			Worksheet newSheet = new Worksheet(this.workbook, null, 0, 0)
+			Worksheet newSheet = new Worksheet(this.workbook, null!, 0, 0)
 			{
 				name = newName,
 				RootStyle = new WorksheetRangeStyle(this.RootStyle),

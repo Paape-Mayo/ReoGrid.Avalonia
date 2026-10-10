@@ -269,6 +269,7 @@ namespace unvell.ReoGrid.Chart
 			var g = dc.Graphics;
 
 			var ds = this.Chart.DataSource;
+			if (ds == null) return;
 			var clientRect = this.ClientBounds;
 
 			var titles = new Dictionary<int, string>();

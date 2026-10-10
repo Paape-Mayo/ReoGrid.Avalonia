@@ -93,10 +93,10 @@ namespace unvell.ReoGrid.Main
 		System.Windows.Controls.ContextMenu ColumnHeaderContextMenu { get; }
 		System.Windows.Controls.ContextMenu LeadHeaderContextMenu { get; }
 #elif AVALONIA
-		Avalonia.Controls.ContextMenu CellsContextMenu { get; }
-		Avalonia.Controls.ContextMenu RowHeaderContextMenu { get; }
-		Avalonia.Controls.ContextMenu ColumnHeaderContextMenu { get; }
-		Avalonia.Controls.ContextMenu LeadHeaderContextMenu { get; }
+		Avalonia.Controls.ContextMenu? CellsContextMenu { get; }
+		Avalonia.Controls.ContextMenu? RowHeaderContextMenu { get; }
+		Avalonia.Controls.ContextMenu? ColumnHeaderContextMenu { get; }
+		Avalonia.Controls.ContextMenu? LeadHeaderContextMenu { get; }
 #endif
     }
 
@@ -113,11 +113,11 @@ namespace unvell.ReoGrid.Main
 
 	internal interface IPersistenceWorkbook
 	{
-		void Save(string path, FileFormat format = FileFormat._Auto, System.Text.Encoding encoding = null);
-		void Save(System.IO.Stream stream, FileFormat format = FileFormat._Auto, System.Text.Encoding encoding = null);
+		void Save(string path, FileFormat format = FileFormat._Auto, System.Text.Encoding? encoding = null);
+		void Save(System.IO.Stream stream, FileFormat format = FileFormat._Auto, System.Text.Encoding? encoding = null);
 
-		void Load(string path, FileFormat format = FileFormat._Auto, System.Text.Encoding encoding = null);
-		void Load(System.IO.Stream stream, FileFormat format = FileFormat._Auto, System.Text.Encoding encoding = null);
+		void Load(string path, FileFormat format = FileFormat._Auto, System.Text.Encoding? encoding = null);
+		void Load(System.IO.Stream stream, FileFormat format = FileFormat._Auto, System.Text.Encoding? encoding = null);
 	}
 
 	internal interface IActionControl
@@ -129,9 +129,9 @@ namespace unvell.ReoGrid.Main
 		void RepeatLastAction(RangePosition range);
 		//bool CanUndo();
 		//bool CanRedo();
-		event EventHandler<WorkbookActionEventArgs> ActionPerformed;
-		event EventHandler<WorkbookActionEventArgs> Undid;
-		event EventHandler<WorkbookActionEventArgs> Redid;
+		event EventHandler<WorkbookActionEventArgs>? ActionPerformed;
+		event EventHandler<WorkbookActionEventArgs>? Undid;
+		event EventHandler<WorkbookActionEventArgs>? Redid;
 		//event EventHandler Repeated;
 		void ClearActionHistory();
 		void ClearActionHistoryForWorksheet(Worksheet sheet);
@@ -139,7 +139,7 @@ namespace unvell.ReoGrid.Main
 
 	internal interface IVisualWorkbook : IScrollableWorksheetContainer
 	{
-		Worksheet CurrentWorksheet { get; set; }
+		Worksheet? CurrentWorksheet { get; set; }
 	}
 
 	internal interface IScrollableWorksheetContainer
@@ -155,8 +155,8 @@ namespace unvell.ReoGrid.Main
 		void ShowEditControl(Graphics.Rectangle bounds, Cell cell);
 		void HideEditControl();
 
-		void SetEditControlText(string text);
-		string GetEditControlText();
+		void SetEditControlText(string? text);
+		string? GetEditControlText();
 
 		void EditControlSelectAll();
 		void SetEditControlCaretPos(int pos);

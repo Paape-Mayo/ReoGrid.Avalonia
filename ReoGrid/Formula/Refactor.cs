@@ -102,7 +102,7 @@ namespace unvell.ReoGrid.Formula
 				case STNodeType.CONNECT: GenerateOperatorString(sb, input, "&", node, flag); break;
 
 				case STNodeType.UNARY_PERCENT:
-					GenerateExpression(sb, input, node.Children[0], flag);
+					GenerateExpression(sb, input, node.Children![0]!, flag);
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceBeforePercent);
 					sb.Append('%');
 					break;
@@ -117,7 +117,7 @@ namespace unvell.ReoGrid.Formula
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceAfterFunctionName);
 					sb.Append('(');
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceBeforeParameterList);
-					for (int i = 0; i < node.Children.Count; i++)
+					for (int i = 0; i < node.Children!.Count; i++)
 					{
 						if (i > 0)
 						{
@@ -125,7 +125,7 @@ namespace unvell.ReoGrid.Formula
 							sb.Append(',');
 							AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceAfterComma);
 						}
-						GenerateExpression(sb, input, node.Children[i], flag);
+						GenerateExpression(sb, input, node.Children![i]!, flag);
 					}
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceAfterParameterList);
 					sb.Append(')');
@@ -134,7 +134,7 @@ namespace unvell.ReoGrid.Formula
 				case STNodeType.SUB_EXPR:
 					sb.Append('(');
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceBeforeSubExpression);
-					GenerateExpression(sb, input, node.Children[0], flag);
+					GenerateExpression(sb, input, node.Children![0]!, flag);
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceAfterSubExpression);
 					sb.Append(')');
 					break;
@@ -142,7 +142,7 @@ namespace unvell.ReoGrid.Formula
 				case STNodeType.UNARY_MINUS:
 					sb.Append('-');
 					AddSpaceIfFlag(sb, flag, FormulaFormatFlag.SpaceAfterMinus);
-					GenerateExpression(sb, input, node.Children[0], flag);
+					GenerateExpression(sb, input, node.Children![0]!, flag);
 					break;
 			}
 		}
@@ -157,8 +157,8 @@ namespace unvell.ReoGrid.Formula
 
 		private static void GenerateOperatorString(StringBuilder sb, string input, string op, STNode node, FormulaFormatFlag flag)
 		{
-			var left = node.Children[0];
-			var right = node.Children[1];
+			var left = node.Children![0]!;
+			var right = node.Children![1]!;
 
 			GenerateExpression(sb, input, left, flag);
 			if ((flag & FormulaFormatFlag.SpaceBeforeOperator) == FormulaFormatFlag.SpaceBeforeOperator) sb.Append(' ');
@@ -222,7 +222,7 @@ namespace unvell.ReoGrid.Formula
 		internal static void CopyFormula(CellPosition fromPosition, STNode fromNode, Cell toCell, 
 			ReplacableString rs, Stack<List<Cell>> dirtyCells)
 		{
-			var sheet = toCell.Worksheet;
+			var sheet = toCell.Worksheet!;
 
 			STNode node2 = (STNode)fromNode.Clone();
 
@@ -346,7 +346,7 @@ namespace unvell.ReoGrid.Formula
 	{
 		private string original;
 
-		private StringBuilder sb;
+		private StringBuilder sb = null!;
 
 		internal ReplacableString(string str)
 		{

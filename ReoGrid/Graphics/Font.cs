@@ -75,14 +75,14 @@ namespace unvell.ReoGrid.Drawing.Text
 
 	internal interface IFont
 	{
-		string Name { get; set; }
+		string? Name { get; set; }
 		RGFloat Size { get; set; }
 		FontStyles FontStyle { get; set; }
 	}
 
 	abstract class BaseFont : IFont
 	{
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		public RGFloat Size { get; set; }
 

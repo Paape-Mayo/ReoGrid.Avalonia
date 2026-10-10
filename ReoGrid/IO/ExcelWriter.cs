@@ -78,7 +78,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			var styles = doc.Stylesheet;
 
 			var existedIndex = styles.fills.FindIndex(f =>
-				f.patternFill.patternType == "solid" && f.patternFill.foregroundColor._rgColor == c);
+				f.patternFill!.patternType == "solid" && f.patternFill!.foregroundColor!._rgColor == c);
 
 			if (existedIndex >= 0)
 			{
@@ -110,7 +110,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			var fontName = rgStyle.FontName;
 			var fontSize = rgStyle.FontSize;
 
-			var existedIndex = styles.fonts.FindIndex(f =>
+			var existedIndex = styles.fonts!.FindIndex(f =>
 				((flag & PlainStyleFlag.FontName) == PlainStyleFlag.FontName
 				&& f.name != null && string.Equals(f.name.value, fontName, StringComparison.CurrentCultureIgnoreCase))
 				&& ((flag & PlainStyleFlag.FontSize) == PlainStyleFlag.FontSize && f.size != null && f._size == fontSize)
@@ -132,9 +132,9 @@ namespace unvell.ReoGrid.IO.OpenXML
 				return existedIndex;
 			}
 
-			styles.fonts.Add(new Schema.Font(rgStyle));
+			styles.fonts!.Add(new Schema.Font(rgStyle));
 
-			return styles.fonts.Count - 1;
+			return styles.fonts!.Count - 1;
 		}
 
 		#endregion // Font
@@ -250,7 +250,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 		#region Data Format
 		private static string ConvertToExcelNumberPattern(NumberDataFormatter.INumberFormatArgs arg,
-			string prefix = null, string postfix = null)
+			string? prefix = null, string? postfix = null)
 		{
 			//NumberDataFormatter.NumberFormatArgs narg;
 
@@ -356,7 +356,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 		private const int BaseUserNumberFormatId = 165;
 
-		private static int WriteNumberFormat(CellDataFormatFlag flag, object arg, Stylesheet styles)
+		private static int WriteNumberFormat(CellDataFormatFlag flag, object? arg, Stylesheet styles)
 		{
 			if (styles.numberFormats == null)
 			{
@@ -396,7 +396,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 						id = styles.numberFormats.Count + BaseUserNumberFormatId;
 
-						string prefix = null, postfix = null;
+						string? prefix = null, postfix = null;
 
 						if (narg.NegativeStyle == NumberDataFormatter.NumberNegativeStyle.CustomSymbol)
 						{
@@ -560,14 +560,14 @@ namespace unvell.ReoGrid.IO.OpenXML
 			}
 		}
 
-		private static int WriteStyle(Document doc, WorksheetRangeStyle rgStyle,
+		private static int WriteStyle(Document doc, WorksheetRangeStyle? rgStyle,
 			RangeBorderStyle? top = null, RangeBorderStyle? bottom = null,
 			RangeBorderStyle? left = null, RangeBorderStyle? right = null,
-			CellDataFormatFlag dataFormatFlag = CellDataFormatFlag.General, object dataFormatArg = null)
+			CellDataFormatFlag dataFormatFlag = CellDataFormatFlag.General, object? dataFormatArg = null)
 		{
 			var styles = doc.Stylesheet;
 
-			string fillId = null, fontId = null, borderId = null, numberFormatId = null;
+			string? fillId = null, fontId = null, borderId = null, numberFormatId = null;
 
 			if (rgStyle != null && (rgStyle.Flag & PlainStyleFlag.BackColor) == PlainStyleFlag.BackColor)
 			{
@@ -639,16 +639,16 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 				&& s.borderId == borderId
 
-				&& ((horAlign && s.alignment != null && s.alignment._horAlign == rgStyle.HAlign)
+				&& ((horAlign && s.alignment != null && s.alignment._horAlign == rgStyle!.HAlign)
 				|| (!horAlign && (s.alignment == null || s.alignment.horizontal == null)))
 
-				&& ((verAlign && s.alignment != null && s.alignment._verAlign == rgStyle.VAlign)
+				&& ((verAlign && s.alignment != null && s.alignment._verAlign == rgStyle!.VAlign)
 				|| (!verAlign && (s.alignment == null || s.alignment.vertical == null)))
 
 				&& ((textWrap && s.alignment != null && s.alignment.wrapText == "1")
 				|| (!textWrap && (s.alignment == null || s.alignment.wrapText == null)))
 
-				&& ((textRotate && s.alignment != null && s.alignment._rotateAngle == (int)rgStyle.RotationAngle)
+				&& ((textRotate && s.alignment != null && s.alignment._rotateAngle == (int)rgStyle!.RotationAngle)
 				|| (!textRotate && (s.alignment == null || s.alignment.textRotation == null)))
 
 				);
@@ -670,7 +670,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				applyNumberFormat = !string.IsNullOrEmpty(numberFormatId) ? "1" : null,
 			};
 
-			if (horAlign || verAlign || textWrap || textRotate)
+			if (rgStyle != null && (horAlign || verAlign || textWrap || textRotate))
 			{
 				var align = new Alignment();
 
@@ -720,7 +720,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			var style = doc.Stylesheet;
 			var defaulStyle = rgWorkbook.Worksheets[0].RootStyle;
 
-			style.fonts.Add(new Schema.Font(defaulStyle));
+			style.fonts!.Add(new Schema.Font(defaulStyle));
 			style.fills.Add(new Fill { patternFill = new PatternFill { patternType = "none" } });
 			style.fills.Add(new Fill { patternFill = new PatternFill { patternType = "gray125" } });
 			style.borders.Add(new Border
@@ -798,7 +798,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 					_rt = rt,
 				};
 
-				Run lastRun = null;
+				Run? lastRun = null;
 
 				foreach (var p in rt.Paragraphcs)
 				{
@@ -1022,7 +1022,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 				{
 					new SheetView
 					{
-						tabSelected = rgSheet.controlAdapter == null ? (rgSheet.workbook.GetWorksheetIndex(rgSheet) == 0 ? "1": "0")
+						tabSelected = rgSheet.controlAdapter == null ? (rgSheet.workbook!.GetWorksheetIndex(rgSheet) == 0 ? "1": "0")
 							: (rgSheet == rgSheet.controlAdapter.ControlInstance.CurrentWorksheet ? "1" : "0"),
 						workbookViewId = "0",
 						//selection = new Selection { activeCell = "A1", sqref = "A1", },
@@ -1159,10 +1159,10 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 			#endregion // Columns
 
-			RowHeader rowHeader = null;
+			RowHeader? rowHeader = null;
 			//int lastRow = -1;
 
-			Row row = null;
+			Row? row = null;
 
 			//#if WINFORM || WPF
 			//			const int colPageSize = unvell.ReoGrid.Data.JaggedTreeArray<ReoGridCell>.ColSize;
@@ -1214,10 +1214,10 @@ namespace unvell.ReoGrid.IO.OpenXML
 					var rgCell = rgSheet.GetCell(r, c);
 
 					int spans = 1;
-					Schema.Cell cell = null;
-					WorksheetRangeStyle rgStyle = null;
+					Schema.Cell? cell = null;
+					WorksheetRangeStyle? rgStyle = null;
 					CellDataFormatFlag dflag = CellDataFormatFlag.General;
-					object dfarg = null;
+					object? dfarg = null;
 
 					#region Cell
 					// not an valid cell, skip it spans
@@ -1244,7 +1244,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 
 							if (CellUtility.IsNumberData(data))
 							{
-								cell.value = new ElementText(Convert.ToString(data, EnglishCulture));
+								cell.value = new ElementText(Convert.ToString(data, EnglishCulture)!);
 							}
 #if DRAWING
 							else if (data is Drawing.RichText)
@@ -1266,7 +1266,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 							{
 								var str = data is string ? (string)data : Convert.ToString(data);
 
-								if (str.Length > 0)
+								if (str != null && str.Length > 0)
 								{
 									if (hasFormula)
 									{
@@ -1436,11 +1436,11 @@ namespace unvell.ReoGrid.IO.OpenXML
 #region Document
 	internal partial class Document : OpenXMLFile
 	{
-		internal ContentType contentType;
+		internal ContentType contentType = null!;
 
-		internal AppProperties appProp;
+		internal AppProperties? appProp;
 
-		internal CoreProperties coreProp;
+		internal CoreProperties? coreProp;
 
 		internal static Document CreateOnStream(Stream stream)
 		{
@@ -1691,7 +1691,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 		}
 #endif // DEBUG
 
-		private void WriteFile<T>(string path, T obj)
+		private void WriteFile<T>(string path, T obj) where T : notnull
 		{
 			var stream = new MemoryStream();
 			{
@@ -1722,7 +1722,7 @@ namespace unvell.ReoGrid.IO.OpenXML
 			WriteFile(ContentType._xmlTarget, contentType);
 
 			// .rels
-			WriteFile(this._relationFile._xmlTarget, this._relationFile);
+			WriteFile(this._relationFile!._xmlTarget, this._relationFile!);
 
 #region Workbook
 			WriteOpenXMLFile(this.Workbook);
@@ -1843,7 +1843,7 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 #region Workbook
 	partial class Workbook
 	{
-		internal Document _doc;
+		internal Document _doc = null!;
 
 		internal Schema.Worksheet CreateWorksheet(string sheetName)
 		{
@@ -1897,14 +1897,14 @@ namespace unvell.ReoGrid.IO.OpenXML.Schema
 				return "rId1";
 
 			int index = this._relationFile.relations.Count + 1;
-			string rId = null;
+			string? rId = null;
 
 			while (this._relationFile.relations.Any(s => s.id.Equals((rId = "rId" + index), StringComparison.CurrentCultureIgnoreCase)))
 			{
 				index++;
 			}
 
-			return rId;
+			return rId!;
 		}
 
 		internal string AddRelationship(string type, string target)

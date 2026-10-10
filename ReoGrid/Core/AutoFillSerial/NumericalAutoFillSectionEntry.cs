@@ -31,24 +31,24 @@ namespace unvell.ReoGrid
       return otherEntry is NumericalAutoFillSectionEntry;
     }
 
-    public object GetIterationValue(object baseValue, object incrementPerIteration, int iteration)
+    public object GetIterationValue(object? baseValue, object? incrementPerIteration, int iteration)
     {
       var diff = GetDifferenceToBaseValue(baseValue);
-      var incr = (double)incrementPerIteration;
+      var incr = (double)incrementPerIteration!;
 
-      return (double)baseValue + diff + incr * iteration;
+      return (double)baseValue! + diff + incr * iteration;
     }
 
-    public object GetIncrementPerIteration(object baseValue, int numberOfEntries)
+    public object GetIncrementPerIteration(object? baseValue, int numberOfEntries)
     {
       return numberOfEntries > 1
           ? (GetDifferenceToBaseValue(baseValue) / (numberOfEntries - 1)) * numberOfEntries
           : 0;
     }
 
-    private double GetDifferenceToBaseValue(object baseValue)
+    private double GetDifferenceToBaseValue(object? baseValue)
     {
-      return (double)Value - (double)baseValue;
+      return (double)Value - (double)baseValue!;
     }
   }
 }

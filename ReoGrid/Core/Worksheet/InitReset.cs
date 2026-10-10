@@ -205,7 +205,7 @@ namespace unvell.ReoGrid
 
 			if (this.SettingsChanged != null)
 			{
-				this.SettingsChanged(this, null);
+				this.SettingsChanged(this, new Events.SettingsChangedEventArgs());
 			}
 
 #if FORMULA
@@ -308,7 +308,7 @@ namespace unvell.ReoGrid
 			this.RequestInvalidate();
 
 			// raise reseting event
-			if (this.Resetted != null) this.Resetted(this, null);
+			if (this.Resetted != null) this.Resetted(this, EventArgs.Empty);
 		}
 
 	}

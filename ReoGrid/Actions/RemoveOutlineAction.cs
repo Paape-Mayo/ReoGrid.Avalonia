@@ -25,12 +25,12 @@ namespace unvell.ReoGrid.Actions
 	/// </summary>
 	public class RemoveOutlineAction : OutlineAction
 	{
-		private IReoGridOutline removedOutline;
+		private IReoGridOutline? removedOutline;
 
 		/// <summary>
 		/// Instance of removed outline if operation was successfully
 		/// </summary>
-		public IReoGridOutline RemovedOutline { get { return this.removedOutline; } }
+		public IReoGridOutline? RemovedOutline { get { return this.removedOutline; } }
 
 		/// <summary>
 		/// Create action instance to remove outline

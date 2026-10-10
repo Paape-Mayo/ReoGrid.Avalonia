@@ -21,7 +21,7 @@ namespace unvell.ReoGrid
 {
   public static class AutoFillSectionEntryFactory
   {
-    public static IAutoFillSectionEntry Create(object value)
+    public static IAutoFillSectionEntry Create(object? value)
     {
       if (value == null)
       {
@@ -33,7 +33,7 @@ namespace unvell.ReoGrid
         return new NumericalAutoFillSectionEntry(number);
       }
 
-      return new TextAutoFillSectionEntry(value.ToString());
+      return new TextAutoFillSectionEntry(value.ToString() ?? string.Empty);
     }
   }
 }

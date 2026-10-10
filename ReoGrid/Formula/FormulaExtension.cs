@@ -50,7 +50,7 @@ namespace unvell.ReoGrid.Formula
 			catch { }
 		}
 
-		internal static Dictionary<string, Func<Cell, object[], object>> customFunctions;
+		internal static Dictionary<string, Func<Cell, object?[], object?>>? customFunctions;
 
 		/// <summary>
 		/// Get collection of custom functions
@@ -69,13 +69,13 @@ namespace unvell.ReoGrid.Formula
 		///     return Convert.ToString(args[0]).ToUpper();
 		///   };
 		/// </example>
-		public static Dictionary<string, Func<Cell, object[], object>> CustomFunctions
+		public static Dictionary<string, Func<Cell, object?[], object?>> CustomFunctions
 		{
 			get
 			{
 				if (customFunctions == null)
 				{
-					customFunctions = new Dictionary<string, Func<Cell, object[], object>>();
+					customFunctions = new Dictionary<string, Func<Cell, object?[], object?>>();
 				}
 
 				return customFunctions;
@@ -85,16 +85,16 @@ namespace unvell.ReoGrid.Formula
 		/// <summary>
 		/// Custom provider for named reference parsing
 		/// </summary>
-		public static Func<Cell, string, object> NameReferenceProvider { get; set; }
+		public static Func<Cell, string, object?>? NameReferenceProvider { get; set; }
 
 		/// <summary>
 		/// Custom provider for empty cell reference returning
 		/// </summary>
-		public static Func<Worksheet, CellPosition, Cell, object> EmptyCellReferenceProvider { get; set; }
+		public static Func<Worksheet?, CellPosition, Cell?, object?>? EmptyCellReferenceProvider { get; set; }
 
-		private static StandardFunctionNameProvider standardFunctionNameProvider = null;
+		private static StandardFunctionNameProvider? standardFunctionNameProvider = null;
 
-		private static RussianFunctionNameProvider russianFunctionNameProvider  = null;
+		private static RussianFunctionNameProvider? russianFunctionNameProvider  = null;
 
 		/// <summary>
 		/// Change built-in function name list to standard English set.

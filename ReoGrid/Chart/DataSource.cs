@@ -45,7 +45,7 @@ namespace unvell.ReoGrid.Chart
 		/// </summary>
 		/// <param name="index">Zero-based number of category to get its name.</param>
 		/// <returns>Specified category's name by index position.</returns>
-		string GetCategoryName(int index);
+		string? GetCategoryName(int index);
 	}
 
 	/// <summary>
@@ -69,7 +69,7 @@ namespace unvell.ReoGrid.Chart
 		/// <summary>
 		/// Get instance of worksheet
 		/// </summary>
-		public Worksheet Worksheet { get; protected set; }
+		public Worksheet? Worksheet { get; protected set; }
 
 		#region Ranges
 
@@ -167,7 +167,7 @@ namespace unvell.ReoGrid.Chart
 		{
 			if (this.DataChanged != null)
 			{
-				this.DataChanged(this, null);
+				this.DataChanged(this, EventArgs.Empty);
 			}
 		}
 
@@ -185,7 +185,7 @@ namespace unvell.ReoGrid.Chart
 		/// <summary>
 		/// This event will be raised when data from the serial data range changed.
 		/// </summary>
-		public event EventHandler DataChanged;
+		public event EventHandler? DataChanged;
 
 		///// <summary>
 		///// This event will be raised when the serial data range changed.
@@ -206,7 +206,7 @@ namespace unvell.ReoGrid.Chart
 		/// </summary>
 		/// <param name="index">Zero-based number of column.</param>
 		/// <returns>Return the title that will be displayed on chart.</returns>
-		public string GetCategoryName(int index)
+		public string? GetCategoryName(int index)
 		{
 			if (this.CategoryNameRange.IsEmpty)
 			{
@@ -286,7 +286,7 @@ namespace unvell.ReoGrid.Chart
 			return this.serials[index];
 		}
 
-		private WorksheetChartDataSerialCollection collection;
+		private WorksheetChartDataSerialCollection? collection;
 
 		/// <summary>
 		/// Get collection of data serials.
@@ -408,7 +408,7 @@ namespace unvell.ReoGrid.Chart
 		/// <summary>
 		/// Get instance of worksheet
 		/// </summary>
-		public Worksheet Worksheet { get; protected set; }
+		public Worksheet? Worksheet { get; protected set; }
 
 		private RangePosition dataRange;
 
@@ -449,7 +449,7 @@ namespace unvell.ReoGrid.Chart
 			this.worksheet = worksheet;
 			this.LabelAddress = labelAddress;
 
-			if (this.worksheet != null)
+			if (worksheet != null)
 			{
 				this.worksheet.CellDataChanged += worksheet_CellDataChanged;
 				this.worksheet.RangeDataChanged += worksheet_RangeDataChanged;
@@ -517,9 +517,9 @@ namespace unvell.ReoGrid.Chart
 		}
 
 		#region Events
-		void worksheet_CellDataChanged(object sender, Events.CellEventArgs e)
+		void worksheet_CellDataChanged(object? sender, Events.CellEventArgs e)
 		{
-			var pos = e.Cell.Position;
+			var pos = e.Cell!.Position;
 
 			if (dataRange.Contains(pos) || this.LabelAddress == pos)
 			{
@@ -527,7 +527,7 @@ namespace unvell.ReoGrid.Chart
 			}
 		}
 
-		void worksheet_RangeDataChanged(object sender, Events.RangeEventArgs e)
+		void worksheet_RangeDataChanged(object? sender, Events.RangeEventArgs e)
 		{
 			var range = e.Range;
 
@@ -566,7 +566,7 @@ namespace unvell.ReoGrid.Chart
 		{
 			get
 			{
-				object data;
+				object? data;
 
 				if (this.dataRange.Rows > this.dataRange.Cols)
 				{

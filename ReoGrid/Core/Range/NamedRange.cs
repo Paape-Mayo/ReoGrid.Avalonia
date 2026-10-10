@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using unvell.ReoGrid.Events;
 
@@ -49,7 +50,7 @@ namespace unvell.ReoGrid
 			}
 
 			if (namedRange.Scope == NamedRangeScope.Workbook
-				&& this.workbook.worksheets.Any(s => s.registeredNamedRanges.Any(p =>
+				&& this.workbook!.worksheets.Any(s => s.registeredNamedRanges.Any(p =>
 					p.Value.Scope == NamedRangeScope.Workbook
 					&& p.Key.Equals(namedRange.Name, StringComparison.CurrentCultureIgnoreCase))))
 			{
@@ -148,7 +149,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">string to name a range</param>
 		/// <returns>referenced range of specified name</returns>
-		public NamedRange GetNamedRange(string name)
+		public NamedRange? GetNamedRange(string name)
 		{
 			if (registeredNamedRanges == null) return null;
 
@@ -163,7 +164,7 @@ namespace unvell.ReoGrid
 		/// <param name="name">name for range to be get</param>
 		/// <param name="namedRange">output argument, range assoicated with specified name will be returned</param>
 		/// <returns>true if specified name exists and the instance of range has been returned from spreadsheet, otherwise false</returns>
-		public bool TryGetNamedRange(string name, out NamedRange namedRange)
+		public bool TryGetNamedRange(string name, [NotNullWhen(true)] out NamedRange? namedRange)
 		{
 			if (!RGUtility.IsValidName(name))
 			{
@@ -183,8 +184,13 @@ namespace unvell.ReoGrid
 			}
 			else
 			{
-				NamedRange namedRange;
+				NamedRange? namedRange;
 				registeredNamedRanges.TryGetValue(name, out namedRange);
+				if (namedRange == null)
+				{
+					range = RangePosition.Empty;
+					return false;
+				}
 				range = namedRange.Position;
 				return true;
 			}
@@ -205,7 +211,7 @@ namespace unvell.ReoGrid
 			}
 			else if (NamedRange.IsValidName(addressOrName))
 			{
-				NamedRange namedRange;
+				NamedRange? namedRange;
 
 				if (this.registeredNamedRanges.TryGetValue(addressOrName, out namedRange))
 				{
@@ -232,7 +238,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="address">an address used to locate the range</param>
 		/// <returns>name to target range, and null if not found</returns>
-		public string GetNameByRange(string address)
+		public string? GetNameByRange(string address)
 		{
 			return RangePosition.IsValidAddress(address) ? GetNameByRange(new RangePosition(address)) : null;
 		}
@@ -242,7 +248,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="range">a range location used to search the name</param>
 		/// <returns>name as string for the range, return null if no range was found</returns>
-		public string GetNameByRange(RangePosition range)
+		public string? GetNameByRange(RangePosition range)
 		{
 			var rr = this.registeredNamedRanges.FirstOrDefault(nr => nr.Value.StartPos == range.StartPos
 				&& nr.Value.EndPos == range.EndPos);
@@ -299,7 +305,7 @@ namespace unvell.ReoGrid
 
 		private string GetAvailableRangeName()
 		{
-			string name = null;
+			string? name = null;
 			int index = 0;
 			while (registeredNamedRanges.ContainsKey((name = "__unnamed_range" +
 				(index == 0 ? string.Empty : ("_" + index)))))
@@ -308,7 +314,7 @@ namespace unvell.ReoGrid
 			return name;
 		}
 
-		private NamedRangeCollection namedRangeCollection = null;
+		private NamedRangeCollection? namedRangeCollection = null;
 
 		/// <summary>
 		/// Get collection of named range.
@@ -328,12 +334,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when named range is defined
 		/// </summary>
-		public event EventHandler<NamedRangeAddedEventArgs> NamedRangeDefined;
+		public event EventHandler<NamedRangeAddedEventArgs>? NamedRangeDefined;
 
 		/// <summary>
 		/// Event raised when named range is undefined
 		/// </summary>
-		public event EventHandler<NamedRangeUndefinedEventArgs> NamedRangeUndefined;
+		public event EventHandler<NamedRangeUndefinedEventArgs>? NamedRangeUndefined;
 	}
 
 	/// <summary>
@@ -353,7 +359,7 @@ namespace unvell.ReoGrid
 			{
 				if (this.internalName != value)
 				{
-					NamedRange oldRange = null;
+					NamedRange? oldRange = null;
 
 					if (this.Worksheet != null)
 					{
@@ -362,7 +368,7 @@ namespace unvell.ReoGrid
 
 					if (oldRange != null)
 					{
-						this.Worksheet.RenameNamedRange(this.internalName, value);
+						this.Worksheet!.RenameNamedRange(this.internalName, value);
 					}
 					else
 					{
@@ -371,7 +377,7 @@ namespace unvell.ReoGrid
 
 					if (this.NameChanged != null)
 					{
-						this.NameChanged(this, null);
+						this.NameChanged(this, EventArgs.Empty);
 					}
 				}
 			}
@@ -380,7 +386,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Comment for describing this range
 		/// </summary>
-		public string Comment { get; set; }
+		public string? Comment { get; set; }
 
 		/// <summary>
 		/// Create named range from specified worksheet and address
@@ -425,7 +431,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when name is changed
 		/// </summary>
-		public event EventHandler NameChanged;
+		public event EventHandler? NameChanged;
 
 		/// <summary>
 		/// Check whether or not the specified name is valid name
@@ -448,7 +454,7 @@ namespace unvell.ReoGrid
 		/// <returns>String to describe the named range.</returns>
 		public override string ToString()
 		{
-			return string.Format("{0}!{1}", this.Worksheet.Name, this.ToAddress());
+			return string.Format("{0}!{1}", this.Worksheet!.Name, this.ToAddress());
 		}
 	}
 
@@ -563,7 +569,8 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Name of range.</param>
 		/// <returns>Instance of named range.</returns>
-		public NamedRange this[string name]
+		[DisallowNull]
+		public NamedRange? this[string name]
 		{
 			get
 			{

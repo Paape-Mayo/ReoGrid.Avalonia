@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -41,20 +42,20 @@ namespace unvell.ReoGrid.Data
 		public const int RowSize = 64;
 		public const int ColSize = 16;
 
-		private T[,][,][,] data = new T[RowSize, ColSize][,][,];
+		private T?[,][,][,] data = new T?[RowSize, ColSize][,][,];
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
 				int r = row >> 12;
 				int c = col >> 8;
-				T[,][,] page1 = data[r, c];
+				T?[,][,] page1 = data[r, c];
 				if (page1 == null) return default(T);
 
 				int r2 = (row >> 6) % RowSize;
 				int c2 = (col >> 4) % ColSize;
-				T[,] page2 = page1[r2, c2];
+				T?[,] page2 = page1[r2, c2];
 
 				return page2 == null ? default(T) : page2[row % RowSize, col % ColSize];
 			}
@@ -67,7 +68,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						data[r, c] = new T[RowSize, ColSize][,];
+						data[r, c] = new T?[RowSize, ColSize][,];
 				}
 
 				int r2 = (row >> 6) % RowSize;
@@ -77,7 +78,7 @@ namespace unvell.ReoGrid.Data
 						return;
 					else
 					{
-						data[r, c][r2, c2] = new T[RowSize, ColSize];
+						data[r, c][r2, c2] = new T?[RowSize, ColSize];
 					}
 
 				data[r, c][r2, c2][row % RowSize, col % ColSize] = value;
@@ -88,7 +89,7 @@ namespace unvell.ReoGrid.Data
 		{
 			int r = row >> 12;
 			int c = col >> 8;
-			T[,][,] page1 = data[r, c];
+			T?[,][,] page1 = data[r, c];
 			if (page1 == null) return true;
 
 			int r2 = (row >> 6) % RowSize;
@@ -99,7 +100,7 @@ namespace unvell.ReoGrid.Data
 		public int Rows { get { return RowSize << 12; } }
 		public int Cols { get { return ColSize << 8; } }
 
-		public void Iterate(int row, int col, int rows, int cols, bool ignoreNull, Func<int, int, T, bool> iterator)
+		public void Iterate(int row, int col, int rows, int cols, bool ignoreNull, Func<int, int, T?, bool> iterator)
 		{
 			int r2 = row + rows;
 			int c2 = col + cols;
@@ -134,9 +135,9 @@ namespace unvell.ReoGrid.Data
 		public const int RowSize = 64;
 		public const int ColSize = 16;
 
-		private Dictionary<long, T[,][,]> data = new Dictionary<long, T[,][,]>();
+		private Dictionary<long, T?[,][,]> data = new Dictionary<long, T?[,][,]>();
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
@@ -145,7 +146,7 @@ namespace unvell.ReoGrid.Data
 
 				int r2 = (row >> 6) % RowSize;
 				int c2 = (col >> 4) % ColSize;
-				T[,] page2 = data[key][r2, c2];
+				T?[,] page2 = data[key][r2, c2];
 
 				return page2 == null ? default(T) : page2[row % RowSize, col % ColSize];
 			}
@@ -153,13 +154,13 @@ namespace unvell.ReoGrid.Data
 			{
 				long key = ((row >> 12) << 16) | (col >> 8);
 
-				T[,][,] page = null;
+				T?[,][,]? page = null;
 
 				if (!data.ContainsKey(key))
 					if (value == null)
 						return;
 					else
-						data.Add(key, page = new T[RowSize, ColSize][,]);
+						data.Add(key, page = new T?[RowSize, ColSize][,]);
 				else
 					page = data[key];
 
@@ -169,7 +170,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						page[r2, c2] = new T[RowSize, ColSize];
+						page[r2, c2] = new T?[RowSize, ColSize];
 
 				page[r2, c2][row % RowSize, col % ColSize] = value;
 			}
@@ -194,9 +195,9 @@ namespace unvell.ReoGrid.Data
 		public const int RowSize = 16;
 		public const int ColSize = 16;
 
-		private Dictionary<long, T[,][,]> data = new Dictionary<long, T[,][,]>();
+		private Dictionary<long, T?[,][,]> data = new Dictionary<long, T?[,][,]>();
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
@@ -205,7 +206,7 @@ namespace unvell.ReoGrid.Data
 
 				int r2 = (row >> 6) % RowSize;
 				int c2 = (col >> 4) % ColSize;
-				T[,] page2 = data[key][r2, c2];
+				T?[,] page2 = data[key][r2, c2];
 
 				return page2 == null ? default(T) : page2[row % RowSize, col % ColSize];
 			}
@@ -213,13 +214,13 @@ namespace unvell.ReoGrid.Data
 			{
 				long key = ((row >> 12) << 16) | (col >> 8);
 
-				T[,][,] page = null;
+				T?[,][,]? page = null;
 
 				if (!data.ContainsKey(key))
 					if (value == null)
 						return;
 					else
-						data.Add(key, page = new T[RowSize, ColSize][,]);
+						data.Add(key, page = new T?[RowSize, ColSize][,]);
 				else
 					page = data[key];
 
@@ -229,7 +230,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						page[r2, c2] = new T[RowSize, ColSize];
+						page[r2, c2] = new T?[RowSize, ColSize];
 
 				page[r2, c2][row % RowSize, col % ColSize] = value;
 			}
@@ -268,7 +269,7 @@ namespace unvell.ReoGrid.Data
 		public int MaxRow { get { return maxRow; } set { maxRow = value; } }
 		public int MaxCol { get { return maxCol; } set { maxCol = value; } }
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
@@ -279,12 +280,12 @@ namespace unvell.ReoGrid.Data
 					int r = (row >> (RowBitLen * d)) % RowSize;
 					int c = (col >> (ColBitLen * d)) % ColSize;
 
-					node = node.nodes[r, c];
+					node = node.nodes![r, c];
 
 					if (node == null) return default(T);
 				}
 
-				return node.data[row % RowSize, col % ColSize];
+				return node.data![row % RowSize, col % ColSize];
 			}
 			set
 			{
@@ -295,7 +296,7 @@ namespace unvell.ReoGrid.Data
 					int r = (row >> (RowBitLen * d)) % RowSize;
 					int c = (col >> (ColBitLen * d)) % ColSize;
 
-					Node child = node.nodes[r, c];
+					Node child = node.nodes![r, c];
 
 					if (child == null)
 					{
@@ -303,7 +304,7 @@ namespace unvell.ReoGrid.Data
 							return;
 						else
 						{
-							child = node.nodes[r, c] = new Node();
+							child = node.nodes![r, c] = new Node();
 							if (d > 1) child.nodes = new Node[RowSize, ColSize];
 						}
 					}
@@ -316,7 +317,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						node.data = new T[RowSize, ColSize];
+						node.data = new T?[RowSize, ColSize];
 				}
 
 				node.data[row % RowSize, col % ColSize] = value;
@@ -335,11 +336,11 @@ namespace unvell.ReoGrid.Data
 		[Serializable]
 		public sealed class Node
 		{
-			internal Node[,] nodes;
-			internal T[,] data;
+			internal Node[,]? nodes;
+			internal T?[,]? data;
 		}
 
-		public bool TryGet(int row, int col, out T value)
+		public bool TryGet(int row, int col, [MaybeNullWhen(false)] out T value)
 		{
 			Node node = root;
 
@@ -348,7 +349,7 @@ namespace unvell.ReoGrid.Data
 				int r = (row >> (RowBitLen * d)) % RowSize;
 				int c = (col >> (ColBitLen * d)) % ColSize;
 
-				node = node.nodes[r, c];
+				node = node.nodes![r, c];
 
 				if (node == null)
 				{
@@ -357,7 +358,7 @@ namespace unvell.ReoGrid.Data
 				}
 			}
 
-			T obj = node.data[row % RowSize, col % ColSize];
+			T? obj = node.data![row % RowSize, col % ColSize];
 			if (obj == null)
 			{
 				value = default(T);
@@ -379,7 +380,7 @@ namespace unvell.ReoGrid.Data
 				int r = (row >> (RowBitLen * d)) % RowSize;
 				int c = (col >> (ColBitLen * d)) % ColSize;
 
-				node = node.nodes[r, c];
+				node = node.nodes![r, c];
 
 				if (node == null) return true;
 			}
@@ -387,12 +388,12 @@ namespace unvell.ReoGrid.Data
 			return node.data == null;
 		}
 
-		public void IterateContent(Func<int, int, T, int> iterator)
+		public void IterateContent(Func<int, int, T?, int> iterator)
 		{
 			Iterate(0, 0, maxRow + 1, maxCol + 1, true, iterator);
 		}
 
-		public void Iterate(int startRow, int startCol, int rows, int cols, bool ignoreNull, Func<int, int, T, int> iterator)
+		public void Iterate(int startRow, int startCol, int rows, int cols, bool ignoreNull, Func<int, int, T?, int> iterator)
 		{
 			int r2 = startRow + rows;
 			int c2 = startCol + cols;
@@ -407,7 +408,7 @@ namespace unvell.ReoGrid.Data
 					}
 					else
 					{
-						T obj = this[r, c];
+						T? obj = this[r, c];
 						int cspan = 1;
 						if (!ignoreNull || obj != null)
 						{
@@ -436,7 +437,7 @@ namespace unvell.ReoGrid.Data
 					}
 					else
 					{
-						T obj = this[r, c];
+						T? obj = this[r, c];
 						int cspan = 1;
 						if (obj != null)
 						{
@@ -464,7 +465,7 @@ namespace unvell.ReoGrid.Data
 					}
 					else
 					{
-						T obj = this[r, c];
+						T? obj = this[r, c];
 						if (obj != null)
 						{
 							yield return obj;
@@ -475,7 +476,7 @@ namespace unvell.ReoGrid.Data
 			}
 		}
 
-		private bool IterateTree(Node node, int offrow, int offcol, Func<int, int, T, bool> handler)
+		private bool IterateTree(Node node, int offrow, int offcol, Func<int, int, T?, bool> handler)
 		{
 			if (node.nodes != null)
 			{
@@ -519,7 +520,7 @@ namespace unvell.ReoGrid.Data
 					}
 					else
 					{
-						T obj = this[r, c];
+						T? obj = this[r, c];
 						if (obj != null)
 						{
 							row = r;
@@ -557,11 +558,11 @@ namespace unvell.ReoGrid.Data
 		public const int ColSizeBits = 8;
 		public const int ColSizeModBits = 0xff;
 
-		private T[][][][] rows;
+		private T?[][][][] rows;
 
 		public Index4DArray()
 		{
-			this.rows = new T[RowSize][][][];
+			this.rows = new T?[RowSize][][][];
 		}
 
 		private int maxRow = -1, maxCol = -1;
@@ -571,7 +572,7 @@ namespace unvell.ReoGrid.Data
 		public int RowCapacity { get { return 1048576; } }
 		public int ColCapacity { get { return 32768; } }
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
@@ -597,7 +598,7 @@ namespace unvell.ReoGrid.Data
 
 				if (l1cols == null)
 				{
-					l1cols = new T[ColSize][][];
+					l1cols = new T?[ColSize][][];
 					this.rows[l1row] = l1cols;
 				}
 
@@ -606,7 +607,7 @@ namespace unvell.ReoGrid.Data
 
 				if (l2rows == null)
 				{
-					l2rows = new T[RowSize][];
+					l2rows = new T?[RowSize][];
 					l1cols[l1col] = l2rows;
 				}
 
@@ -615,7 +616,7 @@ namespace unvell.ReoGrid.Data
 
 				if (l2cols == null)
 				{
-					l2cols = new T[ColSize];
+					l2cols = new T?[ColSize];
 					l2rows[l2row] = l2cols;
 				}
 
@@ -630,12 +631,12 @@ namespace unvell.ReoGrid.Data
 			}
 		}
 
-		public void Iterate(Func<int, int, T, int> iterator)
+		public void Iterate(Func<int, int, T?, int> iterator)
 		{
 			Iterate(0, 0, maxRow + 1, maxCol + 1, true, iterator);
 		}
 
-		public void Iterate(int row, int col, int rows, int cols, bool ignoreNull, Func<int, int, T, int> iterator)
+		public void Iterate(int row, int col, int rows, int cols, bool ignoreNull, Func<int, int, T?, int> iterator)
 		{
 			int endrow = row + rows;
 			int endcol = col + cols;
@@ -693,7 +694,7 @@ namespace unvell.ReoGrid.Data
 
 					int l2col = c % ColSize;
 
-					T value = l2cols[l2col];
+					T? value = l2cols[l2col];
 
 					if (value == null && ignoreNull)
 					{
@@ -711,7 +712,7 @@ namespace unvell.ReoGrid.Data
 
 		internal void Reset()
 		{
-			this.rows = new T[RowSize][][][];
+			this.rows = new T?[RowSize][][][];
 			this.maxCol = -1;
 			this.maxRow = -1;
 		}
@@ -744,7 +745,7 @@ namespace unvell.ReoGrid.Data
 		private Dictionary<JaggedPosition, T[]> cachedPages = new Dictionary<JaggedPosition, T[]>();
 #endif // JAGGED_ROW_CACHE
 
-		public T this[int row, int col]
+		public T? this[int row, int col]
 		{
 			get
 			{
@@ -754,7 +755,7 @@ namespace unvell.ReoGrid.Data
 				{
 					int r = (row >> (RowBitLen * d)) % RowSize;
 
-					var node1 = node.nodes[r];
+					var node1 = node.nodes![r];
 					if (node1 == null) return default(T);
 
 					int c = (col >> (ColBitLen * d)) % ColSize;
@@ -763,7 +764,7 @@ namespace unvell.ReoGrid.Data
 					if (node == null) return default(T);
 				}
 
-				var data1 = node.data[row % RowSize];
+				var data1 = node.data![row % RowSize];
 				if (data1 == null) return default(T);
 
 				return data1[col % ColSize];
@@ -786,7 +787,7 @@ namespace unvell.ReoGrid.Data
 				{
 					int r = (row >> (RowBitLen * d)) % RowSize;
 
-					var node1 = node.nodes[r];
+					var node1 = node.nodes![r];
 					if (node1 == null)
 					{
 						if (value == null)
@@ -795,7 +796,7 @@ namespace unvell.ReoGrid.Data
 						}
 						else
 						{
-							node1 = node.nodes[r] = new Node[ColSize];
+							node1 = node.nodes![r] = new Node[ColSize];
 						}
 					}
 
@@ -810,7 +811,7 @@ namespace unvell.ReoGrid.Data
 						}
 						else
 						{
-							child = node.nodes[r][c] = new Node();
+							child = node.nodes![r][c] = new Node();
 							if (d > 1) child.nodes = new Node[RowSize][];
 						}
 					}
@@ -823,7 +824,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						node.data = new T[RowSize][];
+						node.data = new T?[RowSize][];
 				}
 
 				int rowIndex = row % RowSize;
@@ -835,7 +836,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						dataRow = node.data[rowIndex] = new T[ColSize];
+						dataRow = node.data[rowIndex] = new T?[ColSize];
 				}
 
 				dataRow[col % ColSize] = value;
@@ -859,8 +860,8 @@ namespace unvell.ReoGrid.Data
 		[Serializable]
 		public sealed class Node
 		{
-			internal Node[][] nodes;
-			internal T[][] data;
+			internal Node[][]? nodes;
+			internal T?[][]? data;
 		}
 
 		internal bool IsPageNull(int row, int col)
@@ -870,7 +871,7 @@ namespace unvell.ReoGrid.Data
 			for (int d = MaxDepth - 1; d > 0; d--)
 			{
 				int r = (row >> (RowBitLen * d)) % RowSize;
-				var node1 = node.nodes[r];
+				var node1 = node.nodes![r];
 				if (node1 == null) return true;
 
 				int c = (col >> (ColBitLen * d)) % ColSize;
@@ -881,12 +882,12 @@ namespace unvell.ReoGrid.Data
 			return node.data == null;
 		}
 
-		public void Iterate(Func<int, int, T, int> iterator)
+		public void Iterate(Func<int, int, T?, int> iterator)
 		{
 			Iterate(0, 0, maxRow + 1, maxCol + 1, true, iterator);
 		}
 
-		public void Iterate(int startRow, int startCol, int rows, int cols, bool ignoreNull, Func<int, int, T, int> iterator)
+		public void Iterate(int startRow, int startCol, int rows, int cols, bool ignoreNull, Func<int, int, T?, int> iterator)
 		{
 			int r2 = startRow + rows;
 			int c2 = startCol + cols;
@@ -901,7 +902,7 @@ namespace unvell.ReoGrid.Data
 					}
 					else
 					{
-						T obj = this[r, c];
+						T? obj = this[r, c];
 						int cspan = 1;
 						if (!ignoreNull || obj != null)
 						{
@@ -1520,7 +1521,7 @@ namespace unvell.ReoGrid.Data
 
 		private Node root = new Node();
 
-		public T this[int index]
+		public T? this[int index]
 		{
 			get
 			{
@@ -1530,12 +1531,12 @@ namespace unvell.ReoGrid.Data
 				{
 					int i = (index >> (4 * d)) % nodeSize;
 
-					node = node.nodes[i];
+					node = node.nodes![i];
 
 					if (node == null) return default(T);
 				}
 
-				return node.data[index % nodeSize];
+				return node.data![index % nodeSize];
 			}
 			set
 			{
@@ -1545,7 +1546,7 @@ namespace unvell.ReoGrid.Data
 				{
 					int i = (index >> (4 * d)) % nodeSize;
 
-					Node child = node.nodes[i];
+					Node child = node.nodes![i];
 
 					if (child == null)
 					{
@@ -1553,7 +1554,7 @@ namespace unvell.ReoGrid.Data
 							return;
 						else
 						{
-							child = node.nodes[i] = new Node();
+							child = node.nodes![i] = new Node();
 							if (d > 0) child.nodes = new Node[nodeSize];
 						}
 					}
@@ -1566,7 +1567,7 @@ namespace unvell.ReoGrid.Data
 					if (value == null)
 						return;
 					else
-						node.data = new T[nodeSize];
+						node.data = new T?[nodeSize];
 				}
 
 				node.data[index % nodeSize] = value;
@@ -1599,8 +1600,8 @@ namespace unvell.ReoGrid.Data
 		[Serializable]
 		public sealed class Node
 		{
-			internal Node[] nodes;
-			internal T[] data = null;
+			internal Node[]? nodes;
+			internal T?[]? data = null;
 		}
 
 		public bool IsPageNull(int index)
@@ -1611,7 +1612,7 @@ namespace unvell.ReoGrid.Data
 			{
 				int i = (index >> (4 * d)) % nodeSize;
 
-				node = node.nodes[i];
+				node = node.nodes![i];
 
 				if (node == null) return true;
 			}
@@ -1619,7 +1620,7 @@ namespace unvell.ReoGrid.Data
 			return node.data == null;
 		}
 
-		public void Iterate(int index, int count, bool ignoreNull, Func<int, T, bool> iterator)
+		public void Iterate(int index, int count, bool ignoreNull, Func<int, T?, bool> iterator)
 		{
 			int end = index + count;
 			if (end > capacity) end = (int)(capacity);
@@ -1638,7 +1639,7 @@ namespace unvell.ReoGrid.Data
 			}
 		}
 
-		public void IterateReverse(int index, int count, bool ignoreNull, Func<int, T, bool> iterator)
+		public void IterateReverse(int index, int count, bool ignoreNull, Func<int, T?, bool> iterator)
 		{
 			int end = index - count;
 			if (end <= -1) end = -1;
@@ -1764,13 +1765,13 @@ namespace unvell.ReoGrid.Data
 	#region Tree
 	internal sealed class SimpleTree<T>
 	{
-		public TreeNode<T> Root { get; set; }
+		public TreeNode<T>? Root { get; set; }
 
 		public class TreeNode<T1>
 		{
-			public TreeNode<T1> Childrens { get; set; }
+			public TreeNode<T1>? Childrens { get; set; }
 
-			public List<T1> Elements { get; set; }
+			public List<T1>? Elements { get; set; }
 		}
 	}
 	#endregion

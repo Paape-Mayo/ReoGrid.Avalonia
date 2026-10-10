@@ -58,12 +58,12 @@ namespace unvell.ReoGrid
 		/// </summary>
 		public bool IsUIUpdatesSuspending { get { return this.suspendingUIUpdates; } }
 
-		private IViewportController viewportController;
+		private IViewportController? viewportController;
 
 		/// <summary>
 		/// Get or set viewport controller for worksheet.
 		/// </summary>
-		internal IViewportController ViewportController
+		internal IViewportController? ViewportController
 		{
 			get { return this.viewportController; }
 			set { this.viewportController = value; }

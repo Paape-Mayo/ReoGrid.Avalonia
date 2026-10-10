@@ -55,7 +55,7 @@ namespace unvell.ReoGrid.Views
 				return;
 			}
 
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			r.BeginDrawHeaderText(this.scaleFactor);
 
@@ -148,7 +148,7 @@ namespace unvell.ReoGrid.Views
 						{
 							sheet.currentColWidthChanging = col;
 							sheet.operationStatus = OperationStatus.AdjustColumnWidth;
-							sheet.controlAdapter.ChangeCursor(CursorStyle.ChangeColumnWidth);
+							sheet.controlAdapter!.ChangeCursor(CursorStyle.ChangeColumnWidth);
 							sheet.RequestInvalidate();
 
 							this.headerAdjustBackup = sheet.headerAdjustNewValue = sheet.cols[sheet.currentColWidthChanging].InnerWidth;
@@ -188,7 +188,7 @@ namespace unvell.ReoGrid.Views
 							if ((!isFullColSelected || buttons == MouseButtons.Left))
 							{
 								sheet.operationStatus = OperationStatus.FullColumnSelect;
-								sheet.controlAdapter.ChangeCursor(CursorStyle.FullColumnSelect);
+								sheet.controlAdapter!.ChangeCursor(CursorStyle.FullColumnSelect);
 
 								SetFocus();
 
@@ -201,7 +201,7 @@ namespace unvell.ReoGrid.Views
 						// show context menu
 						if (buttons == MouseButtons.Right)
 						{
-							sheet.ControlAdapter.ShowContextMenuStrip(ViewTypes.ColumnHeader, this.PointToController(location));
+							sheet.ControlAdapter!.ShowContextMenuStrip(ViewTypes.ColumnHeader, this.PointToController(location));
 						}
 					}
 					break;
@@ -224,7 +224,7 @@ namespace unvell.ReoGrid.Views
 						sheet.headerAdjustNewValue = location.X - colHeader.Left;
 						if (sheet.headerAdjustNewValue < 0) sheet.headerAdjustNewValue = 0;
 
-						this.sheet.controlAdapter.ChangeCursor(CursorStyle.ChangeColumnWidth);
+						this.sheet.controlAdapter!.ChangeCursor(CursorStyle.ChangeColumnWidth);
 						this.sheet.RequestInvalidate();
 						isProcessed = true;
 					}
@@ -264,7 +264,7 @@ namespace unvell.ReoGrid.Views
 									curStyle = arg.CursorStyle;
 								}
 
-								sheet.controlAdapter.ChangeCursor(curStyle);
+								sheet.controlAdapter!.ChangeCursor(curStyle);
 							}
 						}
 					}
@@ -274,7 +274,7 @@ namespace unvell.ReoGrid.Views
 				case OperationStatus.FullSingleColumnSelect:
 					if (buttons == MouseButtons.Left)
 					{
-						sheet.controlAdapter.ChangeCursor(CursorStyle.FullColumnSelect);
+						sheet.controlAdapter!.ChangeCursor(CursorStyle.FullColumnSelect);
 						sheet.SelectRangeEndByMouse(this.PointToController(location));
 
 						isProcessed = true;
@@ -326,7 +326,7 @@ namespace unvell.ReoGrid.Views
 
 				case OperationStatus.FullColumnSelect:
 					sheet.operationStatus = OperationStatus.Default;
-					sheet.ControlAdapter.ChangeCursor(CursorStyle.Selection);
+					sheet.ControlAdapter!.ChangeCursor(CursorStyle.Selection);
 					this.FreeFocus();
 					return true;
 			}
@@ -370,7 +370,7 @@ namespace unvell.ReoGrid.Views
 
 			//viewportController.Bounds
 
-			IViewport view = viewportController.View.GetViewByPoint(position) as ColumnHeaderView;
+			IViewport? view = viewportController.View.GetViewByPoint(position) as ColumnHeaderView;
 
 			if (view == null)
 			{

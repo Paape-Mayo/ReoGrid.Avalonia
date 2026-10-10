@@ -45,19 +45,19 @@ namespace unvell.ReoGrid.Utility
             return Archive.GetEntry(path) != null;
         }
 
-        IZipEntry IZipArchive.AddFile(string path, Stream stream)
+        IZipEntry IZipArchive.AddFile(string path, Stream? stream)
         {
             var entry = Archive.CreateEntry(path);
 
             using (var entryStream = entry.Open())
             {
-                stream.CopyTo(entryStream);
+                stream!.CopyTo(entryStream);
             }
 
             return new SystemIOZipEntry(entry);
         }
 
-        IZipEntry IZipArchive.GetFile(string path)
+        IZipEntry? IZipArchive.GetFile(string path)
         {
             var entry = Archive.Entries.FirstOrDefault(e => string.Compare(e.FullName, path, true) == 0);
             if (entry == null) {

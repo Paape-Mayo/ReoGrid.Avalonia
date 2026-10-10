@@ -37,8 +37,8 @@ namespace unvell.ReoGrid.Actions
 		{
 		}
 
-		private List<IReoGridOutline> rowBackupOutlines;
-		private List<IReoGridOutline> colBackupOutlines;
+		private List<IReoGridOutline>? rowBackupOutlines;
+		private List<IReoGridOutline>? colBackupOutlines;
 
 		/// <summary>
 		/// Do this action

@@ -67,10 +67,10 @@ public static class AvaloinaEx
         }
         return style;
     }
-    public static T Child<T>(this Decorator decorator)
+    public static T? Child<T>(this Decorator decorator)
         where T : Control
     {
-        return (T)decorator.Child;
+        return (T?)decorator.Child;
     }
 
     public static T As<T>(this object obj)

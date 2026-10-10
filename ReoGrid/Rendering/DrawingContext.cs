@@ -66,7 +66,7 @@ namespace unvell.ReoGrid.Rendering
 
 		internal IRenderer Renderer { get { return (IRenderer)Graphics; } }
 
-		internal IView CurrentView { get; set; }
+		internal IView? CurrentView { get; set; }
 
 		/// <summary>
 		/// Draw mode that decides what kind of content will be drawn during this drawing event.
@@ -98,7 +98,7 @@ namespace unvell.ReoGrid.Rendering
 		/// <summary>
 		/// Cell instance if enter a cell drawing event
 		/// </summary>
-		public Cell Cell { get; set; }
+		public Cell? Cell { get; set; }
 
 		internal bool AllowCellClip { get; set; }
 		
@@ -146,7 +146,7 @@ namespace unvell.ReoGrid.Rendering
 #endregion // Cell Methods
 
 		internal CellDrawingContext(Worksheet worksheet, DrawMode drawMode)
-			: this(worksheet, drawMode, null)
+			: this(worksheet, drawMode, null!)
 		{
 		}
 

@@ -290,7 +290,7 @@ namespace unvell.ReoGrid.Graphics
 			return this;
 		}
 
-		private static Random rand;
+		private static Random? rand;
 
 		/// <summary>
 		/// Randomly generate a color.
@@ -365,7 +365,7 @@ namespace unvell.ReoGrid.Graphics
 		/// </summary>
 		/// <param name="obj">Object to be compared</param>
 		/// <returns>True if specified object are same as this object</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is SolidColor)
 			{

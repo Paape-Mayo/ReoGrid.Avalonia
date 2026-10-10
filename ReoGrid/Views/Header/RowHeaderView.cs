@@ -58,7 +58,7 @@ namespace unvell.ReoGrid.Views
 				return;
 			}
 
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			g.BeginDrawHeaderText(this.scaleFactor);
 
@@ -150,7 +150,7 @@ namespace unvell.ReoGrid.Views
 						{
 							sheet.currentRowHeightChanging = row;
 							sheet.operationStatus = OperationStatus.AdjustRowHeight;
-							sheet.controlAdapter.ChangeCursor(CursorStyle.ChangeRowHeight);
+							sheet.controlAdapter!.ChangeCursor(CursorStyle.ChangeRowHeight);
 							sheet.RequestInvalidate();
 
 							this.headerAdjustBackup = sheet.headerAdjustNewValue = sheet.rows[sheet.currentRowHeightChanging].InnerHeight;
@@ -168,7 +168,7 @@ namespace unvell.ReoGrid.Views
 							if ((!isFullRowSelected || buttons == MouseButtons.Left))
 							{
 								sheet.operationStatus = OperationStatus.FullRowSelect;
-								sheet.controlAdapter.ChangeCursor(CursorStyle.FullRowSelect);
+								sheet.controlAdapter!.ChangeCursor(CursorStyle.FullRowSelect);
 
 								SetFocus();
 
@@ -179,7 +179,7 @@ namespace unvell.ReoGrid.Views
 
 							if (buttons == MouseButtons.Right)
 							{
-								sheet.controlAdapter.ShowContextMenuStrip(ViewTypes.RowHeader, this.PointToController(location));
+								sheet.controlAdapter!.ShowContextMenuStrip(ViewTypes.RowHeader, this.PointToController(location));
 							}
 						}
 					}
@@ -202,7 +202,7 @@ namespace unvell.ReoGrid.Views
 						int row = -1;
 						bool inline = sheet.FindRowByPosition(location.Y, out row);
 
-						if (row >= 0) sheet.controlAdapter.ChangeCursor(inline ? CursorStyle.ChangeRowHeight :
+						if (row >= 0) sheet.controlAdapter!.ChangeCursor(inline ? CursorStyle.ChangeRowHeight :
 							(sheet.selectionMode == WorksheetSelectionMode.None ? CursorStyle.PlatformDefault : CursorStyle.FullRowSelect));
 					}
 					break;
@@ -215,7 +215,7 @@ namespace unvell.ReoGrid.Views
 						sheet.headerAdjustNewValue = location.Y - rowHeader.Top;
 						if (sheet.headerAdjustNewValue < 0) sheet.headerAdjustNewValue = 0;
 
-						sheet.controlAdapter.ChangeCursor(CursorStyle.ChangeRowHeight);
+						sheet.controlAdapter!.ChangeCursor(CursorStyle.ChangeRowHeight);
 						sheet.RequestInvalidate();
 						isProcessed = true;
 					}
@@ -223,7 +223,7 @@ namespace unvell.ReoGrid.Views
 
 				case OperationStatus.FullRowSelect:
 					sheet.SelectRangeEndByMouse(this.PointToController(location));
-					sheet.controlAdapter.ChangeCursor(CursorStyle.FullRowSelect);
+					sheet.controlAdapter!.ChangeCursor(CursorStyle.FullRowSelect);
 
 					isProcessed = true;
 					break;
@@ -276,7 +276,7 @@ namespace unvell.ReoGrid.Views
 				case OperationStatus.FullRowSelect:
 				case OperationStatus.FullSingleRowSelect:
 					sheet.operationStatus = OperationStatus.Default;
-					sheet.controlAdapter.ChangeCursor(CursorStyle.Selection);
+					sheet.controlAdapter!.ChangeCursor(CursorStyle.Selection);
 
 					this.FreeFocus();
 					isProcessed = true;

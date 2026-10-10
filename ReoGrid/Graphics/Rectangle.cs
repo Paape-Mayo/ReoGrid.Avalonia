@@ -256,7 +256,7 @@ namespace unvell.ReoGrid.Graphics
 		/// </summary>
 		/// <param name="obj">Another rectange compared to this rectangle.</param>
 		/// <returns>True if two rectangles are same; Otherwise return false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is Rectangle)) return false;
 

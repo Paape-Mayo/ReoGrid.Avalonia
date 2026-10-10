@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 #if DEBUG
@@ -62,7 +63,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="addressOrName">Address or name to locate the cell.</param>
 		/// <param name="data">Data to be set.</param>
-		public void SetCellData(string addressOrName, object data)
+		public void SetCellData(string addressOrName, object? data)
 		{
 			if (CellPosition.IsValidAddress(addressOrName))
 			{
@@ -81,7 +82,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="pos">Position of cell to set data.</param>
 		/// <param name="data">Data of cell to be set.</param>
-		public void SetCellData(CellPosition pos, object data)
+		public void SetCellData(CellPosition pos, object? data)
 		{
 			SetCellData(pos.Row, pos.Col, data);
 		}
@@ -92,7 +93,7 @@ namespace unvell.ReoGrid
 		/// <param name="row">Index of row of specified cell.</param>
 		/// <param name="col">Index of column of specified cell.</param>
 		/// <param name="data">Data of cell.</param>
-		public void SetCellData(int row, int col, object data)
+		public void SetCellData(int row, int col, object? data)
 		{
 			if (row < 0 || row > this.rows.Count - 1)
 				throw new ArgumentOutOfRangeException("row",
@@ -166,7 +167,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="cell">Instance of cell.</param>
 		/// <param name="data">Data to be set.</param>
-		internal void SetSingleCellData(Cell cell, object data)
+		internal void SetSingleCellData(Cell cell, object? data)
 		{
 			// set cell body
 			if (data is ICellBody)
@@ -182,7 +183,7 @@ namespace unvell.ReoGrid
 #endif // EX_SCRIPT
 )
 			{
-				string str = data is string ? (string)(data) : Convert.ToString(data);
+				string str = data is string ? (string)(data) : (Convert.ToString(data) ?? string.Empty);
 
 				// cell data processed as plain-text
 				if (str.Length > 1)
@@ -271,7 +272,7 @@ namespace unvell.ReoGrid
 		/// <param name="cell">cell to be updated</param>
 		/// <param name="data">data to be updated</param>
 		/// <param name="dirtyCellStack">A stack to save cells that are marked as dirty cell, the dirty cell will be updated delay</param>
-		internal void UpdateCellData(Cell cell, object data, Stack<List<Cell>> dirtyCellStack = null)
+		internal void UpdateCellData(Cell cell, object? data, Stack<List<Cell>>? dirtyCellStack = null)
 		{
 			if (cell.body != null)
 			{
@@ -310,7 +311,7 @@ namespace unvell.ReoGrid
 
 		internal bool viewDirty = false;
 
-		private void AfterCellDataUpdate(Cell cell, Stack<List<Cell>> dirtyCellStack = null)
+		private void AfterCellDataUpdate(Cell cell, Stack<List<Cell>>? dirtyCellStack = null)
 		{
 #if FORMULA
 			if ((this.settings & WorksheetSettings.Formula_AutoUpdateReferenceCell)
@@ -368,7 +369,7 @@ namespace unvell.ReoGrid
 		/// <param name="row">number of row</param>
 		/// <param name="col">number of column</param>
 		/// <param name="body">body to be set</param>
-		public void SetCellBody(int row, int col, ICellBody body)
+		public void SetCellBody(int row, int col, ICellBody? body)
 		{
 			if (row < 0) throw new ArgumentOutOfRangeException("row");
 			if (row >= this.cells.RowCapacity) throw new ArgumentOutOfRangeException("row");
@@ -392,13 +393,13 @@ namespace unvell.ReoGrid
 			SetCellBody(cell, body);
 		}
 
-		public void SetCellBody(CellPosition pos, ICellBody body)
+		public void SetCellBody(CellPosition pos, ICellBody? body)
 		{
 			pos = this.FixPos(pos);
 			this.SetCellBody(pos.Row, pos.Col, body);
 		}
 
-		public void SetCellBody(string address, ICellBody body)
+		public void SetCellBody(string address, ICellBody? body)
 		{
 			if (!CellPosition.IsValidAddress(address))
 				throw new InvalidAddressException(address);
@@ -411,7 +412,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="cell">cell to be set</param>
 		/// <param name="body">body to be set</param>
-		internal void SetCellBody(Cell cell, ICellBody body)
+		internal void SetCellBody(Cell cell, ICellBody? body)
 		{
 			cell.Body = body;
 
@@ -462,7 +463,7 @@ namespace unvell.ReoGrid
 		/// <param name="addressOrName">address or name to locate a cell</param>
 		/// <returns>data from cell</returns>
 		/// <exception cref="InvalidAddressException">throw if specified address or name is invalid</exception>
-		public object GetCellData(string addressOrName)
+		public object? GetCellData(string addressOrName)
 		{
 			if (CellPosition.IsValidAddress(addressOrName))
 			{
@@ -482,7 +483,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="pos">Position of cell to get data</param>
 		/// <returns>Data of cell</returns>
-		public object GetCellData(CellPosition pos) { return GetCellData(pos.Row, pos.Col); }
+		public object? GetCellData(CellPosition pos) { return GetCellData(pos.Row, pos.Col); }
 
 		/// <summary>
 		/// Get data from specified cell
@@ -490,7 +491,7 @@ namespace unvell.ReoGrid
 		/// <param name="row">zero-based number of row</param>
 		/// <param name="col">zero-based number of column</param>
 		/// <returns>data of cell</returns>
-		public object GetCellData(int row, int col)
+		public object? GetCellData(int row, int col)
 		{
 			if (row < 0 || row >= this.rows.Count) return null;
 			if (col < 0 || col >= this.cols.Count) return null;
@@ -505,7 +506,7 @@ namespace unvell.ReoGrid
 		/// <param name="addressOrName">address or name to locate the cell</param>
 		/// <returns>data of cell</returns>
 		/// <exception cref="InvalidAddressException">throw if specified address or name is invalid</exception>
-		public T GetCellData<T>(string addressOrName)
+		public T? GetCellData<T>(string addressOrName)
 		{
 			if (CellPosition.IsValidAddress(addressOrName))
 			{
@@ -525,7 +526,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="pos">position to locate the cell</param>
 		/// <returns>data of cell</returns>
-		public T GetCellData<T>(CellPosition pos)
+		public T? GetCellData<T>(CellPosition pos)
 		{
 			return CellUtility.ConvertData<T>(this.GetCellData(pos));
 		}
@@ -537,7 +538,7 @@ namespace unvell.ReoGrid
 		/// <param name="row">number of row to locate a cell</param>
 		/// <param name="col">number of column to locate a cell</param>
 		/// <returns></returns>
-		public T GetCellData<T>(int row, int col)
+		public T? GetCellData<T>(int row, int col)
 		{
 			return CellUtility.ConvertData<T>(this.GetCellData(row, col));
 		}
@@ -648,7 +649,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when any data has been changed
 		/// </summary>
-		public event EventHandler<CellEventArgs> CellDataChanged;
+		public event EventHandler<CellEventArgs>? CellDataChanged;
 	}
 
 	#region Cell
@@ -668,19 +669,19 @@ namespace unvell.ReoGrid
 		/// Instance of worksheet that the cell belongs to
 		/// </summary>
 		[NonSerialized]
-		private Worksheet worksheet;
+		private Worksheet? worksheet;
 
 		/// <summary>
 		/// Get the worksheet that is the owner of this cell
 		/// </summary>
-		public Worksheet Worksheet { get { return this.worksheet; } }
+		public Worksheet? Worksheet { get { return this.worksheet; } }
 
 		/// <summary>
 		/// Construct cell instance with specified owner grid instance.
 		/// Cell instance managed by ReoGrid core, it cannot be created by user-code.
 		/// </summary>
 		/// <param name="worksheet">Owner grid control for this cell</param>
-		internal Cell(Worksheet worksheet)
+		internal Cell(Worksheet? worksheet)
 		{
 			this.worksheet = worksheet;
 			this.FontDirty = true;
@@ -834,12 +835,12 @@ namespace unvell.ReoGrid
 			set { dataFormat = value; }
 		}
 
-		private object dataFormatArgs;
+		private object? dataFormatArgs;
 
 		/// <summary>
 		/// Get or set the argument of data format type
 		/// </summary>
-		public object DataFormatArgs
+		public object? DataFormatArgs
 		{
 			get { return dataFormatArgs; }
 			set { dataFormatArgs = value; }
@@ -852,12 +853,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// cell data
 		/// </summary>
-		internal object InnerData { get; set; }
+		internal object? InnerData { get; set; }
 
 		/// <summary>
 		/// Get or set cell data
 		/// </summary>
-		public object Data
+		public object? Data
 		{
 			get { return InnerData; }
 			set
@@ -879,7 +880,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <typeparam name="T">Type try to convert</typeparam>
 		/// <returns>Converted data in specified type</returns>
-		public T GetData<T>()
+		public T? GetData<T>()
 		{
 			return CellUtility.ConvertData<T>(this.InnerData);
 		}
@@ -887,7 +888,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// cell formula
 		/// </summary>
-		internal string InnerFormula { get; set; }
+		internal string? InnerFormula { get; set; }
 #if FORMULA
 
 		internal FormulaStatus formulaStatus;
@@ -904,12 +905,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// cell display text.
 		/// </summary>
-		internal string InnerDisplay { get; set; }
+		internal string? InnerDisplay { get; set; }
 
 		/// <summary>
 		/// Get the text displayed in cell. Set <code>Data</code> property to change this text.
 		/// </summary>
-		public string DisplayText { get { return InnerDisplay; } }
+		public string? DisplayText { get { return InnerDisplay; } }
 
 		/// <summary>
 		/// Determine whether or not allow to change data of this cell.
@@ -957,6 +958,7 @@ namespace unvell.ReoGrid
 			this.worksheet.ExpandColumnWidthFitToCell(this);
 		}
 
+		[MemberNotNull(nameof(worksheet))]
 		private void ValidateAssociation()
 		{
 			if (this.worksheet == null)
@@ -970,23 +972,23 @@ namespace unvell.ReoGrid
 #region Formula
 #if FORMULA
 		[NonSerialized]
-		internal STNode formulaTree;
+		internal STNode? formulaTree;
 
-		internal STNode FormulaTree { get { return this.formulaTree; } set { this.formulaTree = value; } }
+		internal STNode? FormulaTree { get { return this.formulaTree; } set { this.formulaTree = value; } }
 #endif
 
 		/// <summary>
 		/// Get or set the cell formula
 		/// </summary>
 		/// <returns>Formula of cell in string</returns>
-		public string Formula
+		public string? Formula
 		{
 			get { return InnerFormula; }
 			set
 			{
 				if (this.InnerFormula != value)
 				{
-					if (this.Worksheet == null)
+					if (this.worksheet == null)
 					{
 						this.InnerFormula = value;
 						this.InnerData = null;
@@ -1019,13 +1021,14 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Identify whether or not this cell contains the formula and the value has been evaluated
 		/// </summary>
+		[MemberNotNullWhen(true, nameof(InnerFormula))]
 		public bool HasFormula { get { return !string.IsNullOrEmpty(InnerFormula); } }
 
 #endregion // Formula
 
 #region Style
 
-		internal WorksheetRangeStyle InnerStyle { get; set; }
+		internal WorksheetRangeStyle InnerStyle { get; set; } = null!;
 
 		internal StyleParentKind StyleParentKind { get; set; }
 
@@ -1048,7 +1051,7 @@ namespace unvell.ReoGrid
 		}
 
 		[NonSerialized]
-		private ReferenceCellStyle referenceStyle;
+		private ReferenceCellStyle? referenceStyle;
 
 		/// <summary>
 		/// Get or set style object of cell.
@@ -1068,7 +1071,7 @@ namespace unvell.ReoGrid
 			{
 				if (value == null)
 				{
-					this.Worksheet.RemoveRangeStyles(new RangePosition(this.InternalPos, this.InternalPos), PlainStyleFlag.All);
+					this.Worksheet!.RemoveRangeStyles(new RangePosition(this.InternalPos, this.InternalPos), PlainStyleFlag.All);
 				}
 				else
 				{
@@ -1119,7 +1122,7 @@ namespace unvell.ReoGrid
 #endregion // Style
 
 #region Border Wraps
-		private CellBorderProperty borderProperty = null;
+		private CellBorderProperty? borderProperty = null;
 
 		/// <summary>
 		/// Get border property from cell.
@@ -1158,14 +1161,14 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set the user data attaching to this cell.
 		/// </summary>
-		public object Tag { get; set; }
+		public object? Tag { get; set; }
 
-		internal ICellBody body;
+		internal ICellBody? body;
 
 		/// <summary>
 		/// Get or set the cell body.
 		/// </summary>
-		public ICellBody Body
+		public ICellBody? Body
 		{
 			get { return body; }
 			set
@@ -1351,7 +1354,7 @@ namespace unvell.ReoGrid.Utility
 		/// </summary>
 		/// <param name="data">Data to be check.</param>
 		/// <returns>True if data is number.</returns>
-		public static bool IsNumberData(object data)
+		public static bool IsNumberData(object? data)
 		{
 			return data is double || data is int || data is float || data is long || data is byte || data is decimal;
 		}
@@ -1373,7 +1376,7 @@ namespace unvell.ReoGrid.Utility
 		/// <param name="data">Data to be check and converted.</param>
 		/// <param name="value">The output value converted from data.</param>
 		/// <returns>True if convert is succesful.</returns>
-		public static bool TryGetNumberData(object data, out double value)
+		public static bool TryGetNumberData(object? data, out double value)
 		{
 			if (data is double)
 			{
@@ -1402,9 +1405,9 @@ namespace unvell.ReoGrid.Utility
 		/// </summary>
 		/// <param name="data">Cell data to be converted.</param>
 		/// <returns>Output object after convert.</returns>
-		public static T ConvertData<T>(object data)
+		public static T? ConvertData<T>(object? data)
 		{
-			T value;
+			T? value;
 			ConvertData(data, out value);
 			return value;
 		}
@@ -1416,7 +1419,7 @@ namespace unvell.ReoGrid.Utility
 		/// <param name="data">Cell data to be converted.</param>
 		/// <param name="value">Output object after convert.</param>
 		/// <returns>True if convert is successful.</returns>
-		public static bool ConvertData<T>(object data, out T value)
+		public static bool ConvertData<T>(object? data, [MaybeNullWhen(false)] out T value)
 		{
 			if (data == null)
 			{

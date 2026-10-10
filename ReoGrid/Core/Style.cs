@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 #if WINFORM || ANDROID
 using RGIntDouble = System.Int32;
@@ -83,7 +84,7 @@ namespace unvell.ReoGrid
 		/// <exception cref="InvalidAddressException">throw if specified address or name is illegal</exception>
 		public void SetRangeStyles(string addressOrName, WorksheetRangeStyle style)
 		{
-			NamedRange namedRange;
+			NamedRange? namedRange;
 
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
@@ -219,8 +220,8 @@ namespace unvell.ReoGrid
 				pkind = StyleParentKind.Col;
 			}
 
-			WorksheetRangeStyle rowStyle = null;
-			WorksheetRangeStyle colStyle = null;
+			WorksheetRangeStyle? rowStyle = null;
+			WorksheetRangeStyle? colStyle = null;
 
 			// update cells
 			for (int r = r1; r <= r2; r++)
@@ -229,7 +230,7 @@ namespace unvell.ReoGrid
 
 				for (int c = c1; c <= c2; c++)
 				{
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 					colStyle = null;
 
 					if (cell != null)
@@ -342,7 +343,7 @@ namespace unvell.ReoGrid
 		}
 
 		private void SetCellStyle(Cell cell, WorksheetRangeStyle style,
-			StyleParentKind parentKind, WorksheetRangeStyle parentStyle = null)
+			StyleParentKind parentKind, WorksheetRangeStyle? parentStyle = null)
 		{
 			// do nothing if cell is a part of merged range
 			if (cell.Rowspan == 0 || cell.Colspan == 0) return;
@@ -425,7 +426,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised on style of range changed
 		/// </summary>
-		public event EventHandler<RangeEventArgs> RangeStyleChanged;
+		public event EventHandler<RangeEventArgs>? RangeStyleChanged;
 
 		#endregion // Set Style
 
@@ -557,7 +558,7 @@ namespace unvell.ReoGrid
 			}
 
 			// Parent style of cell
-			WorksheetRangeStyle pStyle = null;
+			WorksheetRangeStyle? pStyle = null;
 			StyleParentKind newPKind = StyleParentKind.Root;
 
 			RowHeader rowhead = this.rows[cell.Row];
@@ -670,7 +671,7 @@ namespace unvell.ReoGrid
 			return this.GetCellStyles(range.StartPos);
 		}
 
-		internal object GetRangeStyle(int row, int col, int rows, int cols, PlainStyleFlag flag)
+		internal object? GetRangeStyle(int row, int col, int rows, int cols, PlainStyleFlag flag)
 		{
 			// TODO: return range's style instead of cell 
 			return GetCellStyleItem(row, col, flag);
@@ -709,7 +710,7 @@ namespace unvell.ReoGrid
 		/// <returns>Style of cell from specified position.</returns>
 		public WorksheetRangeStyle GetCellStyles(int row, int col)
 		{
-			Cell cell = cells[row, col];
+			Cell? cell = cells[row, col];
 			StyleParentKind pKind = StyleParentKind.Own;
 			if (cell == null)
 				return StyleUtility.FindCellParentStyle(this, row, col, out pKind);
@@ -724,9 +725,9 @@ namespace unvell.ReoGrid
 		/// <param name="col">Zero-based number of column</param>
 		/// <param name="flag">Specified style item to be get</param>
 		/// <returns>Style item value</returns>
-		public object GetCellStyleItem(int row, int col, PlainStyleFlag flag)
+		public object? GetCellStyleItem(int row, int col, PlainStyleFlag flag)
 		{
-			Cell cell = cells[row, col];
+			Cell? cell = cells[row, col];
 
 			StyleParentKind pKind = StyleParentKind.Own;
 
@@ -758,7 +759,7 @@ namespace unvell.ReoGrid
 			UpdateCellRenderFont(null, cell, DrawMode.View, reason);
 		}
 
-		internal void UpdateCellRenderFont(IRenderer ir, Cell cell, DrawMode drawMode, UpdateFontReason reason)
+		internal void UpdateCellRenderFont(IRenderer? ir, Cell cell, DrawMode drawMode, UpdateFontReason reason)
 		{
 			if (this.controlAdapter == null || cell.InnerStyle == null)
 			{
@@ -809,7 +810,7 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		internal void UpdateCellTextBounds(IRenderer ig, Cell cell, DrawMode drawMode, UpdateFontReason reason)
+		internal void UpdateCellTextBounds(IRenderer? ig, Cell cell, DrawMode drawMode, UpdateFontReason reason)
 		{
 			this.UpdateCellTextBounds(ig, cell, drawMode, this.renderScaleFactor, reason);
 		}
@@ -824,7 +825,7 @@ namespace unvell.ReoGrid
 		/// <param name="cell">The target cell will be updated.</param>
 		/// <param name="drawMode">Draw mode</param>
 		/// <param name="scaleFactor">Scale factor of current worksheet</param>
-		internal void UpdateCellTextBounds(IRenderer ig, Cell cell, DrawMode drawMode, RGFloat scaleFactor, UpdateFontReason reason)
+		internal void UpdateCellTextBounds(IRenderer? ig, Cell cell, DrawMode drawMode, RGFloat scaleFactor, UpdateFontReason reason)
 		{
 			if (cell == null || string.IsNullOrEmpty(cell.DisplayText)) return;
 
@@ -1000,7 +1001,7 @@ namespace unvell.ReoGrid
 			bool enableAdjustRowHeight = this.settings.Has(WorksheetSettings.Edit_AllowAdjustRowHeight
 				| WorksheetSettings.Edit_AutoExpandRowHeight);
 
-			RowHeader rowHeader = null;
+			RowHeader? rowHeader = null;
 
 			this.IterateCells(fixedRange, (r, c, cell) =>
 			{
@@ -1037,7 +1038,7 @@ namespace unvell.ReoGrid
 
 		#endregion // Update Font & Text
 
-		internal WorksheetRangeStyle RootStyle { get; set; }
+		internal WorksheetRangeStyle RootStyle { get; set; } = null!;
 	}
 
 	#region Alignment
@@ -1369,7 +1370,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">Another object to be checked</param>
 		/// <returns>True if two padding values are same; otherwise return false</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is PaddingValue)) return false;
 
@@ -1434,7 +1435,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set font name
 		/// </summary>
-		public string FontName { get; set; }
+		public string? FontName { get; set; }
 
 		/// <summary>
 		/// Get or set font size
@@ -1549,7 +1550,8 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="source">Another style to be cloned.</param>
 		/// <returns>New cloned style set.</returns>
-		public static WorksheetRangeStyle Clone(WorksheetRangeStyle source)
+		[return: NotNullIfNotNull(nameof(source))]
+		public static WorksheetRangeStyle? Clone(WorksheetRangeStyle? source)
 		{
 			return source == null ? source : new WorksheetRangeStyle(source);
 		}
@@ -1573,7 +1575,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">Another style object compared to this object.</param>
 		/// <returns>True if thay are same; otherwise return false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is WorksheetRangeStyle)) return false;
 
@@ -1678,13 +1680,13 @@ namespace unvell.ReoGrid
 		}
 
 		//TODO: reduce create style object
-		internal virtual void SetStyle<T>(RangePosition range, PlainStyleFlag flag, T value)
+		internal virtual void SetStyle<T>(RangePosition range, PlainStyleFlag flag, T value) where T : notnull
 		{
 			SetStyle<T>(range.Row, range.Col, range.Rows, range.Cols, flag, value);
 		}
 
 		//TODO: reduce create style object
-		internal virtual void SetStyle<T>(int row, int col, int rows, int cols, PlainStyleFlag flag, T value)
+		internal virtual void SetStyle<T>(int row, int col, int rows, int cols, PlainStyleFlag flag, T value) where T : notnull
 		{
 			var style = new WorksheetRangeStyle
 			{
@@ -1714,16 +1716,16 @@ namespace unvell.ReoGrid
 			this.Worksheet.SetRangeStyles(row, col, rows, cols, style);
 		}
 
-		internal virtual T GetStyle<T>(RangePosition range, PlainStyleFlag flag)
+		internal virtual T? GetStyle<T>(RangePosition range, PlainStyleFlag flag)
 		{
 			return GetStyle<T>(range.Row, range.Col, range.Rows, range.Cols, flag);
 		}
 
-		internal virtual T GetStyle<T>(int row, int col, int rows, int cols, PlainStyleFlag flag)
+		internal virtual T? GetStyle<T>(int row, int col, int rows, int cols, PlainStyleFlag flag)
 		{
 			Type type = typeof(T);
 
-			return (T)Convert.ChangeType(this.Worksheet.GetRangeStyle(row, col, rows, cols, flag), type);
+			return (T?)Convert.ChangeType(this.Worksheet.GetRangeStyle(row, col, rows, cols, flag), type);
 		}
 
 		internal virtual void CheckForReferenceOwner(object owner)
@@ -1803,7 +1805,8 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set the font name to entire range
 		/// </summary>
-		public string FontName
+		[DisallowNull]
+		public string? FontName
 		{
 			get
 			{
@@ -2037,7 +2040,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleBold);
+				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleBold)!;
 			}
 			set
 			{
@@ -2061,7 +2064,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleItalic);
+				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleItalic)!;
 			}
 			set
 			{
@@ -2085,7 +2088,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleStrikethrough);
+				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleStrikethrough)!;
 			}
 			set
 			{
@@ -2109,7 +2112,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleUnderline);
+				return (bool)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.FontStyleUnderline)!;
 			}
 			set
 			{
@@ -2133,7 +2136,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (ReoGridHorAlign)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.HorizontalAlign);
+				return (ReoGridHorAlign)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.HorizontalAlign)!;
 			}
 			set
 			{
@@ -2157,7 +2160,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (ReoGridVerAlign)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.VerticalAlign);
+				return (ReoGridVerAlign)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.VerticalAlign)!;
 			}
 			set
 			{
@@ -2181,7 +2184,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (PaddingValue)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.Padding);
+				return (PaddingValue)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.Padding)!;
 			}
 			set
 			{
@@ -2206,7 +2209,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (SolidColor)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.BackColor);
+				return (SolidColor)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.BackColor)!;
 			}
 			set
 			{
@@ -2231,7 +2234,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.columnHeader);
 
-				return (SolidColor)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.TextColor);
+				return (SolidColor)this.Worksheet.GetRangeStyle(0, this.columnHeader.Index, -1, 1, PlainStyleFlag.TextColor)!;
 			}
 			set
 			{
@@ -2272,7 +2275,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleBold);
+				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleBold)!;
 			}
 			set
 			{
@@ -2296,7 +2299,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleItalic);
+				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleItalic)!;
 			}
 			set
 			{
@@ -2320,7 +2323,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleStrikethrough);
+				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleStrikethrough)!;
 			}
 			set
 			{
@@ -2344,7 +2347,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleUnderline);
+				return (bool)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.FontStyleUnderline)!;
 			}
 			set
 			{
@@ -2368,7 +2371,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (ReoGridHorAlign)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.HorizontalAlign);
+				return (ReoGridHorAlign)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.HorizontalAlign)!;
 			}
 			set
 			{
@@ -2392,7 +2395,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (ReoGridVerAlign)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.VerticalAlign);
+				return (ReoGridVerAlign)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.VerticalAlign)!;
 			}
 			set
 			{
@@ -2416,7 +2419,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (PaddingValue)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.Padding);
+				return (PaddingValue)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.Padding)!;
 			}
 			set
 			{
@@ -2441,7 +2444,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (SolidColor)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.BackColor);
+				return (SolidColor)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.BackColor)!;
 			}
 			set
 			{
@@ -2466,7 +2469,7 @@ namespace unvell.ReoGrid
 			{
 				CheckForReferenceOwner(this.rowHeader);
 
-				return (SolidColor)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.TextColor);
+				return (SolidColor)this.Worksheet.GetRangeStyle(this.rowHeader.Index, 0, 1, -1, PlainStyleFlag.TextColor)!;
 			}
 			set
 			{
@@ -2502,7 +2505,7 @@ namespace unvell.ReoGrid
 		/// <param name="sheet"></param>
 		/// <param name="cell"></param>
 		public ReferenceCellStyle(Cell cell)
-			: base(cell.Worksheet)
+			: base(cell.Worksheet!)
 		{
 			this.Cell = cell;
 		}
@@ -2615,7 +2618,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set font name of cell.
 		/// </summary>
-		public string FontName
+		public string? FontName
 		{
 			get
 			{

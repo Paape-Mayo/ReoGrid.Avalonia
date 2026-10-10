@@ -43,7 +43,7 @@ namespace unvell.ReoGrid
 		/// <param name="path">File path to create file and save workbook data.</param>
 		/// <param name="fileFormat">Specified file format used to write data of workbook.</param>
 		/// <param name="encoding">Encoding used to write plain-text format file data. (Optional)</param>
-		void Save(string path, IO.FileFormat fileFormat, Encoding encoding);
+		void Save(string path, IO.FileFormat fileFormat, Encoding? encoding);
 
 		/// <summary>
 		/// Save workbook into stream.
@@ -58,7 +58,7 @@ namespace unvell.ReoGrid
 		/// <param name="stream">Output stream to write data of workbook.</param>
 		/// <param name="fileFormat">Specifies the file format used to write data of workbook.</param>
 		/// <param name="encoding">Encoding used to write plain-text from resource. (Optional)</param>
-		void Save(System.IO.Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding encoding);
+		void Save(System.IO.Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding? encoding);
 
 		/// <summary>
 		/// Load workbook from file by specified path.
@@ -79,7 +79,7 @@ namespace unvell.ReoGrid
 		/// <param name="path">Path to locate the file and read workbook data from the file.</param>
 		/// <param name="fileFormat">Specified file format used to read data of workbook.</param>
 		/// <param name="encoding">Encoding used to read plain-text format workbook data from stream. (Optional)</param>
-		void Load(string path, IO.FileFormat fileFormat, Encoding encoding);
+		void Load(string path, IO.FileFormat fileFormat, Encoding? encoding);
 
 		/// <summary>
 		/// Load workbook from specified stream.
@@ -94,17 +94,17 @@ namespace unvell.ReoGrid
 		/// <param name="stream">Input stream to read data of workbook.</param>
 		/// <param name="fileFormat">Specified file format used to read workbook data from stream.</param>
 		/// <param name="encoding">Encoding used to read plain-text format workbook data from stream. (Optional)</param>
-		void Load(System.IO.Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding encoding);
+		void Load(System.IO.Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding? encoding);
 
 		/// <summary>
 		/// Event raised when workbook loaded from stream or file.
 		/// </summary>
-		event EventHandler WorkbookLoaded;
+		event EventHandler? WorkbookLoaded;
 
 		/// <summary>
 		/// Event raised when workbook saved into stream or file.
 		/// </summary>
-		event EventHandler WorkbookSaved;
+		event EventHandler? WorkbookSaved;
 
 		#endregion // Save & Load
 
@@ -115,7 +115,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Name for the worksheet (null or empty name to use default sheet name)</param>
 		/// <returns>Instance of worksheet has been created</returns>
-		Worksheet CreateWorksheet(string name = null);
+		Worksheet CreateWorksheet(string? name = null);
 
 		/// <summary>
 		/// Insert worksheet into workbook before specified index
@@ -163,7 +163,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="name">Name to find worksheet.</param>
 		/// <returns>Instance of worksheet that is found by specified name; otherwise return null</returns>
-		Worksheet GetWorksheetByName(string name);
+		Worksheet? GetWorksheetByName(string? name);
 
 		/// <summary>
 		/// Create a cloned worksheet and put into specified position.
@@ -172,7 +172,7 @@ namespace unvell.ReoGrid
 		/// <param name="newIndex">Target index used to insert the copied worksheet</param>
 		/// <param name="newName">Name for new worksheet, set as null to use a default worksheet name e.g. Sheet1, Sheet2...</param>
 		/// <returns>New instance of copid worksheet</returns>
-		Worksheet CopyWorksheet(int index, int newIndex, string newName = null);
+		Worksheet CopyWorksheet(int index, int newIndex, string? newName = null);
 
 		/// <summary>
 		/// Create a cloned worksheet and put into specified position.
@@ -181,7 +181,7 @@ namespace unvell.ReoGrid
 		/// <param name="newIndex">Target index used to insert the copied worksheet</param>
 		/// <param name="newName">Name for new worksheet, set as null to use a default worksheet name e.g. Sheet1, Sheet2...</param>
 		/// <returns>New instance of copid worksheet</returns>
-		Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string newName = null);
+		Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string? newName = null);
 
 		/// <summary>
 		/// Move worksheet from a position to another position
@@ -217,32 +217,32 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when worksheet is created.
 		/// </summary>
-		event EventHandler<WorksheetCreatedEventArgs> WorksheetCreated;
+		event EventHandler<WorksheetCreatedEventArgs>? WorksheetCreated;
 
 		/// <summary>
 		/// Event raised when worksheet is inserted into this workbook.
 		/// </summary>
-		event EventHandler<WorksheetInsertedEventArgs> WorksheetInserted;
+		event EventHandler<WorksheetInsertedEventArgs>? WorksheetInserted;
 
 		/// <summary>
 		/// Event raised when worksheet is removed from this workbook.
 		/// </summary>
-		event EventHandler<WorksheetRemovedEventArgs> WorksheetRemoved;
+		event EventHandler<WorksheetRemovedEventArgs>? WorksheetRemoved;
 
 		/// <summary>
 		/// Event raised when name of worksheet is changed.
 		/// </summary>
-		event EventHandler<WorksheetNameChangingEventArgs> WorksheetNameChanged;
+		event EventHandler<WorksheetNameChangingEventArgs>? WorksheetNameChanged;
 
 		/// <summary>
 		/// Event raised when background color of worksheet name is changed.
 		/// </summary>
-		event EventHandler<WorksheetEventArgs> WorksheetNameBackColorChanged;
+		event EventHandler<WorksheetEventArgs>? WorksheetNameBackColorChanged;
 
 		/// <summary>
 		/// Event raised when text color of worksheet name is changed.
 		/// </summary>
-		event EventHandler<WorksheetEventArgs> WorksheetNameTextColorChanged;
+		event EventHandler<WorksheetEventArgs>? WorksheetNameTextColorChanged;
 
 		#endregion // Worksheet Management
 
@@ -251,7 +251,7 @@ namespace unvell.ReoGrid
 		/// Event raised when exception has been happened during internal processed.
 		/// Usually these internal processes are raised by hot-keys pressed by user.
 		/// </summary>
-		event EventHandler<ExceptionHappenEventArgs> ExceptionHappened;
+		event EventHandler<ExceptionHappenEventArgs>? ExceptionHappened;
 
 		/// <summary>
 		/// Notify that there are exceptions happen on any worksheet. 
@@ -259,7 +259,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="sheet">Worksheet where the exception happened</param>
 		/// <param name="ex">Exception to describe the details of error information</param>
-		void NotifyExceptionHappen(Worksheet sheet, Exception ex);
+		void NotifyExceptionHappen(Worksheet? sheet, Exception ex);
 		#endregion // Internal Exceptions
 	}
 

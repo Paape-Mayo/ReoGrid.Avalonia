@@ -92,15 +92,15 @@ namespace unvell.ReoGrid.Rendering
 
 		void BeginDrawHeaderText(RGFloat scale);
 
-		void DrawHeaderText(string text, RGBrush brush, Rectangle rect);
+		void DrawHeaderText(string text, RGBrush? brush, Rectangle rect);
 
 		void DrawLeadHeadArrow(Graphics.Rectangle bounds, SolidColor startColor, SolidColor endColor);
 
-		RGPen GetPen(SolidColor color);
+		RGPen? GetPen(SolidColor color);
 
-		void ReleasePen(RGPen pen);
+		void ReleasePen(RGPen? pen);
 
-		RGBrush GetBrush(SolidColor color);
+		RGBrush? GetBrush(SolidColor color);
 
 		Common.ResourcePoolManager ResourcePoolManager { get; }
 	}

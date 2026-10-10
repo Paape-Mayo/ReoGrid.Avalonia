@@ -40,7 +40,7 @@ namespace unvell.ReoGrid.IO
 			using (StreamWriter sw = new StreamWriter(s))
 			{
 				StringBuilder sb = new StringBuilder();
-				Cell cell;
+				Cell? cell;
 
 				if (htmlHeader)
 				{
@@ -107,7 +107,7 @@ namespace unvell.ReoGrid.IO
 							}
 						}
 							
-						WorksheetRangeStyle style = sheet.GetCellStyles(r, c);
+						WorksheetRangeStyle? style = sheet.GetCellStyles(r, c);
 						if (style != null)
 						{
 
@@ -157,7 +157,7 @@ namespace unvell.ReoGrid.IO
 
 						//cell = Grid.GetCell(r, c);
 						
-						string text = null;
+						string? text = null;
 						if (cell != null)
 						{
 							text = string.IsNullOrEmpty(cell.DisplayText) ? "&nbsp;" : 
@@ -197,7 +197,7 @@ namespace unvell.ReoGrid.IO
 		/// </remarks>
 		/// <param name="text">The text string to encode.</param>
 		/// <returns>The HTML-encoded text.</returns>
-		public static string HtmlEncode(string text)
+		public static string? HtmlEncode(string? text)
 		{
 			if (text == null)
 				return null;

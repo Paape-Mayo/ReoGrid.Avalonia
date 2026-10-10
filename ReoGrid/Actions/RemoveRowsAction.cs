@@ -33,18 +33,18 @@ namespace unvell.ReoGrid.Actions
 	public class RemoveRowsAction : WorksheetReusableAction
 	{
 		// main backups 
-		private PartialGrid backupData = null;
-		private int[] backupHeights;
+		private PartialGrid? backupData = null;
+		private int[] backupHeights = null!;
 
 		// additional backups
-		internal List<NamedRange> deletedNamedRanges;
-		internal List<HighlightRange> deletedHighlightRanges;
-		internal Dictionary<NamedRange, BackupRangeInfo> changedNamedRange;
-		internal Dictionary<HighlightRange, BackupRangeInfo> changedHighlightRanges;
+		internal List<NamedRange>? deletedNamedRanges;
+		internal List<HighlightRange>? deletedHighlightRanges;
+		internal Dictionary<NamedRange, BackupRangeInfo>? changedNamedRange;
+		internal Dictionary<HighlightRange, BackupRangeInfo>? changedHighlightRanges;
 
 #if OUTLINE
-		internal List<IReoGridOutline> deletedOutlines;
-		internal Dictionary<IReoGridOutline, BackupRangeInfo> changedOutlines;
+		internal List<IReoGridOutline>? deletedOutlines;
+		internal Dictionary<IReoGridOutline, BackupRangeInfo>? changedOutlines;
 #endif // OUTLINE
 
 		/// <summary>

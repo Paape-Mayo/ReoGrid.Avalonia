@@ -71,7 +71,7 @@ namespace unvell.ReoGrid.Drawing
 			dc.Graphics.IsAntialias = false;
 		}
 
-		internal WorksheetDrawingObjectCollection worksheetDrawingObjectCollection;
+		internal WorksheetDrawingObjectCollection? worksheetDrawingObjectCollection;
 
 		public override IDrawingObjectCollection Children
 		{

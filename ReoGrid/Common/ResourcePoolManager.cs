@@ -76,7 +76,7 @@ namespace unvell.Common
 #if WINFORM || WPF || AVALONIA
         private Dictionary<SolidColor, RGSolidBrush> cachedBrushes = new Dictionary<SolidColor, RGSolidBrush>();
 
-        public RGSolidBrush GetBrush(SolidColor color)
+        public RGSolidBrush? GetBrush(SolidColor color)
         {
             if (color.A == 0) return null;
 
@@ -177,16 +177,16 @@ namespace unvell.Common
 
         #region Pen
         private Dictionary<SolidColor, List<RGPen>> cachedPens = new Dictionary<SolidColor, List<RGPen>>();
-        public RGPen GetPen(SolidColor color)
+        public RGPen? GetPen(SolidColor color)
         {
             return GetPen(color, 1, RGDashStyles.Solid);
         }
-        public RGPen GetPen(SolidColor color, RGFloat weight, RGDashStyle style)
+        public RGPen? GetPen(SolidColor color, RGFloat weight, RGDashStyle? style)
         {
             if (color.A == 0) return null;
 
-            RGPen pen;
-            List<RGPen> penlist;
+            RGPen? pen;
+            List<RGPen>? penlist;
 
             lock (cachedPens)
             {
@@ -247,7 +247,7 @@ namespace unvell.Common
 
         public FontFamily GetFontFamily(string name)
         {
-            FontFamily ff = null;
+            FontFamily? ff = null;
             this.fontFamilies.TryGetValue(name, out ff);
             if (ff == null)
             {

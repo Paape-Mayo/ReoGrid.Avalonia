@@ -31,8 +31,8 @@ namespace unvell.ReoGrid.Utility
 {
     internal interface IZipArchive
     {
-        IZipEntry GetFile(string path);
-        IZipEntry AddFile(string path, Stream stream = null);
+        IZipEntry? GetFile(string path);
+        IZipEntry AddFile(string path, Stream? stream = null);
         bool IsFileExist(string path);
         void Flush();
         void Close();

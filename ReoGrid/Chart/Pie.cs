@@ -212,7 +212,7 @@ namespace unvell.ReoGrid.Chart
 			this.Chart.ChartDataChanged -= Chart_DataSourceChanged;
 		}
 
-		void Chart_DataSourceChanged(object sender, EventArgs e)
+		void Chart_DataSourceChanged(object? sender, EventArgs e)
 		{
 			this.UpdatePieShapes();
 		}

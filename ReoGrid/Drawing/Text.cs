@@ -124,7 +124,7 @@ namespace unvell.ReoGrid.Drawing
         #endregion // Measured Text Size
 
         #region Default Values
-        public string DefaultFontName { get; set; }
+        public string DefaultFontName { get; set; } = null!;
 
         public RGFloat DefaultFontSize { get; set; }
 
@@ -245,7 +245,7 @@ namespace unvell.ReoGrid.Drawing
         /// </summary>
         /// <returns>The paragraph instance to be added.</returns>
         /// <param name="p">Paragraph to be added. Null to create a new empty paragraph.</param>
-        internal void AddParagraph(Paragraph p = null)
+        internal void AddParagraph(Paragraph? p = null)
         {
             if (p == null) p = new Paragraph(this);
             this.paragraphs.Add(p);
@@ -262,7 +262,7 @@ namespace unvell.ReoGrid.Drawing
         /// <param name="fontStyles">Style of the text to be appended. Null to use last font style or default font style.</param>
         /// <param name="textColor">Color of the text to be appended. Null to use last text color or default text color.</param>
         /// <param name="backColor">Background color of text to be appended. Null to use last background color or default background color.</param>
-        public void AddText(string text, string fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
+        public void AddText(string text, string? fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastPara = this.GetOrCreateLastParagraph();
@@ -290,14 +290,14 @@ namespace unvell.ReoGrid.Drawing
         /// <param name="textColor">Color of the text to be appended. Null to use last text color or default text color.</param>
         /// <param name="backColor">Background color of text to be appended. Null to use last background color or default background color.</param>
         /// <returns>Rich format text instance.</returns>
-        public RichText Span(string text, string fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
+        public RichText Span(string text, string? fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             this.AddText(text, fontName, fontSize, fontStyles, textColor, backColor);
             return this;
         }
 
-        public RichText Bold(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Bold(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Bold, textColor, backColor);
@@ -305,7 +305,7 @@ namespace unvell.ReoGrid.Drawing
             return this;
         }
 
-        public RichText Italic(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Italic(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Italic, textColor, backColor);
@@ -313,7 +313,7 @@ namespace unvell.ReoGrid.Drawing
             return this;
         }
 
-        public RichText Underline(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Underline(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Underline, textColor, backColor);
@@ -321,7 +321,7 @@ namespace unvell.ReoGrid.Drawing
             return this;
         }
 
-        public RichText Regular(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Regular(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Regular, textColor, backColor);
@@ -329,7 +329,7 @@ namespace unvell.ReoGrid.Drawing
             return this;
         }
 
-        public RichText Superscript(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Superscript(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Superscrit, textColor, backColor);
@@ -337,7 +337,7 @@ namespace unvell.ReoGrid.Drawing
             return this;
         }
 
-        public RichText Subscript(string text, string fontName = null, RGFloat? fontSize = null,
+        public RichText Subscript(string text, string? fontName = null, RGFloat? fontSize = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var lastRun = this.GetOrCreateLastParagraph().GetOrCreateLastRun(fontName, fontSize, FontStyles.Subscript, textColor, backColor);
@@ -346,7 +346,7 @@ namespace unvell.ReoGrid.Drawing
         }
 
         public RichText SetStyles(RGFloat? paragraphSpacing = null, RGFloat? lineHeight = null,
-            ReoGridHorAlign? halign = null, string fontName = null, RGFloat? fontSize = null,
+            ReoGridHorAlign? halign = null, string? fontName = null, RGFloat? fontSize = null,
             FontStyles? fontStyles = null, SolidColor? textColor = null, SolidColor? backColor = null)
         {
             var p = GetOrCreateLastParagraph();
@@ -362,7 +362,7 @@ namespace unvell.ReoGrid.Drawing
 
         private Paragraph GetOrCreateLastParagraph()
         {
-            Paragraph lastPara = null;
+            Paragraph? lastPara = null;
 
             if (this.paragraphs.Count > 0)
             {
@@ -412,9 +412,9 @@ namespace unvell.ReoGrid.Drawing
                     break;
             }
 
-            Run lastRun = null;
+            Run? lastRun = null;
 
-            RGBrush lastBrush = null;
+            RGBrush? lastBrush = null;
             SolidColor lastColor = SolidColor.Transparent;
 
 #if DEBUG1
@@ -465,7 +465,7 @@ namespace unvell.ReoGrid.Drawing
 #if WINFORM
                             using (var underlinePen = new RGPen(lastBrush.Color))
 #elif WPF || AVALONIA
-                            var underlinePen = new RGPen(new RGBrush(lastBrush.Color), 1);
+                            var underlinePen = new RGPen(new RGBrush(lastBrush!.Color), 1);
 #endif // WPF
                             {
                                 RGFloat underlineY = l.Height + y + 1;
@@ -514,7 +514,7 @@ namespace unvell.ReoGrid.Drawing
 
             this.measuredSize = new Size(0, 0);
 
-            Paragraph lastP = null;
+            Paragraph? lastP = null;
 
             if (this.size.Width > 0 && this.size.Height > 0)
             {
@@ -561,7 +561,7 @@ namespace unvell.ReoGrid.Drawing
         #region ToString
         internal bool sbDirty = true;
 
-        private StringBuilder sb = null;
+        private StringBuilder? sb = null;
 
         /// <summary>
         /// Convert rich format text to plain text.
@@ -657,7 +657,7 @@ namespace unvell.ReoGrid.Drawing.Text
         /// Create new paragraph with initiali text.
         /// </summary>
         /// <param name="text">Text to be the content of paragraph created.</param>
-        internal Paragraph(RichText rt, string text = null)
+        internal Paragraph(RichText rt, string? text = null)
         {
             this.rt = rt;
             this.LineHeight = rt.DefaultLineHeight;
@@ -681,7 +681,7 @@ namespace unvell.ReoGrid.Drawing.Text
         /// <param name="fontStyles">Style of the text to be appended. Null to use last font style or default font style.</param>
         /// <param name="textColor">Color of the text to be appended. Null to use last text color or default text color.</param>
         /// <param name="backColor">Background color of text to be appended. Null to use last background color or default background color.</param>
-        public void AddText(string text, string fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
+        public void AddText(string text, string? fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
             Run lastRun = this.GetOrCreateLastRun(fontName, fontSize, fontStyles, textColor, backColor);
@@ -691,10 +691,10 @@ namespace unvell.ReoGrid.Drawing.Text
             this.rt.sbDirty = true;
         }
 
-        internal Run GetOrCreateLastRun(string fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
+        internal Run GetOrCreateLastRun(string? fontName = null, RGFloat? fontSize = null, FontStyles? fontStyles = null,
             SolidColor? textColor = null, SolidColor? backColor = null)
         {
-            Run newRun = null, lastRun = null;
+            Run? newRun = null, lastRun = null;
 
             if (this.runs.Count > 0)
             {
@@ -742,8 +742,8 @@ namespace unvell.ReoGrid.Drawing.Text
                 var line = new Line(rs.currentLoc.Y);
                 //line.Top = rs.currentLoc.Y;
 
-                Run prevRun = null, nextRun = null;
-                BoxFontInfo curFontInfo = null;
+                Run? prevRun = null, nextRun = null;
+                BoxFontInfo curFontInfo = null!;
 
                 for (int ri = 0; ri < this.Runs.Count; ri++)
                 {
@@ -769,7 +769,7 @@ namespace unvell.ReoGrid.Drawing.Text
 #if WINFORM || ANDROID
                             var b = new Box(r, c.ToString(), curFontInfo, r.TextSizes[i], r.FontInfo.LineHeight);
 #elif WPF || AVALONIA
-                            var b = new Box(r, c.ToString(), curFontInfo, r.GlyphIndexes[i], r.TextSizes[i]);
+                            var b = new Box(r, c.ToString(), curFontInfo, r.GlyphIndexes![i], r.TextSizes![i]);
 #endif // WPF
 
                             rs.AddCachedBox(b);
@@ -875,7 +875,7 @@ namespace unvell.ReoGrid.Drawing.Text
             rs.CacheBoxesReset();
         }
 
-        internal Line lastLine = null;
+        internal Line? lastLine = null;
 
         private void CommitLine(RelayoutSession rs, Line line)
         {
@@ -1061,12 +1061,12 @@ namespace unvell.ReoGrid.Drawing.Text
 #if WINFORM || ANDROID
         internal List<RGFloat> TextSizes { get; private set; }
 #elif WPF || AVALONIA
-        internal List<double> TextSizes { get; private set; }
-        internal List<ushort> GlyphIndexes { get; private set; }
+        internal List<double>? TextSizes { get; private set; }
+        internal List<ushort>? GlyphIndexes { get; private set; }
 #endif // WPF
 
         #region Font Info
-        private BoxFontInfo fontInfo = null;
+        private BoxFontInfo? fontInfo = null;
 
         internal BoxFontInfo FontInfo
         {
@@ -1126,7 +1126,7 @@ namespace unvell.ReoGrid.Drawing.Text
         }
         #endregion // Font Info
 
-        private string fontName;
+        private string fontName = null!;
         public string FontName { get { return this.fontName; } set { this.fontName = value; this.fontInfo = null; } }
 
         private RGFloat fontSize;
@@ -1166,8 +1166,8 @@ namespace unvell.ReoGrid.Drawing.Text
             set
             {
                 this.text = string.Empty;
-                this.TextSizes.Clear();
-                this.TextSizes.Capacity = this.text.Length;
+                this.TextSizes!.Clear();
+                this.TextSizes!.Capacity = this.text.Length;
 
                 this.AppendText(value);
             }
@@ -1266,7 +1266,7 @@ namespace unvell.ReoGrid.Drawing.Text
         internal List<Box> boxes = new List<Box>();
         //public List<Box> Boxes { get { return this.boxes; } }
 
-        public Box LastBox { get { return this.boxes.Count == 0 ? null : this.boxes[this.boxes.Count - 1]; } }
+        public Box? LastBox { get { return this.boxes.Count == 0 ? null : this.boxes[this.boxes.Count - 1]; } }
         //public RGFloat Right { get { var lastBox = this.LastBox; return lastBox == null ? 0 : lastBox.rightTop.X; } }
 
         internal RGFloat Ascent { get; set; }
@@ -1313,7 +1313,7 @@ namespace unvell.ReoGrid.Drawing.Text
         internal RGFloat Width { get; private set; }
         internal RGFloat Height { get; private set; }
 
-        internal BoxFontInfo FontInfo { get; private set; }
+        internal BoxFontInfo FontInfo { get; private set; } = null!;
 
         internal Point leftTop;
         //internal Point leftBottom;
@@ -1393,7 +1393,7 @@ namespace unvell.ReoGrid.Drawing.Text
             return c == 32 || c == 7;
         }
 
-        public static bool IsBreakable(Paragraph p, Run prevRun, Run nextRun, Run r, int index)
+        public static bool IsBreakable(Paragraph p, Run? prevRun, Run? nextRun, Run r, int index)
         {
             string str = r.Text;
             int strlen = str.Length;

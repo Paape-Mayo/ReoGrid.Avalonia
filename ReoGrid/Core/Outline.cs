@@ -34,7 +34,7 @@ namespace unvell.ReoGrid
 
 	partial class Worksheet
 	{
-		private RowOutlineCollection rowOutlineCollection;
+		private RowOutlineCollection? rowOutlineCollection;
 
 		/// <summary>
 		/// Get row outline collection.
@@ -52,7 +52,7 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		private ColumnOutlineCollection columnOutlineCollection;
+		private ColumnOutlineCollection? columnOutlineCollection;
 	
 		/// <summary>
 		/// Get column outline collection.
@@ -71,14 +71,14 @@ namespace unvell.ReoGrid
 		}
 
 		#region Group & Outline
-		internal Dictionary<RowOrColumn, OutlineCollection<ReoGridOutline>> outlines;
+		internal Dictionary<RowOrColumn, OutlineCollection<ReoGridOutline>>? outlines;
 
 		/// <summary>
 		/// Retrieve the attached outlines from spreadsheet.
 		/// </summary>
 		/// <param name="flag">Row or column to be retrieved.</param>
 		/// <returns>Retrieved collection of outline.</returns>
-		public OutlineCollection<ReoGridOutline> GetOutlines(RowOrColumn flag)
+		public OutlineCollection<ReoGridOutline>? GetOutlines(RowOrColumn flag)
 		{
 			return outlines == null ? null : outlines[flag];
 		}
@@ -95,7 +95,7 @@ namespace unvell.ReoGrid
 				throw new ArgumentNullException("iterator", "iterator cannot be null");
 			}
 
-			OutlineCollection<ReoGridOutline> outlines = null;
+			OutlineCollection<ReoGridOutline>? outlines = null;
 
 			if (this.outlines != null
 				&& this.outlines.TryGetValue(flag, out outlines))
@@ -148,7 +148,7 @@ namespace unvell.ReoGrid
 		/// <exception cref="OutlineTooMuchException">If there is more than 9 outlines existed this exception will be thrown.</exception>
 		/// <exception cref="OutlineAlreadyDefinedException">If there is a same outline with specified number and count has been already added.</exception>
 		/// <exception cref="OutlineIntersectedException">If specified outline intersects with another one which has been already added.</exception>
-		public ReoGridOutline GroupColumns(int col, int count)
+		public ReoGridOutline? GroupColumns(int col, int count)
 		{
 			return AddOutline(RowOrColumn.Column, col, count);
 		}
@@ -163,7 +163,7 @@ namespace unvell.ReoGrid
 		/// <exception cref="OutlineTooMuchException">If there is more than 9 outlines existed this exception will be thrown.</exception>
 		/// <exception cref="OutlineAlreadyDefinedException">If there is a same outline with specified number and count has been already added.</exception>
 		/// <exception cref="OutlineIntersectedException">If specified outline intersects with another one which has been already added.</exception>
-		public ReoGridOutline GroupRows(int row, int count)
+		public ReoGridOutline? GroupRows(int row, int count)
 		{
 			return AddOutline(RowOrColumn.Row, row, count);
 		}
@@ -179,7 +179,7 @@ namespace unvell.ReoGrid
 		/// <exception cref="OutlineTooMuchException">If there is more than 9 outlines existed this exception will be thrown.</exception>
 		/// <exception cref="OutlineAlreadyDefinedException">If there is a same outline with specified number and count has been already added.</exception>
 		/// <exception cref="OutlineIntersectedException">If specified outline intersects with another one which has been already added.</exception>
-		public ReoGridOutline AddOutline(RowOrColumn flag, int start, int count)
+		public ReoGridOutline? AddOutline(RowOrColumn flag, int start, int count)
 		{
 			if (flag == RowOrColumn.Both)
 			{
@@ -222,7 +222,7 @@ namespace unvell.ReoGrid
 			int targetGroupIndex = outlineGroups.Count - 2; // last group in master
 
 			// create new outline
-			ReoGridOutline newOutline = null;
+			ReoGridOutline? newOutline = null;
 			bool found = false;
 
 			if (flag == RowOrColumn.Row)
@@ -303,9 +303,11 @@ namespace unvell.ReoGrid
 		/// <param name="start">Zero-based start position of the outline.</param>
 		/// <param name="count">Number of rows or columns contained in the outline.</param>
 		/// <returns>Instance of outline if found with specified position.</returns>
-		public IReoGridOutline GetOutline(RowOrColumn flag, int start, int count)
+		public IReoGridOutline? GetOutline(RowOrColumn flag, int start, int count)
 		{
-			ReoGridOutline outline = null;
+			ReoGridOutline? outline = null;
+
+			if (this.outlines == null) return null;
 
 			var outlines = this.outlines[flag];
 
@@ -334,7 +336,7 @@ namespace unvell.ReoGrid
 		public IReoGridOutline CollapseOutline(RowOrColumn flag, int start, int count)
 		{
 			var outline = GetOutline(flag, start, count);
-			outline.Collapse();
+			outline!.Collapse();
 			return outline;
 		}
 
@@ -348,7 +350,7 @@ namespace unvell.ReoGrid
 		public IReoGridOutline ExpandOutline(RowOrColumn flag, int start, int count)
 		{
 			var outline = GetOutline(flag, start, count);
-			outline.Expand();
+			outline!.Expand();
 			return outline;
 		}
 
@@ -404,7 +406,7 @@ namespace unvell.ReoGrid
 		/// <param name="count">Number of rows or columns contained in the outline.</param>
 		/// <returns>Instance of outline has been removed; Return null if no outlines found 
 		/// from specified position and count information.</returns>
-		public IReoGridOutline RemoveOutline(RowOrColumn flag, int start, int count)
+		public IReoGridOutline? RemoveOutline(RowOrColumn flag, int start, int count)
 		{
 			var outline = GetOutline(flag, start, count);
 			
@@ -598,32 +600,32 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when an outline has been added onto spreadsheet
 		/// </summary>
-		public event EventHandler<OutlineAddedEventArgs> OutlineAdded;
+		public event EventHandler<OutlineAddedEventArgs>? OutlineAdded;
 
 		/// <summary>
 		/// Event raised when an outline has been removed from spreadsheet
 		/// </summary>
-		public event EventHandler<OutlineRemovedEventArgs> OutlineRemoved;
+		public event EventHandler<OutlineRemovedEventArgs>? OutlineRemoved;
 
 		/// <summary>
 		/// Event is raised before an outline collapse
 		/// </summary>
-		public event EventHandler<BeforeOutlineCollapseEventArgs> BeforeOutlineCollapse;
+		public event EventHandler<BeforeOutlineCollapseEventArgs>? BeforeOutlineCollapse;
 
 		/// <summary>
 		/// Event is raised after an outline collapse
 		/// </summary>
-		public event EventHandler<AfterOutlineCollapseEventArgs> AfterOutlineCollapse;
+		public event EventHandler<AfterOutlineCollapseEventArgs>? AfterOutlineCollapse;
 
 		/// <summary>
 		/// Event is raised before an outline expanding
 		/// </summary>
-		public event EventHandler<BeforeOutlineExpandingEventArgs> BeforeOutlineExpand;
+		public event EventHandler<BeforeOutlineExpandingEventArgs>? BeforeOutlineExpand;
 
 		/// <summary>
 		/// Event is raised after an outline expanding
 		/// </summary>
-		public event EventHandler<AfterOutlineExpandingEventArgs> AfterOutlineExpand;
+		public event EventHandler<AfterOutlineExpandingEventArgs>? AfterOutlineExpand;
 
 		internal void RaiseBeforeOutlineCollapseEvent(BeforeOutlineCollapseEventArgs arg)
 		{
@@ -726,7 +728,7 @@ namespace unvell.ReoGrid.Outline
 		/// <param name="target">Outline used to find</param>
 		/// <param name="exclusions">Outline in this list will not be compare</param>
 		/// <returns>true if there is another same as target</returns>
-		public bool HasSame(IReoGridOutline target, IList<IReoGridOutline> exclusions)
+		public bool HasSame(IReoGridOutline target, IList<IReoGridOutline>? exclusions)
 		{
 			for (int i = 0; i < this.Count - 1; i++)
 			{
@@ -823,22 +825,22 @@ namespace unvell.ReoGrid.Outline
 		/// <summary>
 		/// Event is raised before this outline collapse.
 		/// </summary>
-		event EventHandler<BeforeOutlineCollapseEventArgs> BeforeCollapse;
+		event EventHandler<BeforeOutlineCollapseEventArgs>? BeforeCollapse;
 
 		/// <summary>
 		/// Event is raised after this outline collapse.
 		/// </summary>
-		event EventHandler<AfterOutlineCollapseEventArgs> AfterCollapse;
+		event EventHandler<AfterOutlineCollapseEventArgs>? AfterCollapse;
 
 		/// <summary>
 		/// Event is raised before this outline expanding.
 		/// </summary>
-		event EventHandler<BeforeOutlineExpandingEventArgs> BeforeExpand;
+		event EventHandler<BeforeOutlineExpandingEventArgs>? BeforeExpand;
 
 		/// <summary>
 		/// Event is raised after this outline expanding.
 		/// </summary>
-		event EventHandler<AfterOutlineExpandingEventArgs> AfterExpand;
+		event EventHandler<AfterOutlineExpandingEventArgs>? AfterExpand;
 	}
 
 	/// <summary>
@@ -1000,7 +1002,7 @@ namespace unvell.ReoGrid.Outline
 
 		protected void ExpandOuterOutlines(OutlineCollection<ReoGridOutline> outlines, int groupIndex)
 		{
-			ReoGridOutline outerOutline = null;
+			ReoGridOutline? outerOutline = null;
 
 			// find right-side inner outlines and collapse them
 			for (int i = groupIndex - 1; i >= 0; i--)
@@ -1031,22 +1033,22 @@ namespace unvell.ReoGrid.Outline
 		/// <summary>
 		/// Event is raised before this outline collapse.
 		/// </summary>
-		public abstract event EventHandler<BeforeOutlineCollapseEventArgs> BeforeCollapse;
+		public abstract event EventHandler<BeforeOutlineCollapseEventArgs>? BeforeCollapse;
 
 		/// <summary>
 		/// Event is raised after this outline collapse.
 		/// </summary>
-		public abstract event EventHandler<AfterOutlineCollapseEventArgs> AfterCollapse;
+		public abstract event EventHandler<AfterOutlineCollapseEventArgs>? AfterCollapse;
 
 		/// <summary>
 		/// Event is raised before this outline expanding.
 		/// </summary>
-		public abstract event EventHandler<BeforeOutlineExpandingEventArgs> BeforeExpand;
+		public abstract event EventHandler<BeforeOutlineExpandingEventArgs>? BeforeExpand;
 
 		/// <summary>
 		/// Event is raised after this outline expanding.
 		/// </summary>
-		public abstract event EventHandler<AfterOutlineExpandingEventArgs> AfterExpand;
+		public abstract event EventHandler<AfterOutlineExpandingEventArgs>? AfterExpand;
 	}
 
 	/// <summary>
@@ -1071,9 +1073,9 @@ namespace unvell.ReoGrid.Outline
 		/// <param name="start">Zero-based start position to add outline.</param>
 		/// <param name="count">Number of rows or columns to be added into outline.</param>
 		/// <returns>Instance of new outline.</returns>
-		public T AddOutline(int start, int count)
+		public T? AddOutline(int start, int count)
 		{
-			return (T)this.worksheet.AddOutline(this.rowOrColumn, start, count);
+			return (T?)this.worksheet.AddOutline(this.rowOrColumn, start, count);
 		}
 
 		/// <summary>
@@ -1082,9 +1084,9 @@ namespace unvell.ReoGrid.Outline
 		/// <param name="start">Zero-based start position to add outline.</param>
 		/// <param name="count">Number of rows or columns exist in the outline.</param>
 		/// <returns>Instance of removed outline.</returns>
-		public T RemoveOutline(int start, int count)
+		public T? RemoveOutline(int start, int count)
 		{
-			return (T)this.worksheet.RemoveOutline(this.rowOrColumn, start, count);
+			return (T?)this.worksheet.RemoveOutline(this.rowOrColumn, start, count);
 		}
 
 		/// <summary>
@@ -1093,17 +1095,17 @@ namespace unvell.ReoGrid.Outline
 		/// <param name="start">Zero-based start position to find outline.</param>
 		/// <param name="count">Number of rows or columns that is contained in target outline.</param>
 		/// <returns>Instance of outline</returns>
-		public T this[int start, int count]
+		public T? this[int start, int count]
 		{
 			get
 			{
-				return (T)this.worksheet.GetOutline(this.rowOrColumn, start, count);
+				return (T?)this.worksheet.GetOutline(this.rowOrColumn, start, count);
 			}
 		}
 
 		private IEnumerator<T> GetEnum()
 		{
-			foreach (var og in this.worksheet.GetOutlines(this.rowOrColumn))
+			foreach (var og in this.worksheet.GetOutlines(this.rowOrColumn) ?? Enumerable.Empty<OutlineGroup<ReoGridOutline>>())
 			{
 				foreach (var o in og)
 				{
@@ -1328,22 +1330,22 @@ namespace unvell.ReoGrid.Outline
 		/// <summary>
 		/// Event is raised before this outline collapse
 		/// </summary>
-		public override event EventHandler<BeforeOutlineCollapseEventArgs> BeforeCollapse;
+		public override event EventHandler<BeforeOutlineCollapseEventArgs>? BeforeCollapse;
 
 		/// <summary>
 		/// Event is raised after this outline collapse
 		/// </summary>
-		public override event EventHandler<AfterOutlineCollapseEventArgs> AfterCollapse;
+		public override event EventHandler<AfterOutlineCollapseEventArgs>? AfterCollapse;
 
 		/// <summary>
 		/// Event is raised before this outline expanding
 		/// </summary>
-		public override event EventHandler<BeforeOutlineExpandingEventArgs> BeforeExpand;
+		public override event EventHandler<BeforeOutlineExpandingEventArgs>? BeforeExpand;
 
 		/// <summary>
 		/// Event is raised after this outline expanding
 		/// </summary>
-		public override event EventHandler<AfterOutlineExpandingEventArgs> AfterExpand;
+		public override event EventHandler<AfterOutlineExpandingEventArgs>? AfterExpand;
 
 	}
 
@@ -1528,22 +1530,22 @@ namespace unvell.ReoGrid.Outline
 		/// <summary>
 		/// Event is raised before this outline collapse
 		/// </summary>
-		public override event EventHandler<BeforeOutlineCollapseEventArgs> BeforeCollapse;
+		public override event EventHandler<BeforeOutlineCollapseEventArgs>? BeforeCollapse;
 
 		/// <summary>
 		/// Event is raised after this outline collapse
 		/// </summary>
-		public override event EventHandler<AfterOutlineCollapseEventArgs> AfterCollapse;
+		public override event EventHandler<AfterOutlineCollapseEventArgs>? AfterCollapse;
 
 		/// <summary>
 		/// Event is raised before this outline expanding
 		/// </summary>
-		public override event EventHandler<BeforeOutlineExpandingEventArgs> BeforeExpand;
+		public override event EventHandler<BeforeOutlineExpandingEventArgs>? BeforeExpand;
 
 		/// <summary>
 		/// Event is raised after this outline expanding
 		/// </summary>
-		public override event EventHandler<AfterOutlineExpandingEventArgs> AfterExpand;
+		public override event EventHandler<AfterOutlineExpandingEventArgs>? AfterExpand;
 	}
 
 	/// <summary>

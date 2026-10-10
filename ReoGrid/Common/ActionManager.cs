@@ -92,7 +92,7 @@ namespace unvell.Common
 			if (action is IUndoableAction && isCanUndo)
 			{
 				redoStack.Clear();
-				undoStack.Add(action as IUndoableAction);
+				undoStack.Add((action as IUndoableAction)!);
 
 				if (undoStack.Count() > capacity)
 				{
@@ -124,11 +124,11 @@ namespace unvell.Common
 			return redoStack.Count() > 0;
 		}
 
-		public IAction Undo()
+		public IAction? Undo()
 		{
 			if (undoStack.Count() > 0)
 			{
-				IUndoableAction action = null;
+				IUndoableAction? action = null;
 
 				while (undoStack.Count > 0)
 				{
@@ -158,11 +158,11 @@ namespace unvell.Common
 			return null;
 		}
 
-		public IAction Redo()
+		public IAction? Redo()
 		{
 			if (redoStack.Count > 0)
 			{
-				IUndoableAction action = null;
+				IUndoableAction? action = null;
 
 				while (redoStack.Count > 0)
 				{
@@ -190,8 +190,8 @@ namespace unvell.Common
 				return null;
 		}
 
-		public event EventHandler<ActionEventArgs> BeforePerformAction;
-		public event EventHandler<ActionEventArgs> AfterPerformAction;
+		public event EventHandler<ActionEventArgs>? BeforePerformAction;
+		public event EventHandler<ActionEventArgs>? AfterPerformAction;
 	}
 
 	/// <summary>
@@ -267,7 +267,7 @@ namespace unvell.Common
 		/// Get the friendly name of this action.
 		/// </summary>
 		/// <returns>Get friendly name of action.</returns>
-		string GetName();
+		string? GetName();
 	}
 
 	/// <summary>
@@ -314,7 +314,7 @@ namespace unvell.Common
 			set { actions = value; }
 		}
 
-		private string name;
+		private string? name;
 
 		/// <summary>
 		/// Construct action group by specified name, and the collection of action to perform together.
@@ -368,7 +368,7 @@ namespace unvell.Common
 		/// Get the friendly name of this action group.
 		/// </summary>
 		/// <returns>Friendly name of this action.</returns>
-		public virtual string GetName()
+		public virtual string? GetName()
 		{
 			return name;
 		}
@@ -389,9 +389,9 @@ namespace unvell.Common
 	[Serializable]
 	public class ActionException : Exception
 	{
-		private IAction action;
+		private IAction? action;
 
-		internal IAction Action
+		internal IAction? Action
 		{
 			get { return action; }
 			set { action = value; }
@@ -411,7 +411,7 @@ namespace unvell.Common
 		/// </summary>
 		/// <param name="action">Action which causes this exception when do/undo/redo.</param>
 		/// <param name="msg">Message to describe this exception.</param>
-		public ActionException(IAction action, string msg)
+		public ActionException(IAction? action, string msg)
 			: base(msg)
 		{
 			this.action = action;

@@ -17,6 +17,7 @@
  ****************************************************************************/
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using unvell.ReoGrid.Core;
 
 namespace unvell.ReoGrid
@@ -31,7 +32,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set the worksheet which contains this range
 		/// </summary>
-		public Worksheet Worksheet { get; internal set; }
+		public Worksheet? Worksheet { get; internal set; }
 
 		private Cell startCell;
 		private Cell endCell;
@@ -45,7 +46,7 @@ namespace unvell.ReoGrid
 			get { return this.startCell.Position; }
 			set
 			{
-				this.startCell = this.Worksheet.CreateAndGetCell(this.Worksheet.FixPos(value));
+				this.startCell = this.Worksheet!.CreateAndGetCell(this.Worksheet.FixPos(value));
 			}
 		}
 
@@ -57,7 +58,7 @@ namespace unvell.ReoGrid
 			get { return this.endCell.Position; }
 			set
 			{
-				this.endCell = this.Worksheet.CreateAndGetCell(this.Worksheet.FixPos(value));
+				this.endCell = this.Worksheet!.CreateAndGetCell(this.Worksheet.FixPos(value));
 			}
 		}
 
@@ -69,7 +70,7 @@ namespace unvell.ReoGrid
 			get { return this.startCell.Row; }
 			set
 			{
-				this.startCell = this.Worksheet.CreateAndGetCell(value, this.startCell.Column);
+				this.startCell = this.Worksheet!.CreateAndGetCell(value, this.startCell.Column);
 			}
 		}
 
@@ -81,7 +82,7 @@ namespace unvell.ReoGrid
 			get { return this.startCell.Column; }
 			set
 			{
-				this.startCell = this.Worksheet.CreateAndGetCell(this.startCell.Row, value);
+				this.startCell = this.Worksheet!.CreateAndGetCell(this.startCell.Row, value);
 			}
 		}
 
@@ -93,7 +94,7 @@ namespace unvell.ReoGrid
 			get { return this.Position.Rows; }
 			set
 			{
-				this.endCell = this.Worksheet.CreateAndGetCell(this.startCell.Row + value, this.endCell.Column);
+				this.endCell = this.Worksheet!.CreateAndGetCell(this.startCell.Row + value, this.endCell.Column);
 			}
 		}
 
@@ -105,7 +106,7 @@ namespace unvell.ReoGrid
 			get { return this.Position.Cols; }
 			set
 			{
-				this.endCell = this.Worksheet.CreateAndGetCell(this.endCell.Row, this.startCell.Column + value);
+				this.endCell = this.Worksheet!.CreateAndGetCell(this.endCell.Row, this.startCell.Column + value);
 			}
 		}
 
@@ -117,7 +118,7 @@ namespace unvell.ReoGrid
 			get { return this.endCell.Row; }
 			set
 			{
-				this.endCell = this.Worksheet.CreateAndGetCell(new CellPosition(value, this.endCell.Column));
+				this.endCell = this.Worksheet!.CreateAndGetCell(new CellPosition(value, this.endCell.Column));
 			}
 		}
 
@@ -129,7 +130,7 @@ namespace unvell.ReoGrid
 			get { return this.endCell.Column; }
 			set
 			{
-				this.endCell = this.Worksheet.CreateAndGetCell(this.endCell.Row, value);
+				this.endCell = this.Worksheet!.CreateAndGetCell(this.endCell.Row, value);
 			}
 		}
 
@@ -141,7 +142,7 @@ namespace unvell.ReoGrid
 			get { return new RangePosition(startCell.Position, endCell.Position); }
 			set
 			{
-				var range = this.Worksheet.FixRange(value);
+				var range = this.Worksheet!.FixRange(value);
 
 				this.startCell = this.Worksheet.CreateAndGetCell(range.StartPos);
 				this.endCell = this.Worksheet.CreateAndGetCell(range.EndPos);
@@ -318,7 +319,7 @@ namespace unvell.ReoGrid
 		}
 
 		#region Style Wrapper
-		private ReferenceRangeStyle referenceStyle = null;
+		private ReferenceRangeStyle? referenceStyle = null;
 
 		/// <summary>
 		/// Get the style set from this range.
@@ -340,7 +341,7 @@ namespace unvell.ReoGrid
 		#endregion // Style Wrapper
 
 		#region Border Wraps
-		private RangeBorderProperty borderProperty = null;
+		private RangeBorderProperty? borderProperty = null;
 
 		public RangeBorderProperty Border
 		{
@@ -640,6 +641,7 @@ namespace unvell.ReoGrid
 
 		#endregion // Readonly
 
+		[MemberNotNull(nameof(Worksheet))]
 		private void CheckForOwnerAssociated()
 		{
 			if (this.Worksheet == null)
@@ -650,7 +652,7 @@ namespace unvell.ReoGrid
 		#endregion // Control API Routines
 
 		#region Cells Collection
-		private Worksheet.CellCollection cellsCollection;
+		private Worksheet.CellCollection? cellsCollection;
 
 		/// <summary>
 		/// Get the collection of all cell instances in this range
@@ -661,7 +663,7 @@ namespace unvell.ReoGrid
 			{
 				if (this.cellsCollection == null)
 				{
-					this.cellsCollection = new Worksheet.CellCollection(this.Worksheet, this);
+					this.cellsCollection = new Worksheet.CellCollection(this.Worksheet!, this);
 				}
 
 				return this.cellsCollection;

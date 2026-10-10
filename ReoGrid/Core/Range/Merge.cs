@@ -97,8 +97,8 @@ namespace unvell.ReoGrid
 			int tocol = fixedRange.EndCol;
 
 			// find start and end cell
-			Cell startCell = cells[row, col];
-			Cell endCell = cells[torow, tocol];
+			Cell? startCell = cells[row, col];
+			Cell? endCell = cells[torow, tocol];
 
 			if (startCell == null) startCell = CreateCell(row, col);
 			if (endCell == null) endCell = CreateCell(torow, tocol);
@@ -259,12 +259,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when range merged
 		/// </summary>
-		public event EventHandler<RangeEventArgs> RangeMerged;
+		public event EventHandler<RangeEventArgs>? RangeMerged;
 
 		/// <summary>
 		/// Event raised when range unmerged
 		/// </summary>
-		public event EventHandler<RangeEventArgs> RangeUnmerged;
+		public event EventHandler<RangeEventArgs>? RangeUnmerged;
 
 		#endregion Event
 
@@ -281,9 +281,9 @@ namespace unvell.ReoGrid
 
 			cells.Iterate(range.Row, range.Col, range.Rows, range.Cols, true, (r, c, cell) =>
 			{
-				if (!cell.MergeStartPos.IsEmpty)
+				if (!cell!.MergeStartPos.IsEmpty)
 				{
-					Cell checkStartCell = GetCell(cell.MergeStartPos);
+					Cell checkStartCell = GetCell(cell.MergeStartPos)!;
 					for (int rr = checkStartCell.InternalRow; rr <= checkStartCell.MergeEndPos.Row; rr++)
 					{
 						for (int cc = checkStartCell.InternalCol; cc <= checkStartCell.MergeEndPos.Col; cc++)
@@ -330,7 +330,7 @@ namespace unvell.ReoGrid
 			int maxc = range.EndCol;
 
 			bool boundsChanged = false;
-			Cell cell = null;
+			Cell? cell = null;
 
 			do
 			{
@@ -429,7 +429,7 @@ namespace unvell.ReoGrid
 			return IsInsideSameMergedCell(cells[r1, c1], cells[r2, c2]);
 		}
 
-		private static bool IsInsideSameMergedCell(Cell cell1, Cell cell2)
+		private static bool IsInsideSameMergedCell(Cell? cell1, Cell? cell2)
 		{
 			return cell1 != null && cell2 != null
 				&& !cell1.MergeStartPos.IsEmpty
@@ -443,7 +443,7 @@ namespace unvell.ReoGrid
 		/// <returns>True if the range contains only one cell or one merged cell; otherwise return false.</returns>
 		public bool RangeIsMergedCell(RangePosition range)
 		{
-			Cell cell = cells[range.Row, range.Col];
+			Cell? cell = cells[range.Row, range.Col];
 			return (cell == null && range.Rows == 1 && range.Cols == 1)
 				|| (cell != null && cell.Rowspan == range.Rows && cell.Colspan == range.Cols);
 		}

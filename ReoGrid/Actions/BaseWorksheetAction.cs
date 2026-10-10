@@ -27,7 +27,7 @@ namespace unvell.ReoGrid.Actions
 		/// <summary>
 		/// Instance for the grid control will be setted before action performed.
 		/// </summary>
-		public Worksheet Worksheet { get; internal set; }
+		public Worksheet Worksheet { get; internal set; } = null!;
 
 		/// <summary>
 		/// Do this action.

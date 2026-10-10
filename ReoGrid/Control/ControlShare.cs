@@ -153,7 +153,7 @@ namespace unvell.ReoGrid
 
             this.workbook.WorksheetRemoved += (s, e) =>
             {
-                this.ClearActionHistoryForWorksheet(e.Worksheet);
+                this.ClearActionHistoryForWorksheet(e.Worksheet!);
 
                 if (this.workbook.worksheets.Count > 0)
                 {
@@ -220,7 +220,7 @@ namespace unvell.ReoGrid
                     HideVerScrollBar();
                 }
 
-                this.SettingsChanged?.Invoke(this, null);
+                this.SettingsChanged?.Invoke(this, EventArgs.Empty);
             };
 
             this.workbook.ExceptionHappened += Workbook_ErrorHappened;
@@ -267,7 +267,7 @@ namespace unvell.ReoGrid
                     }
                     else
                     {
-                        this.currentWorksheet.UpdateViewportControllBounds();
+                        this.currentWorksheet!.UpdateViewportControllBounds();
                     }
                 }
 
@@ -325,7 +325,7 @@ namespace unvell.ReoGrid
 
         #region Workbook & Worksheet
 
-        private Workbook workbook;
+        private Workbook workbook = null!;
 
         #region Save & Load
         /// <summary>
@@ -354,7 +354,7 @@ namespace unvell.ReoGrid
         /// <param name="path">Full file path to save workbook</param>
         /// <param name="fileFormat">Specified file format used to save workbook</param>
         /// <param name="encoding">Encoding used to read plain-text from resource. (Optional)</param>
-        public void Save(string path, IO.FileFormat fileFormat, Encoding encoding)
+        public void Save(string path, IO.FileFormat fileFormat, Encoding? encoding)
         {
             this.workbook.Save(path, fileFormat, encoding);
         }
@@ -375,7 +375,7 @@ namespace unvell.ReoGrid
         /// <param name="stream">Stream to output data of workbook</param>
         /// <param name="fileFormat">Specified file format used to save workbook</param>
         /// <param name="encoding">Encoding used to read plain-text from resource. (Optional)</param>
-        public void Save(Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding encoding)
+        public void Save(Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding? encoding)
         {
             this.workbook.Save(stream, fileFormat, encoding);
         }
@@ -405,7 +405,7 @@ namespace unvell.ReoGrid
         /// <param name="path">Path to open file and read data.</param>
         /// <param name="fileFormat">Flag used to determine what format should be used to read data from file.</param>
         /// <param name="encoding">Encoding used to read plain-text from resource. (Optional)</param>
-        public void Load(string path, IO.FileFormat fileFormat, Encoding encoding)
+        public void Load(string path, IO.FileFormat fileFormat, Encoding? encoding)
         {
             this.workbook.Load(path, fileFormat, encoding);
         }
@@ -426,7 +426,7 @@ namespace unvell.ReoGrid
         /// <param name="stream">Stream to read data of workbook.</param>
         /// <param name="fileFormat">Flag used to determine what format should be used to read data from file.</param>
         /// <param name="encoding">Encoding used to read plain-text data from specified stream.</param>
-        public void Load(Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding encoding)
+        public void Load(Stream stream, unvell.ReoGrid.IO.FileFormat fileFormat, Encoding? encoding)
         {
             this.workbook.Load(stream, fileFormat, encoding);
 
@@ -440,21 +440,21 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when workbook loaded from stream or file.
         /// </summary>
-        public event EventHandler WorkbookLoaded;
+        public event EventHandler? WorkbookLoaded;
 
         /// <summary>
         /// Event raised when workbook saved into stream or file.
         /// </summary>
-        public event EventHandler WorkbookSaved;
+        public event EventHandler? WorkbookSaved;
 
         #region Worksheet Management
 
-        private Worksheet currentWorksheet;
+        private Worksheet? currentWorksheet;
 
         /// <summary>
         /// Get or set the current worksheet
         /// </summary>
-        public Worksheet CurrentWorksheet
+        public Worksheet? CurrentWorksheet
         {
             get
             {
@@ -482,7 +482,7 @@ namespace unvell.ReoGrid
                         scrollableViewportController.SynchronizeScrollBar();
                     }
 
-                    this.CurrentWorksheetChanged?.Invoke(this, null);
+                    this.CurrentWorksheetChanged?.Invoke(this, EventArgs.Empty);
 
                     this.sheetTab.SelectedIndex = GetWorksheetIndex(this.currentWorksheet);
                     this.sheetTab.ScrollToItem(this.sheetTab.SelectedIndex);
@@ -515,7 +515,7 @@ namespace unvell.ReoGrid
         /// Worksheet will only be available until adding into a workbook, by using these methods:
         /// <code>InsertWorksheet</code>, <code>Worksheets.Add</code> or <code>Worksheets.Insert</code>
         /// </remarks>
-        public Worksheet CreateWorksheet(string name)
+        public Worksheet CreateWorksheet(string? name)
         {
             return this.workbook.CreateWorksheet(name);
         }
@@ -534,7 +534,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="name">Optional name for new worksheet.</param>
         /// <returns>Instance of created new worksheet.</returns>
-        public Worksheet NewWorksheet(string name = null)
+        public Worksheet NewWorksheet(string? name = null)
         {
             var worksheet = this.CreateWorksheet(name);
 
@@ -580,7 +580,7 @@ namespace unvell.ReoGrid
         /// <param name="newIndex">Target index used to insert the copied worksheet</param>
         /// <param name="newName">Name for new worksheet, set as null to use a default worksheet name e.g. Sheet1, Sheet2...</param>
         /// <returns>New instance of copid worksheet</returns>
-        public Worksheet CopyWorksheet(int index, int newIndex, string newName = null)
+        public Worksheet CopyWorksheet(int index, int newIndex, string? newName = null)
         {
             return this.workbook.CopyWorksheet(index, newIndex, newName);
         }
@@ -592,7 +592,7 @@ namespace unvell.ReoGrid
         /// <param name="newIndex">Target index used to insert the copied worksheet</param>
         /// <param name="newName">Name for new worksheet, set as null to use a default worksheet name e.g. Sheet1, Sheet2...</param>
         /// <returns>New instance of copid worksheet</returns>
-        public Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string newName = null)
+        public Worksheet CopyWorksheet(Worksheet sheet, int newIndex, string? newName = null)
         {
             return this.workbook.CopyWorksheet(sheet, newIndex, newName);
         }
@@ -644,7 +644,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="name">Name to find worksheet.</param>
         /// <returns>Instance of worksheet that is found by specified name; otherwise return null.</returns>
-        public Worksheet GetWorksheetByName(string name)
+        public Worksheet? GetWorksheetByName(string? name)
         {
             return this.workbook.GetWorksheetByName(name);
         }
@@ -662,37 +662,37 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when current worksheet is changed.
         /// </summary>
-        public event EventHandler CurrentWorksheetChanged;
+        public event EventHandler? CurrentWorksheetChanged;
 
         /// <summary>
         /// Event raised when worksheet is created.
         /// </summary>
-        public event EventHandler<WorksheetCreatedEventArgs> WorksheetCreated;
+        public event EventHandler<WorksheetCreatedEventArgs>? WorksheetCreated;
 
         /// <summary>
         /// Event raised when worksheet is inserted into this workbook.
         /// </summary>
-        public event EventHandler<WorksheetInsertedEventArgs> WorksheetInserted;
+        public event EventHandler<WorksheetInsertedEventArgs>? WorksheetInserted;
 
         /// <summary>
         /// Event raised when worksheet is removed from this workbook.
         /// </summary>
-        public event EventHandler<WorksheetRemovedEventArgs> WorksheetRemoved;
+        public event EventHandler<WorksheetRemovedEventArgs>? WorksheetRemoved;
 
         /// <summary>
         /// Event raised when the name of worksheet managed by this workbook is changed.
         /// </summary>
-        public event EventHandler<WorksheetNameChangingEventArgs> WorksheetNameChanged;
+        public event EventHandler<WorksheetNameChangingEventArgs>? WorksheetNameChanged;
 
         /// <summary>
         /// Event raised when background color of worksheet name is changed.
         /// </summary>
-        public event EventHandler<WorksheetEventArgs> WorksheetNameBackColorChanged;
+        public event EventHandler<WorksheetEventArgs>? WorksheetNameBackColorChanged;
 
         /// <summary>
         /// Event raised when text color of worksheet name is changed.
         /// </summary>
-        public event EventHandler<WorksheetEventArgs> WorksheetNameTextColorChanged;
+        public event EventHandler<WorksheetEventArgs>? WorksheetNameTextColorChanged;
 
         #endregion // Worksheet Management
 
@@ -740,11 +740,11 @@ namespace unvell.ReoGrid
 
         internal ActionManager actionManager = new ActionManager();
 
-        private WorksheetReusableAction lastReusableAction;
+        private WorksheetReusableAction? lastReusableAction;
 
         public void DoAction(BaseWorksheetAction action)
         {
-            this.DoAction(this.currentWorksheet, action);
+            this.DoAction(this.currentWorksheet!, action);
         }
 
         /// <summary>Do specified action. 
@@ -923,7 +923,7 @@ namespace unvell.ReoGrid
         /// <param name="range">The new range to be applied for the last action.</param>
         public void RepeatLastAction(RangePosition range)
         {
-            this.RepeatLastAction(this.currentWorksheet, range);
+            this.RepeatLastAction(this.currentWorksheet!, range);
         }
 
         /// <summary>
@@ -957,7 +957,7 @@ namespace unvell.ReoGrid
                     // fix #282, https://github.com/unvell/ReoGrid/issues/282
                     //this.ActionPerformed?.Invoke(this, new WorkbookActionEventArgs(newAction));
 
-                    this.currentWorksheet.RequestInvalidate();
+                    this.currentWorksheet?.RequestInvalidate();
                 }
             }
         }
@@ -1048,22 +1048,22 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event fired before action perform.
         /// </summary>
-        public event EventHandler<WorkbookActionEventArgs> BeforeActionPerform;
+        public event EventHandler<WorkbookActionEventArgs>? BeforeActionPerform;
 
         /// <summary>
         /// Event fired when any action performed.
         /// </summary>
-        public event EventHandler<WorkbookActionEventArgs> ActionPerformed;
+        public event EventHandler<WorkbookActionEventArgs>? ActionPerformed;
 
         /// <summary>
         /// Event fired when Undo operation performed by user.
         /// </summary>
-        public event EventHandler<WorkbookActionEventArgs> Undid;
+        public event EventHandler<WorkbookActionEventArgs>? Undid;
 
         /// <summary>
         /// Event fired when Reod operation performed by user.
         /// </summary>
-        public event EventHandler<WorkbookActionEventArgs> Redid;
+        public event EventHandler<WorkbookActionEventArgs>? Redid;
 
         #endregion // Actions
 
@@ -1119,7 +1119,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when settings is changed
         /// </summary>
-        public event EventHandler SettingsChanged;
+        public event EventHandler? SettingsChanged;
         #endregion // Settings
 
         #region Script
@@ -1127,7 +1127,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Get or set script content
         /// </summary>
-        public string Script
+        public string? Script
         {
             get { return this.workbook.Script; }
             set { this.workbook.Script = value; }
@@ -1146,7 +1146,7 @@ namespace unvell.ReoGrid
         /// Run workbook script.
         /// </summary>
         /// <returns>Return value from script.</returns>
-        public object RunScript()
+        public object? RunScript()
         {
             return this.workbook.RunScript();
         }
@@ -1156,7 +1156,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="script">Script to be executed.</param>
         /// <returns>Return value from specified script.</returns>
-        public object RunScript(string script = null)
+        public object? RunScript(string? script = null)
         {
             return this.workbook.RunScript(script);
         }
@@ -1169,9 +1169,9 @@ namespace unvell.ReoGrid
         /// Event raised when exception has been happened during internal operations.
         /// Usually the internal operations are raised by hot-keys pressed by end-user.
         /// </summary>
-        public event EventHandler<ExceptionHappenEventArgs> ExceptionHappened;
+        public event EventHandler<ExceptionHappenEventArgs>? ExceptionHappened;
 
-        void Workbook_ErrorHappened(object sender, ExceptionHappenEventArgs e)
+        void Workbook_ErrorHappened(object? sender, ExceptionHappenEventArgs e)
         {
             this.ExceptionHappened?.Invoke(this, e);
         }
@@ -1182,7 +1182,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="sheet">Worksheet where the exception happened.</param>
         /// <param name="ex">Exception to describe the details of error information.</param>
-        public void NotifyExceptionHappen(Worksheet sheet, Exception ex)
+        public void NotifyExceptionHappen(Worksheet? sheet, Exception ex)
         {
             if (this.workbook != null)
             {
@@ -1193,21 +1193,21 @@ namespace unvell.ReoGrid
 
         #region Cursors
 #if WINFORM || WPF || AVALONIA
-        private Cursor builtInCellsSelectionCursor = null;
-        private Cursor builtInFullColSelectCursor = null;
-        private Cursor builtInFullRowSelectCursor = null;
-        private Cursor builtInEntireSheetSelectCursor = null;
-        private Cursor builtInCrossCursor = null;
+        private Cursor? builtInCellsSelectionCursor = null;
+        private Cursor? builtInFullColSelectCursor = null;
+        private Cursor? builtInFullRowSelectCursor = null;
+        private Cursor? builtInEntireSheetSelectCursor = null;
+        private Cursor? builtInCrossCursor = null;
 
-        private Cursor customCellsSelectionCursor = null;
-        private Cursor defaultPickRangeCursor = null;
-        private Cursor internalCurrentCursor = null;
+        private Cursor? customCellsSelectionCursor = null;
+        private Cursor? defaultPickRangeCursor = null;
+        private Cursor? internalCurrentCursor = null;
 
         /// <summary>
         /// Get or set the mouse cursor on cells selection
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Cursor CellsSelectionCursor
+        public Cursor? CellsSelectionCursor
         {
             get { return this.customCellsSelectionCursor ?? this.builtInCellsSelectionCursor; }
             set
@@ -1221,19 +1221,19 @@ namespace unvell.ReoGrid
         /// Cursor symbol displayed when moving mouse over on row headers
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Cursor FullRowSelectionCursor { get; set; }
+        public Cursor? FullRowSelectionCursor { get; set; }
 
         /// <summary>
         /// Cursor symbol displayed when moving mouse over on column headers
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Cursor FullColumnSelectionCursor { get; set; }
+        public Cursor? FullColumnSelectionCursor { get; set; }
 
         /// <summary>
         /// Get or set the mouse cursor of lead header part
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Cursor EntireSheetSelectionCursor { get; set; }
+        public Cursor? EntireSheetSelectionCursor { get; set; }
 
 #if AVALONIA
         private static Cursor LoadCursorFromResource(byte[] res, bool center = true)
@@ -1283,11 +1283,11 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="onPicked">Callback function invoked after range is picked.</param>
         /// <param name="pickerCursor">Cursor style during picking.</param>
-        public void PickRange(Func<Worksheet, RangePosition, bool> onPicked, Cursor pickerCursor)
+        public void PickRange(Func<Worksheet, RangePosition, bool> onPicked, Cursor? pickerCursor)
         {
             this.internalCurrentCursor = pickerCursor;
 
-            this.currentWorksheet.PickRange((sheet, range) =>
+            this.currentWorksheet?.PickRange((sheet, range) =>
             {
                 bool ret = onPicked(sheet, range);
                 return ret;
@@ -1299,7 +1299,7 @@ namespace unvell.ReoGrid
         /// </summary>
         public void StartPickRangeAndCopyStyle()
         {
-            this.currentWorksheet.StartPickRangeAndCopyStyle();
+            this.currentWorksheet?.StartPickRangeAndCopyStyle();
         }
 
         /// <summary>
@@ -1307,7 +1307,7 @@ namespace unvell.ReoGrid
         /// </summary>
         public void EndPickRange()
         {
-            this.currentWorksheet.EndPickRange();
+            this.currentWorksheet?.EndPickRange();
 
             this.internalCurrentCursor = (this.customCellsSelectionCursor ?? this.builtInCellsSelectionCursor);
         }
@@ -1319,9 +1319,9 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Retrieve control instance of workbook.
         /// </summary>
-        public ReoGridControl ControlInstance { get { return null; } }
+        public ReoGridControl? ControlInstance { get { return null; } }
 
-        private ControlAppearanceStyle controlStyle = null;
+        private ControlAppearanceStyle controlStyle = null!;
 
         /// <summary>
         /// Control Style Settings
@@ -1494,7 +1494,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when current worksheet is scrolled.
         /// </summary>
-        public event EventHandler<WorksheetScrolledEventArgs> WorksheetScrolled;
+        public event EventHandler<WorksheetScrolledEventArgs>? WorksheetScrolled;
 
         /// <summary>
         /// Raise the event of worksheet scrolled.
@@ -1524,7 +1524,7 @@ namespace unvell.ReoGrid
                 if (this.showScrollEndSpacing != value)
                 {
                     this.showScrollEndSpacing = value;
-                    this.currentWorksheet.UpdateViewportController();
+                    this.currentWorksheet?.UpdateViewportController();
                 }
             }
         }

@@ -21,7 +21,7 @@ namespace unvell.ReoGrid
 {
   public class TextAutoFillSectionEntry : IAutoFillSectionEntry
   {
-    public object Value { get; }
+    public object? Value { get; }
 
     private string textLeftOfDigit = string.Empty;
     private string textRightOfDigit = string.Empty;
@@ -66,32 +66,32 @@ namespace unvell.ReoGrid
              && hasDigit == otherTextEntry.hasDigit;
     }
 
-    public object GetIterationValue(object baseValue, object incrementPerIteration, int iteration)
+    public object GetIterationValue(object? baseValue, object? incrementPerIteration, int iteration)
     {
       var digitText = string.Empty;
 
       if (hasDigit)
       {
         var diff = GetDifferenceToBaseValue(baseValue);
-        var incr = (double)incrementPerIteration;
+        var incr = (double)incrementPerIteration!;
 
-        digitText = ((double)baseValue + diff + incr * iteration).ToString();
+        digitText = ((double)baseValue! + diff + incr * iteration).ToString();
       }
 
       return $"{textLeftOfDigit}{digitText}{textRightOfDigit}";
     }
 
-    public object GetIncrementPerIteration(object baseValue, int numberOfEntries)
+    public object GetIncrementPerIteration(object? baseValue, int numberOfEntries)
     {
       return numberOfEntries > 1 && hasDigit
           ? (GetDifferenceToBaseValue(baseValue) / (numberOfEntries - 1)) * numberOfEntries
           : 0;
     }
 
-    private double GetDifferenceToBaseValue(object baseValue)
+    private double GetDifferenceToBaseValue(object? baseValue)
     {
       return hasDigit
-          ? (double)Value - (double)baseValue
+          ? (double)Value! - (double)baseValue!
           : 0;
     }
   }

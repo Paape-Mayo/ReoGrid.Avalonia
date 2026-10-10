@@ -231,7 +231,7 @@ namespace unvell.ReoGrid.Drawing
 		/// <summary>
 		/// Event raised when mouse pressed down inside this drawing object.
 		/// </summary>
-		public event EventHandler<MouseEventArgs> MouseDown;
+		public event EventHandler<MouseEventArgs>? MouseDown;
 
 		#endregion // Events
 
@@ -317,7 +317,7 @@ namespace unvell.ReoGrid.Drawing
 
 		private bool isSelected;
 
-		public event EventHandler SelectionChanged;
+		public event EventHandler? SelectionChanged;
 
 		/// <summary>
 		/// Determine whether or not this drawing object is being selected.
@@ -352,7 +352,7 @@ namespace unvell.ReoGrid.Drawing
 		{
 			if (this.SelectionChanged != null)
 			{
-				this.SelectionChanged(this, null);
+				this.SelectionChanged(this, EventArgs.Empty);
 			}
 		}
 
@@ -363,7 +363,7 @@ namespace unvell.ReoGrid.Drawing
 		{
 			if (this.SelectionChanged != null)
 			{
-				this.SelectionChanged(this, null);
+				this.SelectionChanged(this, EventArgs.Empty);
 			}
 		}
 
@@ -405,7 +405,7 @@ namespace unvell.ReoGrid.Drawing
 		/// <summary>
 		/// Get or set the container of this drawing object.
 		/// </summary>
-		public IDrawingContainer Container { get; set; }
+		public IDrawingContainer? Container { get; set; }
 
 		/// <summary>
 		/// Invalidate the drawing object on rendering device.
@@ -493,7 +493,7 @@ namespace unvell.ReoGrid.Drawing
 		internal virtual RGFloat FontSize { get; set; }
 		internal virtual Text.FontStyles FontStyles { get; set; }
 
-		private DrawingObjectStyle styleProxy = null;
+		private DrawingObjectStyle? styleProxy = null;
 		
 		/// <summary>
 		/// Get style object.

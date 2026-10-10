@@ -38,7 +38,7 @@ namespace unvell.ReoGrid.Formula
 		/// <param name="cell">Cell instance.</param>
 		/// <param name="input">Formula to be converted.</param>
 		/// <returns>syntax tree constructed from specified formula.</returns>
-		public static STNode Parse(IWorkbook workbook, Cell cell, string input)
+		public static STNode? Parse(IWorkbook? workbook, Cell? cell, string input)
 		{
 			ExcelFormulaLexer lexer = new ExcelFormulaLexer(workbook, cell, input);
 			var node = ReadExpr(lexer);
@@ -53,13 +53,13 @@ namespace unvell.ReoGrid.Formula
 		#endregion // Parser API
 
 		#region Parsers
-		private static STNode ReadExpr(ExcelFormulaLexer lexer)
+		private static STNode? ReadExpr(ExcelFormulaLexer lexer)
 		{
 			var node = ReadCompare(lexer);
 			return node;
 		}
 
-		private static STNode ReadCompare(ExcelFormulaLexer lexer)
+		private static STNode? ReadCompare(ExcelFormulaLexer lexer)
 		{
 			var node = ReadConnect(lexer);
 			if (node == null) return null;
@@ -87,7 +87,7 @@ namespace unvell.ReoGrid.Formula
 			if (right == null) throw CreateException(lexer, "expect expression");
 
 			node = CreateNode(lexer, type, node.Start, lexer.CommittedLength - node.Start,
-				new List<STNode> { node, right });
+				new List<STNode?> { node, right });
 
 			return node;
 		}
@@ -119,18 +119,18 @@ namespace unvell.ReoGrid.Formula
 				var right = ReadExpr(lexer);
 				if (right != null)
 				{
-					return CreateNode(lexer, type, 0, lexer.CommittedLength, new List<STNode> { null, right });
+					return CreateNode(lexer, type, 0, lexer.CommittedLength, new List<STNode?> { null, right })!;
 				}
 			}
 
-			STNode node = ReadConnect(lexer);
+			STNode? node = ReadConnect(lexer);
 
-			return new STNode(STNodeType.EQUALS, 0, input.Length, new List<STNode> { null,
+			return new STNode(STNodeType.EQUALS, 0, input.Length, new List<STNode?> { null,
 				(node != null && node.Type != STNodeType.IDENTIFIER) ? node : 
 				new STStringNode(input, 0, input.Length) });
 		}
 
-		private static STNode ReadConnect(ExcelFormulaLexer lexer)
+		private static STNode? ReadConnect(ExcelFormulaLexer lexer)
 		{
 			var node = ReadAdd(lexer);
 			if (node == null) return null;
@@ -141,13 +141,13 @@ namespace unvell.ReoGrid.Formula
 				if (right == null) throw CreateException(lexer, "expect expression");
 
 				node = CreateNode(lexer, STNodeType.CONNECT, node.Start, lexer.CommittedLength - node.Start,
-					new List<STNode> { node, right });
+					new List<STNode?> { node, right })!;
 			}
 
 			return node;
 		}
 
-		private static STNode ReadAdd(ExcelFormulaLexer lexer)
+		private static STNode? ReadAdd(ExcelFormulaLexer lexer)
 		{
 			var node = ReadMul(lexer);
 			if (node == null) return null;
@@ -169,13 +169,13 @@ namespace unvell.ReoGrid.Formula
 				if (right == null) throw CreateException(lexer, "expect expression");
 
 				node = CreateNode(lexer, type, node.Start, lexer.CommittedLength - node.Start,
-					new List<STNode> { node, right });
+					new List<STNode?> { node, right })!;
 			}
 
 			return node;
 		}
 
-		private static STNode ReadMul(ExcelFormulaLexer lexer)
+		private static STNode? ReadMul(ExcelFormulaLexer lexer)
 		{
 			var node = ReadExponent(lexer);
 			if (node == null) return node;
@@ -197,13 +197,13 @@ namespace unvell.ReoGrid.Formula
 				if (right == null) throw CreateException(lexer, "expect expression");
 
 				node = CreateNode(lexer, type, node.Start, lexer.CommittedLength - node.Start,
-					new List<STNode> { node, right });
+					new List<STNode?> { node, right })!;
 			}
 
 			return node;
 		}
 
-		private static STNode ReadExponent(ExcelFormulaLexer lexer)
+		private static STNode? ReadExponent(ExcelFormulaLexer lexer)
 		{
 			var node = ReadPercent(lexer);
 			if (node == null) return node;
@@ -214,13 +214,13 @@ namespace unvell.ReoGrid.Formula
 				if (right == null) throw CreateException(lexer, "expect expression");
 
 				node = CreateNode(lexer, STNodeType.POW, node.Start, lexer.CommittedLength - node.Start,
-					new List<STNode> { node, right });
+					new List<STNode?> { node, right })!;
 			}
 
 			return node;
 		}
 
-		private static STNode ReadPercent(ExcelFormulaLexer lexer)
+		private static STNode? ReadPercent(ExcelFormulaLexer lexer)
 		{
 			var node = ReadMinus(lexer);
 			if (node == null) return null;
@@ -228,13 +228,13 @@ namespace unvell.ReoGrid.Formula
 			while (lexer.SkipToken("%"))
 			{
 				node = CreateNode(lexer, STNodeType.UNARY_PERCENT, node.Start, lexer.CommittedLength - node.Start,
-					new List<STNode>() { node });
+					new List<STNode?>() { node })!;
 			}
 
 			return node;
 		}
 
-		private static STNode ReadMinus(ExcelFormulaLexer lexer)
+		private static STNode? ReadMinus(ExcelFormulaLexer lexer)
 		{
 			if (!lexer.IsToken("-")) return ReadFunctionCall(lexer);
 
@@ -244,20 +244,20 @@ namespace unvell.ReoGrid.Formula
 			var node = ReadFunctionCall(lexer);
 			if (node == null) throw CreateException(lexer, "expect expression");
 
-			return CreateNode(lexer, STNodeType.UNARY_MINUS, start, lexer.CommittedLength - start, new List<STNode> { node });
+			return CreateNode(lexer, STNodeType.UNARY_MINUS, start, lexer.CommittedLength - start, new List<STNode?> { node });
 		}
 
-		private static STNode ReadFunctionCall(ExcelFormulaLexer lexer)
+		private static STNode? ReadFunctionCall(ExcelFormulaLexer lexer)
 		{
 			var id = ReadSheetName(lexer);
 			if (id == null) return null;
 
-			string funName = null;
+			string? funName = null;
 
 			// process function name like 'LOG10'
 			if (id.Type == STNodeType.CELL)
 			{
-				Group mg = null;
+				Group? mg = null;
 
 				if (lexer.CurrentToken == null
 					|| (mg = lexer.CurrentToken.Groups["token"]) == null
@@ -283,14 +283,14 @@ namespace unvell.ReoGrid.Formula
 			return new STFunctionNode(funName, id.Start, lexer.CommittedLength - id.Start, parameterList);
 		}
 
-		private static List<STNode> ReadParameterList(ExcelFormulaLexer lexer)
+		private static List<STNode?>? ReadParameterList(ExcelFormulaLexer lexer)
 		{
-			List<STNode> nodes = new List<STNode>();
+			List<STNode?> nodes = new List<STNode?>();
 
 			int i = 0;
 			while (true)
 			{
-				STNode node = ReadExpr(lexer);
+				STNode? node = ReadExpr(lexer);
 				nodes.Add(node);
 				i++;
 
@@ -305,7 +305,7 @@ namespace unvell.ReoGrid.Formula
 			return nodes.Count == 0 ? null : nodes;
 		}
 
-		private static STNode ReadSheetName(ExcelFormulaLexer lexer)
+		private static STNode? ReadSheetName(ExcelFormulaLexer lexer)
 		{
 			var node = ReadPrimary(lexer);
 			if (node == null) return null;
@@ -318,7 +318,7 @@ namespace unvell.ReoGrid.Formula
 
 			if (lexer.SkipToken("!"))
 			{
-				var id = ReadPrimary(lexer);
+				var id = ReadPrimary(lexer)!;
 
 				if (id.Type != STNodeType.CELL
 					&& id.Type != STNodeType.RANGE
@@ -329,7 +329,7 @@ namespace unvell.ReoGrid.Formula
 
 				var sheetName = ((STIdentifierNode)node).Identifier;
 
-				IWorkbook workbook = lexer.Workbook;
+				IWorkbook? workbook = lexer.Workbook;
 
 				if (workbook == null
 					&& lexer.Cell != null && lexer.Cell.Worksheet != null && lexer.Cell.Worksheet.workbook != null)
@@ -369,7 +369,7 @@ namespace unvell.ReoGrid.Formula
 			}
 			else if (lexer.SkipToken("."))
 			{
-				var id = ReadPrimary(lexer);
+				var id = ReadPrimary(lexer)!;
 
 				if (id.Type != STNodeType.IDENTIFIER)
 				{
@@ -384,9 +384,9 @@ namespace unvell.ReoGrid.Formula
 			}
 		}
 
-		private static STNode ReadPrimary(ExcelFormulaLexer lexer)
+		private static STNode? ReadPrimary(ExcelFormulaLexer lexer)
 		{
-			STNode node;
+			STNode? node;
 
 			if (CommitMatchNode(lexer, "string", STNodeType.STRING, out node)
 				|| CommitMatchNode(lexer, "identifier", STNodeType.IDENTIFIER, out node)
@@ -422,7 +422,7 @@ namespace unvell.ReoGrid.Formula
 				if (!lexer.SkipToken(")")) throw CreateException(lexer, "expect )");
 
 				return CreateNode(lexer, STNodeType.SUB_EXPR, start, lexer.CommittedLength - start,
-					new List<STNode>() { expr });
+					new List<STNode?>() { expr });
 			}
 			else
 				return null;
@@ -434,11 +434,11 @@ namespace unvell.ReoGrid.Formula
 		}
 
 		#region Commit & STNode Constructions
-		private static bool CommitMatchNode(ExcelFormulaLexer lexer, string groupName, STNodeType type, out STNode node)
+		private static bool CommitMatchNode(ExcelFormulaLexer lexer, string groupName, STNodeType type, out STNode? node)
 		{
 			if (lexer.IsMatch(groupName))
 			{
-				var g = lexer.CurrentToken.Groups[groupName];
+				var g = lexer.CurrentToken!.Groups[groupName];
 				node = CommitRunAndCreateNode(lexer, type, g.Index, g.Length, null);
 				return true;
 			}
@@ -449,8 +449,8 @@ namespace unvell.ReoGrid.Formula
 			}
 		}
 
-		private static STNode CommitRunAndCreateNode(ExcelFormulaLexer lexer, STNodeType type, 
-			int start, int len, List<STNode> nodes)
+		private static STNode? CommitRunAndCreateNode(ExcelFormulaLexer lexer, STNodeType type,
+			int start, int len, List<STNode?>? nodes)
 		{
 			lexer.NextToken();
 			return CreateNode(lexer, type, start, len, nodes);
@@ -458,10 +458,10 @@ namespace unvell.ReoGrid.Formula
 
 		private static STNode CreateNode(ExcelFormulaLexer lexer, STNodeType type)
 		{
-			return new STNode(type, lexer.CurrentToken.Index, lexer.CurrentToken.Length, null);
+			return new STNode(type, lexer.CurrentToken!.Index, lexer.CurrentToken!.Length, null);
 		}
 
-		private static STNode CreateNode(ExcelFormulaLexer lexer, STNodeType type, int start, int len, List<STNode> nodes)
+		private static STNode? CreateNode(ExcelFormulaLexer lexer, STNodeType type, int start, int len, List<STNode?>? nodes)
 		{
 			switch (type)
 			{
@@ -509,8 +509,8 @@ namespace unvell.ReoGrid.Formula
 	#region Lexer
 	internal class ExcelFormulaLexer
 	{
-		public IWorkbook Workbook { get; set; }
-		public Cell Cell { get; set; }
+		public IWorkbook? Workbook { get; set; }
+		public Cell? Cell { get; set; }
 
 		private static readonly Regex TokenRegex = new Regex(
 			"\\s*((?<string>\"(?:\"\"|[^\"])*\")|(?<union_ranges>[A-Z]+[0-9]+:[A-Z]+[0-9]+(\\s[A-Z]+[0-9]+:[A-Z]+[0-9]+)+)"
@@ -539,16 +539,16 @@ namespace unvell.ReoGrid.Formula
 
 		public int CommittedLength { get; set; }
 
-		private Match match;
+		private Match? match;
 
-		public Match CurrentToken { get { return this.match; } }
+		public Match? CurrentToken { get { return this.match; } }
 
-		public ExcelFormulaLexer(IWorkbook workbook, Cell cell, string input)
+		public ExcelFormulaLexer(IWorkbook? workbook, Cell? cell, string input)
 			: this(workbook, cell, input, 0, input.Length)
 		{
 		}
 
-		public ExcelFormulaLexer(IWorkbook workbook, Cell cell, string input, int start, int length)
+		public ExcelFormulaLexer(IWorkbook? workbook, Cell? cell, string input, int start, int length)
 		{
 			this.Workbook = workbook;
 			this.Cell = cell;
@@ -606,7 +606,7 @@ namespace unvell.ReoGrid.Formula
 			return IsMatch(groupName, null);
 		}
 
-		public bool IsMatch(string groupName, string value)
+		public bool IsMatch(string groupName, string? value)
 		{
 			return this.match != null && this.match.Groups[groupName].Success
 				&& (value == null || this.match.Groups[groupName].Value.Equals(value));
@@ -623,13 +623,13 @@ namespace unvell.ReoGrid.Formula
 	#region Nodes
 
 	#region STNode
-	class STNode : IEnumerable<STNode>, ICloneable //: IReferenceNode
+	class STNode : IEnumerable<STNode?>, ICloneable //: IReferenceNode
 	{
 		#region Attributes
 		/// <summary>
 		/// Children nodes
 		/// </summary>
-		public List<STNode> Children { get; set; }
+		public List<STNode?>? Children { get; set; }
 
 		/// <summary>
 		/// Type of node
@@ -666,7 +666,7 @@ namespace unvell.ReoGrid.Formula
 		/// <param name="start">Start index from an input string</param>
 		/// <param name="len">Length of value in an input string</param>
 		/// <param name="children">Children nodes of tree from this node</param>
-		public STNode(STNodeType type, int start, int len, List<STNode> children)
+		public STNode(STNodeType type, int start, int len, List<STNode?>? children)
 		{
 			this.Start = start;
 			this.Type = type;
@@ -706,20 +706,20 @@ namespace unvell.ReoGrid.Formula
 		/// </summary>
 		/// <param name="index">zero-based number of child to be get</param>
 		/// <returns>child node from specified position</returns>
-		public STNode this[int index]
+		public STNode? this[int index]
 		{
 			get
 			{
-				return this.Children[index];
+				return this.Children![index];
 			}
 			set
 			{
-				this.Children[index] = value;
+				this.Children![index] = value;
 			}
 		}
 
 		#region Enum
-		private IEnumerator<STNode> GetEnum()
+		private IEnumerator<STNode?> GetEnum()
 		{
 			if (this.Children != null && this.Children.Count > 0)
 			{
@@ -730,7 +730,7 @@ namespace unvell.ReoGrid.Formula
 			}
 		}
 
-		public IEnumerator<STNode> GetEnumerator()
+		public IEnumerator<STNode?> GetEnumerator()
 		{
 			return this.GetEnum();
 		}
@@ -748,7 +748,7 @@ namespace unvell.ReoGrid.Formula
 			{
 				foreach (var child in node)
 				{
-					RecursivelyIterate(child, iterator);
+					RecursivelyIterate(child!, iterator);
 				}
 			}
 			else
@@ -773,11 +773,11 @@ namespace unvell.ReoGrid.Formula
 
 			if (this.Children != null && this.Children.Count > 0)
 			{
-				node.Children = new List<STNode>();
+				node.Children = new List<STNode?>();
 
 				foreach (var child in this.Children)
 				{
-					node.Children.Add((STNode)child.Clone());
+					node.Children.Add((STNode)child!.Clone());
 				}
 			}
 
@@ -806,9 +806,9 @@ namespace unvell.ReoGrid.Formula
 	#region StringNode
 	class STStringNode : STNode
 	{
-		internal string Text { get; set; }
+		internal string Text { get; set; } = null!;
 
-		public STStringNode(string input, int start, int len)
+		public STStringNode(string? input, int start, int len)
 			: base(STNodeType.STRING, start, len)
 		{
 			if (input != null)
@@ -834,11 +834,11 @@ namespace unvell.ReoGrid.Formula
 	#region IdentifierNode
 	class STIdentifierNode : STNode
 	{
-		public Worksheet Worksheet { get; set; }
+		public Worksheet? Worksheet { get; set; }
 	
 		public string Identifier { get; set; }
 
-		public STIdentifierNode(Worksheet worksheet, string identifier, int start, int len)
+		public STIdentifierNode(Worksheet? worksheet, string identifier, int start, int len)
 			: base(STNodeType.IDENTIFIER, start, len)
 		{
 			this.Worksheet = worksheet;
@@ -857,16 +857,16 @@ namespace unvell.ReoGrid.Formula
 	{
 		public string Name { get; set; }
 
-		public STFunctionNode(string name, int start, int len, List<STNode> children)
+		public STFunctionNode(string name, int start, int len, List<STNode?>? children)
 			: base(STNodeType.FUNCTION_CALL, start, len, children) { this.Name = name; }
 
 		public override object Clone()
 		{
-			List<STNode> newChildren = null;
+			List<STNode?>? newChildren = null;
 
 			if (this.Children != null && this.Children.Count > 0)
 			{
-				newChildren = new List<STNode>(this.Children.Count);
+				newChildren = new List<STNode?>(this.Children.Count);
 				foreach (var child in this.Children)
 				{
             if (child != null)
@@ -884,11 +884,11 @@ namespace unvell.ReoGrid.Formula
 	#region CellNode
 	class STCellNode : STNode
 	{
-		public Worksheet Worksheet { get; set; }
+		public Worksheet? Worksheet { get; set; }
 
 		public CellPosition Position { get; set; }
 
-		public STCellNode(Worksheet worksheet, CellPosition pos, STNodeType type, int start, int len)
+		public STCellNode(Worksheet? worksheet, CellPosition pos, STNodeType type, int start, int len)
 			: base(type, start, len)
 		{
 			this.Worksheet = worksheet;
@@ -905,11 +905,11 @@ namespace unvell.ReoGrid.Formula
 	#region RangeNode
 	class STRangeNode : STNode
 	{
-		public Worksheet Worksheet { get; set; }
+		public Worksheet? Worksheet { get; set; }
 	
 		public RangePosition Range { get; set; }
 
-		public STRangeNode(Worksheet worksheet, RangePosition range, int start, int len)
+		public STRangeNode(Worksheet? worksheet, RangePosition range, int start, int len)
 			: base(STNodeType.RANGE, start, len)
 		{
 			this.Worksheet = worksheet;

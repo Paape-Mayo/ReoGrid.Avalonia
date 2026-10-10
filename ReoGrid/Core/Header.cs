@@ -336,13 +336,13 @@ namespace unvell.ReoGrid
 				#region Offset Cells
 				for (int r = 0; r < maxRow; r++)
 				{
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
 						if (cell.IsEndMergedCell)
 						{
-							Cell mergedStartCell = GetCell(cell.MergeStartPos);
+							Cell mergedStartCell = GetCell(cell.MergeStartPos)!;
 							UpdateCellBounds(mergedStartCell);
 
 							mergedStartCell.UpdateContentBounds();
@@ -543,13 +543,13 @@ namespace unvell.ReoGrid
 				#region Offset Cells
 				for (int c = 0; c < maxCol; c++)
 				{
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
 						if (cell.IsEndMergedCell)
 						{
-							Cell mergedStartCell = GetCell(cell.MergeStartPos);
+							Cell mergedStartCell = GetCell(cell.MergeStartPos)!;
 							UpdateCellBounds(mergedStartCell);
 						}
 						else
@@ -723,7 +723,7 @@ namespace unvell.ReoGrid
 
 			for (int c = 0; c <= this.MaxContentCol; c++)
 			{
-				Cell cell = this.cells[row, c];
+				Cell? cell = this.cells[row, c];
 
 				if (cell != null && cell.Rowspan == 1)
 				{
@@ -804,7 +804,7 @@ namespace unvell.ReoGrid
 
 			for (int r = 0; r <= this.MaxContentRow; r++)
 			{
-				Cell cell = this.cells[r, col];
+				Cell? cell = this.cells[r, col];
 
 				if (cell != null
 					&& cell.Colspan == 1)
@@ -1072,7 +1072,7 @@ namespace unvell.ReoGrid
 					Row = row + i,
 					Top = y,
 					InnerHeight = height,
-					InnerStyle = rows[row].InnerStyle == null ? null : new WorksheetRangeStyle(rows[row].InnerStyle),
+					InnerStyle = rows[row].InnerStyle == null ? null : new WorksheetRangeStyle(rows[row].InnerStyle!),
 					IsAutoHeight = true,
 				};
 
@@ -1101,7 +1101,7 @@ namespace unvell.ReoGrid
 				{
 					cells[r, c] = cells[r - count, c];
 
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
@@ -1157,14 +1157,14 @@ namespace unvell.ReoGrid
 				#region insert vertial border
 
 				// insert vertial border
-				bool vhasTop = row > 0 && vBorders[row - 1, c] != null && vBorders[row - 1, c].Style != null;
-				bool vhasBottom = vBorders[row + count, c] != null && vBorders[row + count, c].Style != null;
+				bool vhasTop = row > 0 && vBorders[row - 1, c] != null && vBorders[row - 1, c]!.Style != null;
+				bool vhasBottom = vBorders[row + count, c] != null && vBorders[row + count, c]!.Style != null;
 
 				// insert vertial border if cell has both top and bottom borders
 				if (vhasTop && vhasBottom)
 				{
 					// set vertial border
-					SetVBorders(row, c, count, vBorders[row - 1, c].Style, vBorders[row - 1, c].Pos);
+					SetVBorders(row, c, count, vBorders[row - 1, c]!.Style, vBorders[row - 1, c]!.Pos);
 
 					//for (int r = row; r < row + count; r++)
 					//{
@@ -1224,10 +1224,10 @@ namespace unvell.ReoGrid
 					#endregion
 
 					#region fill merged cell
-					Cell prevCell = row <= 0 ? null : cells[row - 1, c];
-					Cell nextCell = cells[row + count, c];
+					Cell? prevCell = row <= 0 ? null : cells[row - 1, c];
+					Cell? nextCell = cells[row + count, c];
 
-					Cell cell = cells[row, c] = null;
+					Cell? cell = cells[row, c] = null;
 
 					bool isTopMerged = prevCell != null && prevCell.Rowspan != 1;
 					bool isBottomMerged = nextCell != null && nextCell.Rowspan != 1;
@@ -1241,7 +1241,7 @@ namespace unvell.ReoGrid
 							cell = CreateCell(r, c);
 							cell.Colspan = 0;
 							cell.Rowspan = 0;
-							cell.MergeEndPos = prevCell.MergeEndPos.Offset(count, 0);
+							cell.MergeEndPos = prevCell!.MergeEndPos.Offset(count, 0);
 							cell.MergeStartPos = prevCell.MergeStartPos;
 
 							// cells inside range should be have an empty v-border and h-border
@@ -1251,9 +1251,9 @@ namespace unvell.ReoGrid
 
 						// find cells which in the top side of inserted row, and offset their's merge-end-pos 
 						// (merge-end-pos += number of inserted rows)
-						for (int r = cell.MergeStartPos.Row; r < row; r++)
+						for (int r = cell!.MergeStartPos.Row; r < row; r++)
 						{
-							cells[r, c].MergeEndPos = cells[r, c].MergeEndPos.Offset(count, 0);
+							cells[r, c]!.MergeEndPos = cells[r, c]!.MergeEndPos.Offset(count, 0);
 						}
 
 						// if range is splitted by inserted rows
@@ -1263,7 +1263,7 @@ namespace unvell.ReoGrid
 						//
 						if (c == cell.MergeStartPos.Col)
 						{
-							Cell startCell = GetCell(cell.MergeStartPos);
+							Cell startCell = GetCell(cell.MergeStartPos)!;
 							startCell.Rowspan += (short)count;
 							startCell.Height += totalHeight;
 						}
@@ -1403,7 +1403,7 @@ namespace unvell.ReoGrid
 					RenderText = RGUtility.GetAlphaChar(index),
 					Left = x,
 					InnerWidth = width,
-					InnerStyle = cols[col].InnerStyle == null ? null : new WorksheetRangeStyle(cols[col].InnerStyle),
+					InnerStyle = cols[col].InnerStyle == null ? null : new WorksheetRangeStyle(cols[col].InnerStyle!),
 					IsAutoWidth = true,
 				};
 
@@ -1439,7 +1439,7 @@ namespace unvell.ReoGrid
 				{
 					cells[r, c] = cells[r, c - count];
 
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
@@ -1495,14 +1495,14 @@ namespace unvell.ReoGrid
 				#region insert horizontal border
 
 				// insert horizontal border
-				bool hhasLeft = col > 0 && hBorders[r, col - 1] != null && hBorders[r, col - 1].Style != null;
-				bool hhasRight = hBorders[r, col + count] != null && hBorders[r, col + count].Style != null;
+				bool hhasLeft = col > 0 && hBorders[r, col - 1] != null && hBorders[r, col - 1]!.Style != null;
+				bool hhasRight = hBorders[r, col + count] != null && hBorders[r, col + count]!.Style != null;
 
 				// insert horizontal border if cell has both top and bottom borders
 				if (hhasLeft && hhasRight)
 				{
 					// set horizontal border
-					SetHBorders(r, col, count, hBorders[r, col - 1].Style, hBorders[r, col - 1].Pos);
+					SetHBorders(r, col, count, hBorders[r, col - 1]!.Style, hBorders[r, col - 1]!.Pos);
 				}
 
 				#endregion
@@ -1515,10 +1515,10 @@ namespace unvell.ReoGrid
 					#endregion
 
 					#region fill merged cell
-					Cell prevCell = col <= 0 ? null : cells[r, col - 1];
-					Cell nextCell = cells[r, col + count];
+					Cell? prevCell = col <= 0 ? null : cells[r, col - 1];
+					Cell? nextCell = cells[r, col + count];
 
-					Cell cell = cells[r, col] = null;
+					Cell? cell = cells[r, col] = null;
 
 					bool isTopMerged = prevCell != null && prevCell.Rowspan != 1;
 					bool isBottomMerged = nextCell != null && nextCell.Rowspan != 1;
@@ -1532,7 +1532,7 @@ namespace unvell.ReoGrid
 							cell = CreateCell(r, c);
 							cell.Colspan = 0;
 							cell.Rowspan = 0;
-							cell.MergeEndPos = prevCell.MergeEndPos.Offset(0, count);
+							cell.MergeEndPos = prevCell!.MergeEndPos.Offset(0, count);
 							cell.MergeStartPos = prevCell.MergeStartPos;
 
 							// cells inside range should be have an empty v-border and h-border
@@ -1542,9 +1542,9 @@ namespace unvell.ReoGrid
 
 						// find cells which in the left side of inserted column, offset their's merge-end-pos  
 						// (merge-end-pos += number of inserted rows)
-						for (int c = cell.MergeStartPos.Col; c < col; c++)
+						for (int c = cell!.MergeStartPos.Col; c < col; c++)
 						{
-							cells[r, c].MergeEndPos = cells[r, c].MergeEndPos.Offset(0, count);
+							cells[r, c]!.MergeEndPos = cells[r, c]!.MergeEndPos.Offset(0, count);
 						}
 
 						// if range is splitted by inserted rows
@@ -1554,7 +1554,7 @@ namespace unvell.ReoGrid
 						//
 						if (r == cell.MergeStartPos.Row)
 						{
-							Cell startCell = GetCell(cell.MergeStartPos);
+							Cell startCell = GetCell(cell.MergeStartPos)!;
 							startCell.Colspan += (short)count;
 							startCell.Width += totalWidth;
 						}
@@ -1660,7 +1660,7 @@ namespace unvell.ReoGrid
 			this.DeleteRows(row, count, null);
 		}
 
-		internal void DeleteRows(int row, int count, RemoveRowsAction action)
+		internal void DeleteRows(int row, int count, RemoveRowsAction? action)
 		{
 			#region Check
 
@@ -1720,7 +1720,7 @@ namespace unvell.ReoGrid
 			for (int c = 0; c <= this.cols.Count; c++)
 			{
 				// TODO: bounds test
-				Cell cell = cells[row, c];
+				Cell? cell = cells[row, c];
 
 				if (c < this.cols.Count && cell != null)
 				{
@@ -1729,7 +1729,7 @@ namespace unvell.ReoGrid
 						// update colspan for range
 						if (cell.MergeStartPos.Col == c)
 						{
-							Cell mergedStartCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
+							Cell? mergedStartCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
 
 							Debug.Assert(mergedStartCell != null);
 							Debug.Assert(mergedStartCell.Colspan > 0);
@@ -1747,7 +1747,7 @@ namespace unvell.ReoGrid
 						// update merge-end-col for range
 						for (int r = cell.MergeStartPos.Row; r < row; r++)
 						{
-							Cell topCell = cells[r, c];
+							Cell topCell = cells[r, c]!;
 							int span = Math.Min(count, topCell.MergeEndPos.Row - row + 1);
 							topCell.MergeEndPos = topCell.MergeEndPos.Offset(-span, 0);
 						}
@@ -1758,7 +1758,7 @@ namespace unvell.ReoGrid
 				// from columns from 0 col no need to do this
 				if (row > 0
 					// is border at start column 
-					&& this.vBorders[row - 1, c] != null && this.vBorders[row - 1, c].Span > 0)
+					&& this.vBorders[row - 1, c] != null && this.vBorders[row - 1, c]!.Span > 0)
 				{
 					// find border to merge in right side
 					int addspan = 0;
@@ -1766,13 +1766,13 @@ namespace unvell.ReoGrid
 					// border exists in right side?
 					if (this.vBorders[endrow, c] != null
 						// this is not a same border range
-						&& this.vBorders[endrow, c].Span + count + 1 != this.vBorders[row - 1, c].Span
+						&& this.vBorders[endrow, c]!.Span + count + 1 != this.vBorders[row - 1, c]!.Span
 						// does they have same styles?
-						&& this.vBorders[endrow, c].Style.Equals(this.vBorders[row - 1, c].Style)
+						&& this.vBorders[endrow, c]!.Style.Equals(this.vBorders[row - 1, c]!.Style)
 						// does they have same owner position flags?
-						&& this.vBorders[endrow, c].Pos == this.vBorders[row - 1, c].Pos)
+						&& this.vBorders[endrow, c]!.Pos == this.vBorders[row - 1, c]!.Pos)
 					{
-						addspan = this.vBorders[endrow, c].Span;
+						addspan = this.vBorders[endrow, c]!.Span;
 					}
 
 					// update borders in left side
@@ -1780,25 +1780,25 @@ namespace unvell.ReoGrid
 
 					// calc how many borders in delete target range,
 					// it need be subtract from left side border.
-					if (this.vBorders[row, c] != null && this.vBorders[row, c].Span > 0
-						&& this.vBorders[row, c].Span == this.vBorders[row - 1, c].Span - 1)
+					if (this.vBorders[row, c] != null && this.vBorders[row, c]!.Span > 0
+						&& this.vBorders[row, c]!.Span == this.vBorders[row - 1, c]!.Span - 1)
 					{
-						subspan = Math.Min(this.vBorders[row, c].Span, count);
+						subspan = Math.Min(this.vBorders[row, c]!.Span, count);
 					}
 
 					// set reference span
-					int refspan = this.vBorders[row - 1, c].Span;
+					int refspan = this.vBorders[row - 1, c]!.Span;
 
-					this.vBorders[row - 1, c].Span += addspan - subspan;
+					this.vBorders[row - 1, c]!.Span += addspan - subspan;
 
 					if (row > 1)
 					{
 						// update all span in left side
 						for (int r = row - 2; r >= 0; r--)
 						{
-							if (this.vBorders[r, c] != null && this.vBorders[r, c].Span == refspan + 1)
+							if (this.vBorders[r, c] != null && this.vBorders[r, c]!.Span == refspan + 1)
 							{
-								this.vBorders[r, c].Span += addspan - subspan;
+								this.vBorders[r, c]!.Span += addspan - subspan;
 								refspan++;
 							}
 							else
@@ -1817,7 +1817,7 @@ namespace unvell.ReoGrid
 			{
 				for (int r = endrow; r < bottomBounds; r++)
 				{
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
@@ -1849,7 +1849,7 @@ namespace unvell.ReoGrid
 						{
 							if (r == endrow && c == cell.MergeStartPos.Col)
 							{
-								Cell startCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
+								Cell? startCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
 								Debug.Assert(startCell != null);
 
 								// create a new merged cell
@@ -1898,7 +1898,7 @@ namespace unvell.ReoGrid
 				// remove border to force show grid line
 				if (row == 0 || !IsInsideSameMergedCell(row - 1, c, row, c))
 				{
-					if (hBorders[row, c] != null && hBorders[row, c].Span == 0)
+					if (hBorders[row, c] != null && hBorders[row, c]!.Span == 0)
 					{
 						hBorders[row, c] = null;
 					}
@@ -1912,7 +1912,7 @@ namespace unvell.ReoGrid
 
 			if (rowOutlines != null)
 			{
-				List<IReoGridOutline> removingOutlines = null;
+				List<IReoGridOutline>? removingOutlines = null;
 
 				if (action != null)
 				{
@@ -1964,7 +1964,7 @@ namespace unvell.ReoGrid
 				// when any outlines size changed, there is may cause some outlines have same position and count
 				// it's nesscaray to found them out, and remove them from current worksheet
 				//
-				List<IReoGridOutline> deletedOutlines2 = null;
+				List<IReoGridOutline>? deletedOutlines2 = null;
 
 				rowOutlines.IterateReverseOutlines(o =>
 				{
@@ -2007,7 +2007,7 @@ namespace unvell.ReoGrid
 			#endregion // delete outlines
 
 			#region move named ranges
-			List<NamedRange> removedNamedRange = null;
+			List<NamedRange>? removedNamedRange = null;
 
 			foreach (var name in this.registeredNamedRanges.Keys)
 			{
@@ -2175,7 +2175,7 @@ namespace unvell.ReoGrid
 			DeleteColumns(col, count, null);
 		}
 
-		internal void DeleteColumns(int col, int count, RemoveColumnsAction action)
+		internal void DeleteColumns(int col, int count, RemoveColumnsAction? action)
 		{
 			#region Check
 
@@ -2235,7 +2235,7 @@ namespace unvell.ReoGrid
 			for (int r = 0; r <= this.rows.Count; r++)
 			{
 				// TODO: bounds test
-				Cell cell = cells[r, col];
+				Cell? cell = cells[r, col];
 
 				if (r < this.rows.Count && cell != null)
 				{
@@ -2244,7 +2244,7 @@ namespace unvell.ReoGrid
 						// update colspan for range
 						if (cell.MergeStartPos.Row == r)
 						{
-							Cell mergedStartCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
+							Cell mergedStartCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col]!;
 #if DEBUG
 							Debug.Assert(mergedStartCell.Colspan > 0);
 #endif
@@ -2264,7 +2264,7 @@ namespace unvell.ReoGrid
 						// update merge-end-col for range
 						for (int c = cell.MergeStartPos.Col; c < col; c++)
 						{
-							Cell leftCell = cells[r, c];
+							Cell leftCell = cells[r, c]!;
 							int span = Math.Min(count, leftCell.MergeEndPos.Col - col + 1);
 							leftCell.MergeEndPos = leftCell.MergeEndPos.Offset(0, -span);
 						}
@@ -2275,7 +2275,7 @@ namespace unvell.ReoGrid
 				// from columns from 0 col no need to do this
 				if (col > 0
 					// is border at start column 
-					&& this.hBorders[r, col - 1] != null && this.hBorders[r, col - 1].Span > 0)
+					&& this.hBorders[r, col - 1] != null && this.hBorders[r, col - 1]!.Span > 0)
 				{
 					// find border to merge in right side
 					int addspan = 0;
@@ -2283,13 +2283,13 @@ namespace unvell.ReoGrid
 					// border exists in right side?
 					if (this.hBorders[r, endcol] != null
 						// this is not a same border range
-						&& this.hBorders[r, endcol].Span + count + 1 != this.hBorders[r, col - 1].Span
+						&& this.hBorders[r, endcol]!.Span + count + 1 != this.hBorders[r, col - 1]!.Span
 						// does they have same style?
-						&& this.hBorders[r, endcol].Style.Equals(this.hBorders[r, col - 1].Style)
+						&& this.hBorders[r, endcol]!.Style.Equals(this.hBorders[r, col - 1]!.Style)
 						// does they have same owner position flag?
-						&& this.hBorders[r, endcol].Pos == this.hBorders[r, col - 1].Pos)
+						&& this.hBorders[r, endcol]!.Pos == this.hBorders[r, col - 1]!.Pos)
 					{
-						addspan = this.hBorders[r, endcol].Span;
+						addspan = this.hBorders[r, endcol]!.Span;
 					}
 
 					// update borders in left side
@@ -2297,25 +2297,25 @@ namespace unvell.ReoGrid
 
 					// calc how many borders in delete target range,
 					// it need be subtract from left side border.
-					if (this.hBorders[r, col] != null && this.hBorders[r, col].Span > 0
-						&& this.hBorders[r, col].Span == this.hBorders[r, col - 1].Span - 1)
+					if (this.hBorders[r, col] != null && this.hBorders[r, col]!.Span > 0
+						&& this.hBorders[r, col]!.Span == this.hBorders[r, col - 1]!.Span - 1)
 					{
-						subspan = Math.Min(this.hBorders[r, col].Span, count);
+						subspan = Math.Min(this.hBorders[r, col]!.Span, count);
 					}
 
 					// set reference span
-					int refspan = this.hBorders[r, col - 1].Span;
+					int refspan = this.hBorders[r, col - 1]!.Span;
 
-					this.hBorders[r, col - 1].Span += addspan - subspan;
+					this.hBorders[r, col - 1]!.Span += addspan - subspan;
 
 					if (col > 1)
 					{
 						// update all span in left side
 						for (int c = col - 2; c >= 0; c--)
 						{
-							if (this.hBorders[r, c] != null && this.hBorders[r, c].Span == refspan + 1)
+							if (this.hBorders[r, c] != null && this.hBorders[r, c]!.Span == refspan + 1)
 							{
-								this.hBorders[r, c].Span += addspan - subspan;
+								this.hBorders[r, c]!.Span += addspan - subspan;
 								refspan++;
 							}
 							else
@@ -2332,7 +2332,7 @@ namespace unvell.ReoGrid
 			{
 				for (int c = endcol; c < rightBounds; c++)
 				{
-					Cell cell = cells[r, c];
+					Cell? cell = cells[r, c];
 
 					if (cell != null)
 					{
@@ -2362,9 +2362,9 @@ namespace unvell.ReoGrid
 						//
 						else if (cell.MergeStartPos.Col >= col && cell.MergeStartPos.Col < endcol)
 						{
-							if (c == endcol && r == cells[r, c].MergeStartPos.Row)
+							if (c == endcol && r == cells[r, c]!.MergeStartPos.Row)
 							{
-								Cell startCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
+								Cell? startCell = cells[cell.MergeStartPos.Row, cell.MergeStartPos.Col];
 								Debug.Assert(startCell != null);
 
 								// create a new merged cell
@@ -2413,7 +2413,7 @@ namespace unvell.ReoGrid
 				//
 				if (col == 0 || !IsInsideSameMergedCell(r, col - 1, r, col))
 				{
-					if (vBorders[r, col] != null && vBorders[r, col].Span == 0)
+					if (vBorders[r, col] != null && vBorders[r, col]!.Span == 0)
 						vBorders[r, col] = null;
 				}
 			}
@@ -2425,7 +2425,7 @@ namespace unvell.ReoGrid
 
 			if (colOutlines != null)
 			{
-				List<IReoGridOutline> removingOutlines = null;
+				List<IReoGridOutline>? removingOutlines = null;
 
 				if (action != null)
 				{
@@ -2477,7 +2477,7 @@ namespace unvell.ReoGrid
 				// when any outlines size changed, there is may cause some outlines have same position and count
 				// it's nesscaray to found them out, and remove them from current worksheet
 				//
-				List<IReoGridOutline> deletedOutlines2 = null;
+				List<IReoGridOutline>? deletedOutlines2 = null;
 
 				colOutlines.IterateReverseOutlines(o =>
 				{
@@ -2520,7 +2520,7 @@ namespace unvell.ReoGrid
 			#endregion // delete outlines
 
 			#region move named ranges
-			List<NamedRange> removedNamedRange = null;
+			List<NamedRange>? removedNamedRange = null;
 
 			foreach (var name in this.registeredNamedRanges.Keys)
 			{
@@ -2805,7 +2805,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="index">number of row to be get.</param>
 		/// <returns>instance of row header.</returns>
-		public RowHeader GetRowHeader(int index)
+		public RowHeader? GetRowHeader(int index)
 		{
 			return (index < 0 || index >= this.rows.Count) ? null : this.rows[index];
 		}
@@ -2815,12 +2815,12 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="index">Number of column to be get.</param>
 		/// <returns>Instance of column header.</returns>
-		public ColumnHeader GetColumnHeader(int index)
+		public ColumnHeader? GetColumnHeader(int index)
 		{
 			return (index < 0 || index >= this.cols.Count) ? null : this.cols[index];
 		}
 
-		private RowHeaderCollection rowHeaderCollection;
+		private RowHeaderCollection? rowHeaderCollection;
 
 		/// <summary>
 		/// Get the collection of row header.
@@ -2837,7 +2837,7 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		private ColumnHeaderCollection colHeaderCollection;
+		private ColumnHeaderCollection? colHeaderCollection;
 
 		/// <summary>
 		/// Get the collection of column header.
@@ -2871,7 +2871,7 @@ namespace unvell.ReoGrid
 			/// </summary>
 			/// <param name="index">Zero-based number of row</param>
 			/// <returns>Row header instance</returns>
-			public RowHeader this[int index]
+			public RowHeader? this[int index]
 			{
 				get
 				{
@@ -2913,7 +2913,7 @@ namespace unvell.ReoGrid
 			/// </summary>
 			/// <param name="index">Zero-based number of column</param>
 			/// <returns>Column header instance</returns>
-			public ColumnHeader this[int index]
+			public ColumnHeader? this[int index]
 			{
 				get
 				{
@@ -2927,7 +2927,7 @@ namespace unvell.ReoGrid
 			/// </summary>
 			/// <param name="address">Address code to get column header</param>
 			/// <returns>Column header instance</returns>
-			public ColumnHeader this[string address]
+			public ColumnHeader? this[string address]
 			{
 				get
 				{
@@ -2959,32 +2959,32 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised on row inserted at given index of row.
 		/// </summary>
-		public event EventHandler<RowsInsertedEventArgs> RowsInserted;
+		public event EventHandler<RowsInsertedEventArgs>? RowsInserted;
 
 		/// <summary>
 		/// Event raised on row deleted at given index of row.
 		/// </summary>
-		public event EventHandler<RowsDeletedEventArgs> RowsDeleted;
+		public event EventHandler<RowsDeletedEventArgs>? RowsDeleted;
 
 		/// <summary>
 		/// Event raised on column inserted at given index of column.
 		/// </summary>
-		public event EventHandler<ColumnsInsertedEventArgs> ColumnsInserted;
+		public event EventHandler<ColumnsInsertedEventArgs>? ColumnsInserted;
 
 		/// <summary>
 		/// Event raised on column deleted at given index of column.
 		/// </summary>
-		public event EventHandler<ColumnsDeletedEventArgs> ColumnsDeleted;
+		public event EventHandler<ColumnsDeletedEventArgs>? ColumnsDeleted;
 
 		/// <summary>
 		/// Event raised when row's height changed.
 		/// </summary>
-		public event EventHandler<RowsHeightChangedEventArgs> RowsHeightChanged;
+		public event EventHandler<RowsHeightChangedEventArgs>? RowsHeightChanged;
 
 		/// <summary>
 		/// Event raised when column's width changed.
 		/// </summary>
-		public event EventHandler<ColumnsWidthChangedEventArgs> ColumnsWidthChanged;
+		public event EventHandler<ColumnsWidthChangedEventArgs>? ColumnsWidthChanged;
 
 		#endregion // Events
 	}
@@ -3015,14 +3015,14 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set user data.
 		/// </summary>
-		public object Tag { get; set; }
+		public object? Tag { get; set; }
 		
-		private IHeaderBody body;
+		private IHeaderBody? body;
 
 		/// <summary>
 		/// Header body
 		/// </summary>
-		public IHeaderBody Body
+		public IHeaderBody? Body
 		{
 			get { return this.body; }
 			set
@@ -3037,7 +3037,7 @@ namespace unvell.ReoGrid
 		/// If this value is not null, when an new instance of cells on this column is created,
 		/// the cell will have a body automatically that is the instance of the type specified by this value.
 		/// </summary>
-		public Type DefaultCellBody { get; set; }
+		public Type? DefaultCellBody { get; set; }
 	}
 
 	/// <summary>
@@ -3079,14 +3079,14 @@ namespace unvell.ReoGrid
 		/// </summary>
 		public override int Index { get { return this.Col; } }
 
-		internal string RenderText { get; set; }
+		internal string RenderText { get; set; } = null!;
 
-		private string text = null;
+		private string? text = null;
 
 		/// <summary>
 		/// Get or set the text of column header.
 		/// </summary>
-		public string Text
+		public string? Text
 		{
 			get { return this.text; }
 			set
@@ -3114,9 +3114,9 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		internal WorksheetRangeStyle InnerStyle { get; set; }
+		internal WorksheetRangeStyle? InnerStyle { get; set; }
 
-		private ColumnHeaderStyle refStyle;
+		private ColumnHeaderStyle? refStyle;
 
 		/// <summary>
 		/// Get style set of column header, modify any style in this set will affect all cells on this column.
@@ -3204,7 +3204,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when width changed of this column.
 		/// </summary>
-		public event EventHandler<ColumnsWidthChangedEventArgs> WidthChanged;
+		public event EventHandler<ColumnsWidthChangedEventArgs>? WidthChanged;
 
 		internal void RaiseWidthChangedEvent()
 		{
@@ -3270,12 +3270,12 @@ namespace unvell.ReoGrid
 		/// </summary>
 		public override int Index { get { return this.Row; } }
 
-		private string text;
+		private string? text;
 
 		/// <summary>
 		/// Get or set display text for the row header.
 		/// </summary>
-		public string Text
+		public string? Text
 		{
 			get { return this.text; }
 			set
@@ -3311,9 +3311,9 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		internal WorksheetRangeStyle InnerStyle { get; set; }
+		internal WorksheetRangeStyle? InnerStyle { get; set; }
 
-		private RowHeaderStyle refStyle = null;
+		private RowHeaderStyle? refStyle = null;
 
 		/// <summary>
 		/// Get style set of row header, modify any style in this set will affect all cells on this row.
@@ -3394,7 +3394,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when width changed of this column.
 		/// </summary>
-		public event EventHandler<RowsHeightChangedEventArgs> HeightChanged;
+		public event EventHandler<RowsHeightChangedEventArgs>? HeightChanged;
 
 		internal void RaiseHeightChangedEvent()
 		{

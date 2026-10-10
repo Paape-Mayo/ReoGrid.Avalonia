@@ -45,7 +45,7 @@ namespace unvell.ReoGrid.Views
 		}
 
 		#region Find View
-		public override IView GetViewByPoint(Point p)
+		public override IView? GetViewByPoint(Point p)
 		{
 			var drawingCanvas = this.sheet.drawingCanvas;
 

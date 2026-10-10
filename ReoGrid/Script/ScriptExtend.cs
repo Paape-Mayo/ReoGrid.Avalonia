@@ -33,6 +33,7 @@ using unvell.ReoGrid.Formula;
 #endif // FORMULA
 
 #if EX_SCRIPT
+using System.Diagnostics.CodeAnalysis;
 using unvell.ReoScript;
 using unvell.ReoGrid.Script;
 #endif // EX_SCRIPT
@@ -43,18 +44,18 @@ namespace unvell.ReoGrid
 {
 	partial class Workbook
 	{
-		private string script;
+		private string? script;
 
 		/// <summary>
 		/// Script content for this control
 		/// </summary>
-		public string Script { get { return script; } set { script = value; } }
+		public string? Script { get { return script; } set { script = value; } }
 
 #if EX_SCRIPT
 		/// <summary>
 		/// ReoScript Runtime Machine 
 		/// </summary>
-		private ScriptRunningMachine srm;
+		private ScriptRunningMachine? srm;
 
 		/// <summary>
 		/// ReoScript Runtime Machine
@@ -76,7 +77,7 @@ namespace unvell.ReoGrid
 		/// Run script belongs to this control
 		/// </summary>
 		/// <returns>Last value returned from script execution</returns>
-		public object RunScript()
+		public object? RunScript()
 		{
 			return RunScript(this.script);
 		}
@@ -86,7 +87,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="script">Script to be executed.</param>
 		/// <returns>Last value returned from script execution.</returns>
-		public object RunScript(string script)
+		public object? RunScript(string? script)
 		{
 			if (srm == null)
 			{
@@ -104,11 +105,12 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		internal RSWorkbook workbookObj;
+		internal RSWorkbook? workbookObj;
 
 		/// <summary>
 		/// Initial or reset Script Running Machine
 		/// </summary>
+		[MemberNotNull(nameof(srm))]
 		internal void InitSRM()
 		{
 #if DEBUG
@@ -145,7 +147,7 @@ namespace unvell.ReoGrid
 
 			if (this.SRMInitialized != null)
 			{
-				this.SRMInitialized(this, null);
+				this.SRMInitialized(this, EventArgs.Empty);
 			}
 
 #if DEBUG
@@ -158,16 +160,16 @@ namespace unvell.ReoGrid
 #endif
 		}
 
-		internal event EventHandler SRMInitialized;
+		internal event EventHandler? SRMInitialized;
 #endif // EX_SCRIPT
 	}
 
 #if EX_SCRIPT
 	partial class Worksheet
 	{
-		internal RSWorksheet worksheetObj;
+		internal RSWorksheet? worksheetObj;
 
-		internal ScriptRunningMachine Srm
+		internal ScriptRunningMachine? Srm
 		{
 			get
 			{
@@ -179,7 +181,7 @@ namespace unvell.ReoGrid
 		/// Call script's function. The function must be method of workbook object.
 		/// </summary>
 		/// <param name="eventName">Function name of workbook object in script.</param>
-		public object RaiseScriptEvent(string eventName)
+		public object? RaiseScriptEvent(string eventName)
 		{
 			return RaiseScriptEvent(eventName, null);
 		}
@@ -189,7 +191,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="eventName">Function name of workbook object in script.</param>
 		/// <param name="eventArg">Function argument.</param>
-		public object RaiseScriptEvent(string eventName, ObjectValue eventArg)
+		public object? RaiseScriptEvent(string eventName, ObjectValue? eventArg)
 		{
 			if (Srm != null)
 			{

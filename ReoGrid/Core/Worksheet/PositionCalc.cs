@@ -217,17 +217,18 @@ namespace unvell.ReoGrid
 
 		internal Rectangle GetCellBounds(int row, int col)
 		{
-			if (cells[row, col] == null)
+			var target = cells[row, col];
+			if (target == null)
 			{
 				return GetCellRectFromHeader(row, col);
 			}
-			else if (cells[row, col].MergeStartPos != CellPosition.Empty)
+			else if (target.MergeStartPos != CellPosition.Empty)
 			{
-				Cell cell = GetCell(cells[row, col].MergeStartPos);
+				Cell? cell = GetCell(target.MergeStartPos);
 				return cell?.Bounds ?? GetCellRectFromHeader(row, col);
 			}
 			else
-				return cells[row, col].Bounds;
+				return target.Bounds;
 		}
 
 		private Rectangle GetCellRectFromHeader(int row, int col)

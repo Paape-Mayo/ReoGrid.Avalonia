@@ -29,7 +29,7 @@ namespace unvell.ReoGrid
 
 	partial class Worksheet
 	{
-		internal WorksheetDrawingCanvas drawingCanvas;
+		internal WorksheetDrawingCanvas drawingCanvas = null!;
 
 		/// <summary>
 		/// Access the collection of floating objects from worksheet.

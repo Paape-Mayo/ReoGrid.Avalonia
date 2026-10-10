@@ -158,14 +158,14 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
         }
 
-        private IPointer Pointer;
+        private IPointer? Pointer;
 
         private bool splitterMoving = false;
         private bool scrollLeftDown = false, scrollRightDown = false;
 
-        private Avalonia.Threading.DispatcherTimer scrollTimer;
+        private Avalonia.Threading.DispatcherTimer scrollTimer = null!;
 
-        protected void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        protected void OnSizeChanged(object? sender, SizeChangedEventArgs e)
         {
             this.Clip = new RectangleGeometry(new Rect(0, 0, e.NewSize.Width, e.NewSize.Height));
 
@@ -182,17 +182,19 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             var newSheetImage = e.NameScope.Find<Border>("newSheetImage");
             var rightThumb = e.NameScope.Find<Border>("rightThumb");
 
+            if (grid == null || pleft == null || pright == null || newSheetImage == null || rightThumb == null) return;
 
 
 
 
-            newSheetImage.PointerEntered += (s, e) => (newSheetImage.Child as Image).Source = imageHoverSource;
-            newSheetImage.PointerExited += (s, e) => (newSheetImage.Child as Image).Source = imageSource;
+
+            newSheetImage.PointerEntered += (s, e) => (newSheetImage.Child as Image)!.Source = imageHoverSource;
+            newSheetImage.PointerExited += (s, e) => (newSheetImage.Child as Image)!.Source = imageSource;
             newSheetImage.PointerPressed += (s, e) =>
             {
                 if (this.NewSheetClick != null)
                 {
-                    this.NewSheetClick(this, null);
+                    this.NewSheetClick(this, EventArgs.Empty);
                 }
             };
             newSheetImage.ZIndex = 100;
@@ -247,7 +249,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
                     {
                         if (this.SheetListClick != null)
                         {
-                            this.SheetListClick(this, null);
+                            this.SheetListClick(this, EventArgs.Empty);
                         }
                     }
                 }
@@ -273,7 +275,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
                     {
                         if (this.SheetListClick != null)
                         {
-                            this.SheetListClick(this, null);
+                            this.SheetListClick(this, EventArgs.Empty);
                         }
                     }
                 }
@@ -303,7 +305,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             rightThumb.PointerReleased += (s, e) =>
             {
                 this.splitterMoving = false;
-                this.Pointer.Capture(null);
+                this.Pointer?.Capture(null);
             };
 
 
@@ -376,7 +378,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
                 if (this.SelectedIndexChanged != null)
                 {
-                    this.SelectedIndexChanged(this, null);
+                    this.SelectedIndexChanged(this, EventArgs.Empty);
                 }
             }
         }
@@ -424,9 +426,9 @@ namespace unvell.ReoGrid.AvaloniaPlatform
             }
         }
 
-        private void Tab_MouseDown(object sender, PointerPressedEventArgs e)
+        private void Tab_MouseDown(object? sender, PointerPressedEventArgs e)
         {
-            var index = this.canvas.Children.IndexOf((Control)sender);
+            var index = this.canvas.Children.IndexOf((Control)sender!);
 
             var arg = new SheetTabMouseEventArgs()
             {
@@ -454,7 +456,7 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
         public void UpdateTab(int index, string title, Color backColor, Color textColor)
         {
-            SheetTabItem item = this.canvas.Children[index] as SheetTabItem;
+            SheetTabItem? item = this.canvas.Children[index] as SheetTabItem;
             if (item != null)
             {
                 item.ChangeTitle(title);
@@ -556,15 +558,15 @@ namespace unvell.ReoGrid.AvaloniaPlatform
 
         public event EventHandler<SheetTabMovedEventArgs> TabMoved { add { } remove { } }
 
-        public event EventHandler SelectedIndexChanged;
+        public event EventHandler? SelectedIndexChanged;
 
-        public event EventHandler SplitterMoving;
+        public event EventHandler? SplitterMoving;
 
-        public event EventHandler SheetListClick;
+        public event EventHandler? SheetListClick;
 
-        public event EventHandler NewSheetClick;
+        public event EventHandler? NewSheetClick;
 
-        public event EventHandler<SheetTabMouseEventArgs> TabMouseDown;
+        public event EventHandler<SheetTabMouseEventArgs>? TabMouseDown;
     }
 
     class SheetTabItem : ContentControl

@@ -27,13 +27,13 @@ namespace unvell.ReoGrid.Actions
 		/// <summary>
 		/// Get the workbook instance.
 		/// </summary>
-		public IWorkbook Workbook { get; internal set; }
+		public IWorkbook? Workbook { get; internal set; }
 
 		/// <summary>
 		/// Create workbook action with specified workbook instance.
 		/// </summary>
 		/// <param name="workbook"></param>
-		public WorkbookAction(IWorkbook workbook = null)
+		public WorkbookAction(IWorkbook? workbook = null)
 		{
 			this.Workbook = workbook;
 		}

@@ -29,10 +29,10 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public WorksheetRangeStyle Style { get { return style; } set { style = value; } }
 
-		private WorksheetRangeStyle backupRootStyle = null;
-		private WorksheetRangeStyle[] backupRowStyles = null;
-		private WorksheetRangeStyle[] backupColStyles = null;
-		private PartialGrid backupData = null;
+		private WorksheetRangeStyle backupRootStyle = null!;
+		private WorksheetRangeStyle?[] backupRowStyles = null!;
+		private WorksheetRangeStyle?[] backupColStyles = null!;
+		private PartialGrid backupData = null!;
 		private bool isFullColSelected = false;
 		private bool isFullRowSelected = false;
 		private bool isFullGridSelected = false;

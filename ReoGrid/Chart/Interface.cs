@@ -52,7 +52,7 @@ namespace unvell.ReoGrid.Chart
 		/// <summary>
 		/// Get or set the data source of chart
 		/// </summary>
-		WorksheetChartDataSource DataSource { get; set; }
+		WorksheetChartDataSource? DataSource { get; set; }
 
 		/// <summary>
 		/// Determine the style of data serial

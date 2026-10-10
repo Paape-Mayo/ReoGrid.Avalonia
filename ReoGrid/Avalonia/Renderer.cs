@@ -48,7 +48,7 @@ namespace unvell.ReoGrid.Rendering
             get { return this.resourceManager; }
         }
 
-        private PlatformGraphics g = null;
+        private PlatformGraphics g = null!;
 
         public AvaloniaGraphics()
         {
@@ -58,13 +58,14 @@ namespace unvell.ReoGrid.Rendering
         public PlatformGraphics PlatformGraphics { get { return g; } set { this.g = value; } }
 
         #region Line
-        public void DrawLine(Pen p, double x1, double y1, double x2, double y2)
+        public void DrawLine(Pen? p, double x1, double y1, double x2, double y2)
         {
             DrawLine(p, new Point(x1, y1), new Point(x2, y2));
         }
 
-        public void DrawLine(Pen p, Point startPoint, Point endPoint)
+        public void DrawLine(Pen? p, Point startPoint, Point endPoint)
         {
+            if (p == null) return;
 #if !GRID_GUIDELINE
             double halfPenWidth = p.Thickness / 2;
 
@@ -86,13 +87,14 @@ namespace unvell.ReoGrid.Rendering
 
         public void DrawLine(Point startPoint, Point endPoint, SolidColor color)
         {
-            this.g.DrawLine(this.resourceManager.GetPen(color), (Point)startPoint, (Point)endPoint);
+            var p = this.resourceManager.GetPen(color);
+            if (p != null) this.g.DrawLine(p, (Point)startPoint, (Point)endPoint);
         }
 
         public void DrawLine(double x1, double y1, double x2, double y2, SolidColor color)
         {
             var pen = this.resourceManager.GetPen(color);
-            this.DrawLine(pen, x1, y1, x2, y2);
+            if (pen != null) this.DrawLine(pen, x1, y1, x2, y2);
         }
 
         public void DrawLine(double x1, double y1, double x2, double y2, SolidColor color, double width, LineStyles style)
@@ -124,7 +126,7 @@ namespace unvell.ReoGrid.Rendering
                 if (p != null)
                 {
                     var geo = new PathGeometry();
-                    geo.Figures.Add(new PathFigure()
+                    geo.Figures!.Add(new PathFigure()
                     {
                         StartPoint = points[start],
                         IsClosed = false,
@@ -160,12 +162,12 @@ namespace unvell.ReoGrid.Rendering
         #endregion // Line
 
         #region Rectangle
-        public void DrawRectangle(Pen p, Rectangle rect)
+        public void DrawRectangle(Pen? p, Rectangle rect)
         {
             g.DrawRectangle(null, p, rect);
         }
 
-        public void DrawRectangle(Pen p, double x, double y, double w, double h)
+        public void DrawRectangle(Pen? p, double x, double y, double w, double h)
         {
             g.DrawRectangle(null, p, new Rect(x, y, w, h));
         }
@@ -208,7 +210,7 @@ namespace unvell.ReoGrid.Rendering
             }
         }
 
-        public void FillRectangle(RGBrush b, double x, double y, double width, double height)
+        public void FillRectangle(RGBrush? b, double x, double y, double width, double height)
         {
             this.g.DrawRectangle(b, null, new Rect(x, y, width, height));
         }
@@ -463,17 +465,17 @@ namespace unvell.ReoGrid.Rendering
             }
         }
 
-        public void DrawEllipse(RGPen pen, Rectangle rectangle)
+        public void DrawEllipse(RGPen? pen, Rectangle rectangle)
         {
             this.g.DrawEllipse(null, pen, rectangle.Location, rectangle.Width, rectangle.Height);
         }
 
-        public void FillEllipse(RGBrush b, Rectangle rectangle)
+        public void FillEllipse(RGBrush? b, Rectangle rectangle)
         {
             this.g.DrawEllipse(b, null, rectangle.Location, rectangle.Width, rectangle.Height);
         }
 
-        public void FillEllipse(RGBrush b, double x, double y, double width, double height)
+        public void FillEllipse(RGBrush? b, double x, double y, double width, double height)
         {
             this.g.DrawEllipse(b, null, new Point(x, y), width, height);
         }
@@ -494,7 +496,7 @@ namespace unvell.ReoGrid.Rendering
 
                 for (int i = 1, k = 1; i < points.Length; i++, k++)
                 {
-                    geo.Figures.Add(new PathFigure() { Segments = { new LineSegment() { Point = points[k - 1] } } });
+                    geo.Figures!.Add(new PathFigure() { Segments = [new LineSegment() { Point = points[k - 1] }] });
                     //geo.AddGeometry(new LineGeometry(points[k - 1], points[k]));
                 }
 
@@ -517,7 +519,7 @@ namespace unvell.ReoGrid.Rendering
         }
         #endregion // Utility
 
-        internal RGDashStyle GetDashStyle(LineStyles style) => style switch
+        internal RGDashStyle? GetDashStyle(LineStyles style) => style switch
         {
             LineStyles.Dot => DashStyles.Dot,
             LineStyles.Dash => DashStyles.Dash,
@@ -571,7 +573,7 @@ namespace unvell.ReoGrid.Rendering
             {
                 Matrix m = Matrix.Identity;
 
-                double hw = cell.formattedText.Width * 0.5, hh = cell.formattedText.Height * 0.5;
+                double hw = cell.formattedText!.Width * 0.5, hh = cell.formattedText!.Height * 0.5;
                 Avalonia.Point p1 = new(-hw, -hh), p2 = new(hw, hh);
                 //m.Rotate(cell.InnerStyle.RotationAngle);
                 m = Matrix.CreateRotation(cell.InnerStyle.RotationAngle);
@@ -580,7 +582,7 @@ namespace unvell.ReoGrid.Rendering
             }
             else
             {
-                return new Graphics.Size(cell.formattedText.Width, cell.formattedText.Height);
+                return new Graphics.Size(cell.formattedText!.Width, cell.formattedText!.Height);
             }
         }
 
@@ -604,19 +606,19 @@ namespace unvell.ReoGrid.Rendering
                 var m2 = Matrix.CreateTranslation(cell.Bounds.OriginX * sheet.ScaleFactor, cell.Bounds.OriginY * sheet.ScaleFactor);
 
                 this.PushTransform(m1 * m2);
-                this.PlatformGraphics.DrawText(cell.formattedText, new RGPointF(-cell.formattedText.Width * 0.5, -cell.formattedText.Height * 0.5));
+                this.PlatformGraphics.DrawText(cell.formattedText!, new RGPointF(-cell.formattedText!.Width * 0.5, -cell.formattedText!.Height * 0.5));
                 this.PopTransform();
             }
             else
             {
-                this.PlatformGraphics.DrawText(cell.formattedText, cell.TextBounds.Location);
+                this.PlatformGraphics.DrawText(cell.formattedText!, cell.TextBounds.Location);
             }
         }
 
         private static Color DecideTextColor(Cell cell)
         {
             var sheet = cell.Worksheet;
-            var controlStyle = sheet.controlAdapter.ControlStyle;
+            var controlStyle = sheet!.controlAdapter!.ControlStyle;
             SolidColor textColor;
 
             if (!cell.RenderColor.IsTransparent)
@@ -649,7 +651,7 @@ namespace unvell.ReoGrid.Rendering
             {
                 SolidColor textColor = DecideTextColor(cell);
 
-                cell.formattedText = new Avalonia.Media.FormattedText(cell.InnerDisplay,
+                cell.formattedText = new Avalonia.Media.FormattedText(cell.InnerDisplay!,
                     System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                     Typeface.Default, // base.resourceManager.GetTypeface(cell.InnerStyle.FontName),
                     fontSize,
@@ -657,13 +659,13 @@ namespace unvell.ReoGrid.Rendering
             }
             else if (reason == Core.UpdateFontReason.FontChanged || reason == Core.UpdateFontReason.ScaleChanged)
             {
-                cell.formattedText.SetFontFamily(cell.InnerStyle.FontName);
+                cell.formattedText.SetFontFamily(cell.InnerStyle.FontName!);
                 cell.formattedText.SetFontSize(fontSize);
             }
             else if (reason == Core.UpdateFontReason.TextColorChanged)
             {
                 SolidColor textColor = DecideTextColor(cell);
-                cell.formattedText.SetForegroundBrush(resourceManager.GetBrush(textColor));
+                cell.formattedText.SetForegroundBrush(resourceManager.GetBrush(textColor)!);
             }
 
             var ft = cell.formattedText;
@@ -684,7 +686,7 @@ namespace unvell.ReoGrid.Rendering
 
         }
 
-        private Pen capLinePen = null;
+        private Pen? capLinePen = null;
 
         public void BeginCappedLine(LineCapStyles startCap, Graphics.Size startSize, LineCapStyles endCap, Graphics.Size endSize,
             SolidColor color, double width)
@@ -707,7 +709,7 @@ namespace unvell.ReoGrid.Rendering
             this.capLinePen = null;
         }
 
-        private Pen cachePen = null;
+        private Pen cachePen = null!;
 
         public void BeginDrawLine(double width, SolidColor color)
         {
@@ -727,14 +729,14 @@ namespace unvell.ReoGrid.Rendering
         {
         }
 
-        public Pen GetPen(SolidColor color)
+        public Pen? GetPen(SolidColor color)
         {
             return this.resourceManager.GetPen(color);
         }
 
-        public void ReleasePen(Pen pen) { }
+        public void ReleasePen(Pen? pen) { }
 
-        public RGBrush GetBrush(SolidColor color)
+        public RGBrush? GetBrush(SolidColor color)
         {
             return this.resourceManager.GetBrush(color);
         }
@@ -751,7 +753,7 @@ namespace unvell.ReoGrid.Rendering
             this.headerTextScale = 9d * scale;
         }
 
-        public void DrawHeaderText(string text, RGBrush brush, Rectangle rect)
+        public void DrawHeaderText(string text, RGBrush? brush, Rectangle rect)
         {
             var ft = new Avalonia.Media.FormattedText(text,
                 System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,

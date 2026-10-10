@@ -89,7 +89,7 @@ namespace unvell.ReoGrid.DataFormat
 		/// </summary>
 		/// <param name="cell">Instance of cell to be formatted.</param>
 		/// <returns>Return non-empty string if formatting was performed successfully; Otherwise return null.</returns>
-		string FormatCell(Cell cell);
+		string? FormatCell(Cell cell);
 
 		/// <summary>
 		/// Indicate that whether or not to check the data type before format.
@@ -103,7 +103,7 @@ namespace unvell.ReoGrid.DataFormat
 	/// </summary>
 	public sealed class DataFormatterManager
 	{
-		private static DataFormatterManager instance;
+		private static DataFormatterManager? instance;
 
 		/// <summary>
 		/// Instance for this class
@@ -149,7 +149,7 @@ namespace unvell.ReoGrid.DataFormat
 			if (cell.DataFormat == CellDataFormatFlag.General)
 			{
 				bool found = false;
-				string formattedText = null;
+				string? formattedText = null;
 
 				foreach (CellDataFormatFlag flag in dataFormatters.Keys)
 				{
@@ -189,7 +189,7 @@ namespace unvell.ReoGrid.DataFormat
 			{
 				if (DataFormatters.TryGetValue(cell.DataFormat, out var formatter))
 				{
-					string formattedText = DataFormatters[cell.DataFormat].FormatCell(cell);
+					string? formattedText = DataFormatters[cell.DataFormat].FormatCell(cell);
 
 					if (formattedText == null)
 					{

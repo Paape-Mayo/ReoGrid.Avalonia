@@ -143,7 +143,7 @@ namespace unvell.ReoGrid
 		{
 			try
 			{
-				this.controlAdapter.ChangeCursor(CursorStyle.Busy);
+				this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
 
 				this.SetRowsHeight(range.Row, range.Rows, r =>
 				{
@@ -167,17 +167,17 @@ namespace unvell.ReoGrid
 			{
 				if (this.controlAdapter != null)
 				{
-					this.ControlAdapter.ChangeCursor(Interaction.CursorStyle.PlatformDefault);
+					this.ControlAdapter!.ChangeCursor(Interaction.CursorStyle.PlatformDefault);
 				}
 			}
 
-			this.RowsFiltered?.Invoke(this, null);
+			this.RowsFiltered?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Event raised when rows filtered on this worksheet.
 		/// </summary>
-		public event EventHandler RowsFiltered;
+		public event EventHandler? RowsFiltered;
 
 		#endregion // Filter
 
@@ -193,7 +193,7 @@ namespace unvell.ReoGrid
 		/// <returns>Data changed range</returns>
 		public RangePosition SortColumn(string columnAddress, SortOrder order = SortOrder.Ascending,
 			CellElementFlag moveElementFlag = CellElementFlag.Data,
-			Func<object, object, int> cellDataComparer = null)
+			Func<object, object, int>? cellDataComparer = null)
 		{
 			return SortColumn(RGUtility.GetNumberOfChar(columnAddress), order, moveElementFlag, cellDataComparer);
 		}
@@ -208,7 +208,7 @@ namespace unvell.ReoGrid
 		/// <returns>Data changed range</returns>
 		public RangePosition SortColumn(int columnIndex, SortOrder order = SortOrder.Ascending,
 			CellElementFlag moveElementFlag = CellElementFlag.Data,
-			Func<object, object, int> cellDataComparer = null)
+			Func<object, object, int>? cellDataComparer = null)
 		{
 			return SortColumn(columnIndex, 0, MaxContentRow, 0, MaxContentCol, order, moveElementFlag, cellDataComparer);
 		}
@@ -225,7 +225,7 @@ namespace unvell.ReoGrid
 		/// <returns>Data changed range.</returns>
 		public RangePosition SortColumn(int columnIndex, int titleRows, SortOrder order = SortOrder.Ascending,
 				CellElementFlag moveElementFlag = CellElementFlag.Data,
-		Func<object, object, int> cellDataComparer = null)
+		Func<object, object, int>? cellDataComparer = null)
 		{
 			return SortColumn(columnIndex, titleRows, MaxContentRow, 0, MaxContentCol, order, moveElementFlag, cellDataComparer);
 		}
@@ -245,7 +245,7 @@ namespace unvell.ReoGrid
 		public RangePosition SortColumn(int columnIndex, int startRow, int endRow, int startColumn, int endColumn,
 			SortOrder order = SortOrder.Ascending,
 			CellElementFlag moveElementFlag = CellElementFlag.Data,
-			Func<object, object, int> cellDataComparer = null)
+			Func<object, object, int>? cellDataComparer = null)
 		{
 			return SortColumn(columnIndex, new RangePosition(startRow, startColumn, MaxContentRow - startRow + 1,
 				endColumn - startColumn + 1), order, cellDataComparer);
@@ -261,7 +261,7 @@ namespace unvell.ReoGrid
 		/// <returns></returns>
 		public RangePosition SortColumn(int columnIndex, string applyRange, SortOrder order = SortOrder.Ascending,
 			CellElementFlag moveElementFlag = CellElementFlag.Data,
-			Func<object, object, int> cellDataComparer = null)
+			Func<object, object, int>? cellDataComparer = null)
 		{
 			if (RangePosition.IsValidAddress(applyRange))
 			{
@@ -286,7 +286,7 @@ namespace unvell.ReoGrid
 		/// <returns>Data changed range.</returns>
 		public RangePosition SortColumn(int columnIndex, RangePosition applyRange,
 			SortOrder order = SortOrder.Ascending,
-			Func<object, object, int> cellDataComparer = null)
+			Func<object, object, int>? cellDataComparer = null)
 		{
 
 			var range = FixRange(applyRange);
@@ -306,14 +306,14 @@ namespace unvell.ReoGrid
 
 			try
 			{
-				this.controlAdapter.ChangeCursor(CursorStyle.Busy);
+				this.controlAdapter!.ChangeCursor(CursorStyle.Busy);
 
 				if (!this.CheckQuickSortRange(range.Row, range.EndRow, range.Col, range.EndCol))
 				{
 					throw new InvalidOperationException("Cannot change a part of range, all cells should be having same colspan on column.");
 				}
 
-				IComparer<object> comparer = cellDataComparer == null ? (IComparer<object>)new CellComparer(order) : new CellComparerAdapter(cellDataComparer, order);
+				IComparer<object?> comparer = cellDataComparer == null ? (IComparer<object?>)new CellComparer(order) : new CellComparerAdapter(cellDataComparer, order);
 
 				var data = this.GetSortedData(columnIndex, range.Row, range.EndRow, range.Col, range.EndCol, ref affectRange, comparer, order);
 
@@ -336,7 +336,7 @@ namespace unvell.ReoGrid
 
 			this.RequestInvalidate();
 
-			this.controlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
+			this.controlAdapter!.ChangeCursor(CursorStyle.PlatformDefault);
 
 			if (!affectRange.IsEmpty)
 			{
@@ -381,9 +381,9 @@ namespace unvell.ReoGrid
 			return true;
 		}
 
-		private object[,] GetSortedData(int columnIndex, int startRow, int endRow, int startColumn,
+		private object?[,] GetSortedData(int columnIndex, int startRow, int endRow, int startColumn,
 			int endColumn,
-			ref RangePosition affectRange, IComparer<object> cellComparer, SortOrder sortOrder)
+			ref RangePosition affectRange, IComparer<object?> cellComparer, SortOrder sortOrder)
 		{
 
 			if (affectRange.IsEmpty)
@@ -395,7 +395,7 @@ namespace unvell.ReoGrid
 			int affectedRangeStartRow = int.MaxValue;
 			int affectedRangeEndRow = int.MinValue;
 
-			var sortedData = new object[endRow - startRow + 1, endColumn - startColumn + 1];
+			var sortedData = new object?[endRow - startRow + 1, endColumn - startColumn + 1];
 
 			var rangeData = Enumerable.Range(startRow, endRow - startRow + 1)
 									 .Select(x => new
@@ -439,7 +439,7 @@ namespace unvell.ReoGrid
 			bool canTrimData = !new RangePosition(startRow, startColumn, endRow - startRow + 1, endColumn - startColumn + 1).Equals(affectRange);
 
 			return canTrimData
-				? (object[,])ResizeArray(sortedData, new[] { affectRange.Rows, affectRange.Cols })
+				? (object?[,])ResizeArray(sortedData, new[] { affectRange.Rows, affectRange.Cols })
 				: sortedData;
 		}
 
@@ -448,7 +448,7 @@ namespace unvell.ReoGrid
 			if (newSizes.Length != arr.Rank)
 				throw new ArgumentException("Array must have the same number of dimensions as there are elements in newSizes", nameof(newSizes));
 
-			var newArray = Array.CreateInstance(arr.GetType().GetElementType(), newSizes);
+			var newArray = Array.CreateInstance(arr.GetType().GetElementType()!, newSizes);
 			int length = arr.Length <= newArray.Length ? arr.Length : newArray.Length;
 			Array.ConstrainedCopy(arr, 0, newArray, 0, length);
 			return newArray;
@@ -457,7 +457,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised when rows sorted on this worksheet.
 		/// </summary>
-		public event EventHandler<Events.RangeEventArgs> RowsSorted;
+		public event EventHandler<Events.RangeEventArgs>? RowsSorted;
 		#endregion // Sort
 
 	}
@@ -478,7 +478,7 @@ namespace unvell.ReoGrid
 		Descending,
 	}
 
-	internal class CellComparer : IComparer<object>
+	internal class CellComparer : IComparer<object?>
 	{
 		private readonly int sign;
 
@@ -488,7 +488,7 @@ namespace unvell.ReoGrid
 			sign = order == SortOrder.Ascending ? 1 : -1;
 		}
 
-		public int Compare(object x, object y)
+		public int Compare(object? x, object? y)
 		{
 			var data = x as IComparable;
 
@@ -508,14 +508,14 @@ namespace unvell.ReoGrid
 
 			if (data == null) return sign;
 
-			if (data.GetType() == y.GetType())
+			if (data.GetType() == y!.GetType())
 			{
 				return data.CompareTo(y);
 			}
 
 			if (y is string)
 			{
-				return Convert.ToString(data).CompareTo(y);
+				return (Convert.ToString(data) ?? string.Empty).CompareTo(y);
 			}
 
 			if (data is string)
@@ -529,12 +529,12 @@ namespace unvell.ReoGrid
 			}
 			catch
 			{
-				return Convert.ToString(data).CompareTo(Convert.ToString(y));
+				return (Convert.ToString(data) ?? string.Empty).CompareTo(Convert.ToString(y));
 			}
 		}
 	}
 
-	internal class CellComparerAdapter : IComparer<object>
+	internal class CellComparerAdapter : IComparer<object?>
 	{
 		private readonly Func<object, object, int> comparerFunc;
 		private readonly int sign;
@@ -546,7 +546,7 @@ namespace unvell.ReoGrid
 			sign = order == SortOrder.Ascending ? 1 : -1;
 		}
 
-		public int Compare(object x, object y)
+		public int Compare(object? x, object? y)
 		{
 			if (x is string str && string.IsNullOrEmpty(str))
 			{
@@ -564,7 +564,7 @@ namespace unvell.ReoGrid
 
 			if (x == null) return sign;
 
-			return comparerFunc(x, y);
+			return comparerFunc(x, y!);
 		}
 	}
 }

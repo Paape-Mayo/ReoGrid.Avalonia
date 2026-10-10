@@ -25,8 +25,8 @@ namespace unvell.ReoGrid.Actions
 	public class SetRangeDataFormatAction : WorksheetReusableAction
 	{
 		private CellDataFormatFlag format;
-		private object formatArgs;
-		private PartialGrid backupData = null;
+		private object? formatArgs;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Create instance for SetRangeDataFormatAction.
@@ -35,7 +35,7 @@ namespace unvell.ReoGrid.Actions
 		/// <param name="format">Format type of cell to be set.</param>
 		/// <param name="dataFormatArgs">Argument belongs to format type to be set.</param>
 		public SetRangeDataFormatAction(RangePosition range, CellDataFormatFlag format,
-			object dataFormatArgs)
+			object? dataFormatArgs)
 			: base(range)
 		{
 			this.format = format;

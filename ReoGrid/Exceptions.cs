@@ -35,14 +35,14 @@ namespace unvell.ReoGrid
 		/// Create common exception with specified exception message
 		/// </summary>
 		/// <param name="msg">message used to describe the exception</param>
-		public ReoGridException(string msg) : base(msg) { }
+		public ReoGridException(string? msg) : base(msg) { }
 
 		/// <summary>
 		/// Create common exception with specified message and inner exception
 		/// </summary>
 		/// <param name="msg">message used to describe the exception</param>
 		/// <param name="innerException">inner exception</param>
-		public ReoGridException(string msg, Exception innerException) : base(msg, innerException) { }
+		public ReoGridException(string? msg, Exception? innerException) : base(msg, innerException) { }
 	}
 
 	/// <summary>
@@ -102,7 +102,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// worksheet of exception
 		/// </summary>
-		public Worksheet Worksheet { get; set; }
+		public Worksheet? Worksheet { get; set; }
 
 		/// <summary>
 		/// Create this exception with specified message
@@ -237,7 +237,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="msg">Additional message used to describe this exception</param>
 		/// <param name="range">The range is caused this exception happen</param>
-		public RangeException(RangePosition range, string msg)
+		public RangeException(RangePosition range, string? msg)
 			: base(msg)
 		{
 			this.Range = range;
@@ -318,7 +318,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set the name of range
 		/// </summary>
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		/// <summary>
 		/// Create instance of this exception with additional message
@@ -611,7 +611,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="msg">message of exception</param>
 		/// <param name="innerEx">previous or inner exception</param>
-		public ReoGridPrintException(string msg, Exception innerEx) :
+		public ReoGridPrintException(string msg, Exception? innerEx) :
 			base(msg, innerEx)
 		{
 		}
@@ -729,7 +729,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="msg">Additional message to describe this exception</param>
 		/// <param name="innerEx">Original exception happened inside loading process</param>
-		public ReoGridIOException(string msg, Exception innerEx) :
+		public ReoGridIOException(string msg, Exception? innerEx) :
 			base(msg, innerEx)
 		{
 		}
@@ -754,7 +754,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="msg">Addtional message to describe the exception</param>
 		/// <param name="innerEx">Inner exception where original exception happened</param>
-		public ReoGridLoadException(string msg, Exception innerEx) :
+		public ReoGridLoadException(string msg, Exception? innerEx) :
 			base(msg, innerEx)
 		{
 		}
@@ -778,7 +778,7 @@ namespace unvell.ReoGrid
 		/// Create exception instance by specified message
 		/// </summary>
 		/// <param name="msg">Additional message to describe this exception</param>
-		public FileFormatNotSupportException(string msg) : this(msg, null)
+		public FileFormatNotSupportException(string? msg) : this(msg, null)
 		{
 		}
 
@@ -787,7 +787,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="msg">Additional message to describe this exception</param>
 		/// <param name="innerEx">Inner exception where original exception happened</param>
-		public FileFormatNotSupportException(string msg, Exception innerEx) :
+		public FileFormatNotSupportException(string? msg, Exception? innerEx) :
 			base(msg, innerEx)
 		{
 		}

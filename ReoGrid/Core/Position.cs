@@ -313,7 +313,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">object to be compared</param>
 		/// <returns>true if this position is same as the specified object, otherwise false</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj == null) return false;
 			if (!(obj is CellPosition)) return false;
@@ -848,7 +848,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="obj">target range to be checked.</param>
 		/// <returns>true if two ranges are same, otherwise return false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj == null) return false;
 			if (!(obj is RangePosition)) return false;

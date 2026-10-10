@@ -38,7 +38,7 @@ namespace unvell.ReoGrid.Actions
 			return new MergeRangeAction(range);
 		}
 
-		private PartialGrid backupData;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Do this operation.

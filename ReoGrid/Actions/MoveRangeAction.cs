@@ -49,7 +49,7 @@ namespace unvell.ReoGrid.Actions
 			this.ToPosition = toPosition;
 		}
 
-		private PartialGrid backupGrid;
+		private PartialGrid backupGrid = null!;
 
 		/// <summary>
 		/// Do this action.

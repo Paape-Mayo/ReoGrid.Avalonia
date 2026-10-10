@@ -27,9 +27,9 @@ namespace unvell.ReoGrid.DataFormat
 	/// </summary>
 	internal class GeneralDataFormatter : IDataFormatter
 	{
-		public string FormatCell(Cell cell)
+		public string? FormatCell(Cell cell)
 		{
-			object data = cell.InnerData;
+			object? data = cell.InnerData;
 
 			// check numeric
 			bool isNumeric = false;
@@ -94,7 +94,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 		}
 
-		public string[] Formats { get { return null; } }
+		public string[]? Formats { get { return null; } }
 
 		public bool PerformTestFormat()
 		{

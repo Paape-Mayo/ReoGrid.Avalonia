@@ -25,8 +25,8 @@ namespace unvell.ReoGrid.Actions
 	public class SetSortedRangeDataAction : BaseWorksheetAction
 	{
 		private readonly RangePosition range;
-		private readonly object[,] data;
-		private object[,] backupData;
+		private readonly object?[,] data;
+		private object?[,] backupData = null!;
 		private bool isRegularExecution;
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		/// <param name="range">range to set specified data.</param>
 		/// <param name="data">data to be set.</param>
-		public SetSortedRangeDataAction(RangePosition range, object[,] data)
+		public SetSortedRangeDataAction(RangePosition range, object?[,] data)
 		{
 			this.range = range;
 			this.data = data;

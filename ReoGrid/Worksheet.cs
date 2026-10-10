@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using unvell.Common;
@@ -71,9 +72,9 @@ namespace unvell.ReoGrid
     public sealed partial class Worksheet : IDisposable
     {
         #region ControlAdapter
-        internal IControlAdapter controlAdapter;
+        internal IControlAdapter? controlAdapter;
 
-        internal IControlAdapter ControlAdapter
+        internal IControlAdapter? ControlAdapter
         {
             get
             {
@@ -135,12 +136,12 @@ namespace unvell.ReoGrid
         #endregion
 
         #region Workbook Relation
-        internal Workbook workbook;
+        internal Workbook? workbook;
 
         /// <summary>
         /// Instance of workbook of this worksheet
         /// </summary>
-        public IWorkbook Workbook { get { return this.workbook; } }
+        public IWorkbook? Workbook { get { return this.workbook; } }
 
         private void CheckWorkbookAssociated()
         {
@@ -178,7 +179,7 @@ namespace unvell.ReoGrid
 
                 if (this.NameChanged != null)
                 {
-                    this.NameChanged(this, null);
+                    this.NameChanged(this, EventArgs.Empty);
                 }
 
                 if (this.workbook != null)
@@ -191,7 +192,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when name of worksheet is changed
         /// </summary>
-        public event EventHandler NameChanged;
+        public event EventHandler? NameChanged;
         #endregion // Name
 
         #region Name Text Color & Back Color
@@ -436,7 +437,7 @@ namespace unvell.ReoGrid
             //lastFrozenArea = area;
             /////////////////////////////////////////////////////////////////
 
-            if (this.viewportController != null)
+            if (this.viewportController != null && this.controlAdapter != null)
             {
                 // update viewport bounds - sometimes the viewport may cannot get the correct size for freezing,
                 // so trying update it here
@@ -487,11 +488,11 @@ namespace unvell.ReoGrid
                 // raise events
                 if (row > 0 || col > 0)
                 {
-                    this.CellsFrozen?.Invoke(this, null);
+                    this.CellsFrozen?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
-                    this.CellsUnfrozen?.Invoke(this, null);
+                    this.CellsUnfrozen?.Invoke(this, EventArgs.Empty);
                 }
             }
             //else
@@ -533,12 +534,12 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when worksheet is frozen.
         /// </summary>
-        public event EventHandler CellsFrozen;
+        public event EventHandler? CellsFrozen;
 
         /// <summary>
         /// Event raised when worksheet is unfreezed.
         /// </summary>
-        public event EventHandler CellsUnfrozen;
+        public event EventHandler? CellsUnfrozen;
         #endregion // Freeze
 
         #region Zoom
@@ -559,7 +560,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when worksheet is scaled.
         /// </summary>
-        public event EventHandler<EventArgs> Scaled;
+        public event EventHandler<EventArgs>? Scaled;
 
         /// <summary>
         /// Set scale factor to zoom in/out current worksheet.
@@ -603,7 +604,7 @@ namespace unvell.ReoGrid
 
                 this.viewportController?.UpdateController();
 
-                Scaled?.Invoke(this, null);
+                Scaled?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -639,7 +640,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="pos">Position on worksheet to be access.</param>
         /// <returns>Cells data from worksheet at specified position.</returns>
-        public object this[CellPosition pos]
+        public object? this[CellPosition pos]
         {
             get { return this[pos.Row, pos.Col]; }
             set { this[pos.Row, pos.Col] = value; }
@@ -651,11 +652,11 @@ namespace unvell.ReoGrid
         /// <param name="row">Number of row of the cell to be accessed.</param>
         /// <param name="col">Number of column of the cell to be accessed.</param>
         /// <returns>Cells Data from worksheet at specified position.</returns>
-        public object this[int row, int col]
+        public object? this[int row, int col]
         {
             get
             {
-                Cell cell = GetCell(row, col);
+                Cell? cell = GetCell(row, col);
                 return cell == null ? null : cell.InnerData;
             }
             set
@@ -689,6 +690,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="range">Range to be get or set.</param>
         /// <returns>Data copied from grid.</returns>
+        [AllowNull]
         public object this[RangePosition range]
         {
             get
@@ -708,7 +710,7 @@ namespace unvell.ReoGrid
         /// <param name="addressOrName">Position specified in address code or name. (e.g. A1, A1:C3, $B$5, mydata)</param>
         /// <returns>Cells data returned from worksheet at specified position.</returns>
         /// <exception cref="InvalidAddressException">Throw this exception if specified address or name is invalid.</exception>
-        public object this[string addressOrName]
+        public object? this[string addressOrName]
         {
             get
             {
@@ -721,7 +723,7 @@ namespace unvell.ReoGrid
                     return this[new RangePosition(addressOrName)];
                 }
 
-                NamedRange referenceRange;
+                NamedRange? referenceRange;
                 if (registeredNamedRanges.TryGetValue(addressOrName, out referenceRange))
                 {
                     return this[referenceRange];
@@ -742,7 +744,7 @@ namespace unvell.ReoGrid
                     return;
                 }
 
-                NamedRange referenceRange;
+                NamedRange? referenceRange;
                 if (registeredNamedRanges.TryGetValue(addressOrName, out referenceRange))
                 {
                     this[referenceRange] = value;
@@ -758,7 +760,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="cell">Cell instance to set data.</param>
         /// <returns>Data returned from specifed cell instance.</returns>
-        internal object this[Cell cell]
+        internal object? this[Cell cell]
         {
             get { return cell.InnerData; }
             set { SetSingleCellData(cell, value); }
@@ -777,7 +779,7 @@ namespace unvell.ReoGrid
         /// <remarks>Use <code>GetCell</code> to get cell without creating new instance.</remarks>
         /// <param name="address">Address to create and get cell instance.</param>
         /// <returns>Cell instance at specified address.</returns>
-        public Cell CreateAndGetCell(string address)
+        public Cell? CreateAndGetCell(string address)
         {
             return CellPosition.IsValidAddress(address) ? CreateAndGetCell(new CellPosition(address)) : null;
         }
@@ -804,7 +806,7 @@ namespace unvell.ReoGrid
         /// <returns>Cell instance at specified position.</returns>
         public Cell CreateAndGetCell(int row, int col)
         {
-            Cell cell = cells[row, col];
+            Cell? cell = cells[row, col];
             if (cell == null) cell = CreateCell(row, col);
             return cell;
         }
@@ -887,14 +889,14 @@ namespace unvell.ReoGrid
         /// return null if cell instance does not exist.</returns>
         /// <remarks>Use <code>CreateAndGetCell</code> to create and get cell instance.</remarks>
         /// <exception cref="InvalidAddressException">Throws if specified address or name is invalid.</exception>
-        public Cell GetCell(string addressOrName)
+        public Cell? GetCell(string addressOrName)
         {
             if (CellPosition.IsValidAddress(addressOrName))
             {
                 return GetCell(new CellPosition(addressOrName));
             }
 
-            NamedRange range;
+            NamedRange? range;
 
             if (this.registeredNamedRanges.TryGetValue(addressOrName, out range))
             {
@@ -911,7 +913,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="pos">Position to locate cell.</param>
         /// <returns>Null if cell instance not found at specified position.</returns>
-        public Cell GetCell(CellPosition pos)
+        public Cell? GetCell(CellPosition pos)
         {
             return GetCell(pos.Row, pos.Col);
         }
@@ -922,7 +924,7 @@ namespace unvell.ReoGrid
         /// <param name="row">Zero-based number of row.</param>
         /// <param name="col">Zero-based number of column.</param>
         /// <returns>Null if cell instance not found at specified position.</returns>
-        public Cell GetCell(int row, int col)
+        public Cell? GetCell(int row, int col)
         {
             return cells[row, col];
         }
@@ -932,7 +934,7 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="address">Position in range.</param>
         /// <returns>First left-top cell of the range which cell belongs to.</returns>
-        public Cell GetMergedCellOfRange(string address)
+        public Cell? GetMergedCellOfRange(string address)
         {
             return CellPosition.IsValidAddress(address) ? GetMergedCellOfRange(new CellPosition(address)) : null;
         }
@@ -963,7 +965,8 @@ namespace unvell.ReoGrid
         /// </summary>
         /// <param name="cell">Cell instance in range.</param>
         /// <returns>Cell instance of merged range.</returns>
-        public Cell GetMergedCellOfRange(Cell cell)
+        [return: NotNullIfNotNull(nameof(cell))]
+        public Cell? GetMergedCellOfRange(Cell? cell)
         {
             if (cell == null) return null;
 
@@ -1121,7 +1124,7 @@ namespace unvell.ReoGrid
         /// <exception cref="InvalidAddressException">throw if specified address or name is invalid</exception>
         public void IterateCells(string addressOrName, Func<int, int, Cell, bool> iterator)
         {
-            this.IterateCells(addressOrName, true, iterator);
+            this.IterateCells(addressOrName, true, iterator!);
         }
 
         /// <summary>
@@ -1132,9 +1135,9 @@ namespace unvell.ReoGrid
         /// <param name="iterator">Callback iterator to check all cells in specified range.</param>
         /// <remarks>Anytime return <code>false</code> to abort iteration.</remarks>
         /// <exception cref="InvalidAddressException">throw if specified address or name is invalid</exception>
-        public void IterateCells(string addressOrName, bool skipEmptyCells, Func<int, int, Cell, bool> iterator)
+        public void IterateCells(string addressOrName, bool skipEmptyCells, Func<int, int, Cell?, bool> iterator)
         {
-            NamedRange namedRange;
+            NamedRange? namedRange;
 
             if (RangePosition.IsValidAddress(addressOrName))
             {
@@ -1156,7 +1159,7 @@ namespace unvell.ReoGrid
         /// <remarks>Anytime return <code>false</code> to abort iteration.</remarks>
         public void IterateCells(RangePosition range, Func<int, int, Cell, bool> iterator)
         {
-            this.IterateCells(range, true, iterator);
+            this.IterateCells(range, true, iterator!);
         }
 
         /// <summary>
@@ -1166,7 +1169,7 @@ namespace unvell.ReoGrid
         /// <param name="skipEmptyCells">Determines whether or not to skip empty cells. (Default is true)</param>
         /// <param name="iterator">callback iterator to check through all cells</param>
         /// <remarks>anytime return <code>false</code> to abort iteration.</remarks>
-        public void IterateCells(RangePosition range, bool skipEmptyCells, Func<int, int, Cell, bool> iterator)
+        public void IterateCells(RangePosition range, bool skipEmptyCells, Func<int, int, Cell?, bool> iterator)
         {
             var fixedRange = FixRange(range);
             this.IterateCells(fixedRange.Row, fixedRange.Col, fixedRange.Rows, fixedRange.Cols, skipEmptyCells, iterator);
@@ -1182,7 +1185,7 @@ namespace unvell.ReoGrid
         /// <param name="skipEmptyCells">Determines whether or not to skip empty cells.</param>
         /// <param name="iterator">Callback iterator to check over all cells in specified range.</param>
         /// <remarks>Anytime return false in iterator to abort iteration.</remarks>
-        public void IterateCells(int row, int col, int rows, int cols, bool skipEmptyCells, Func<int, int, Cell, bool> iterator)
+        public void IterateCells(int row, int col, int rows, int cols, bool skipEmptyCells, Func<int, int, Cell?, bool> iterator)
         {
             cells.Iterate(row, col, rows, cols, skipEmptyCells, (r, c, cell) =>
             {
@@ -1257,7 +1260,7 @@ namespace unvell.ReoGrid
 
         #region Cell Collection
 
-        private CellCollection cellCollection;
+        private CellCollection? cellCollection;
 
         /// <summary>
         /// Get collection of cells from spreadsheet.
@@ -1284,14 +1287,14 @@ namespace unvell.ReoGrid
         public class CellCollection : IEnumerable<Cell>
         {
             private Worksheet grid;
-            private ReferenceRange range;
+            private ReferenceRange? range;
 
             internal CellCollection(Worksheet grid)
                 : this(grid, null)
             {
             }
 
-            internal CellCollection(Worksheet grid, ReferenceRange range)
+            internal CellCollection(Worksheet grid, ReferenceRange? range)
             {
                 this.grid = grid;
                 this.range = range;
@@ -1302,7 +1305,7 @@ namespace unvell.ReoGrid
             /// </summary>
             /// <param name="addressOrName">Reference from an address or name.</param>
             /// <returns>Instance for cell.</returns>
-            public Cell this[string addressOrName]
+            public Cell? this[string addressOrName]
             {
                 get
                 {
@@ -1312,7 +1315,7 @@ namespace unvell.ReoGrid
                     }
                     else if (RGUtility.IsValidName(addressOrName))
                     {
-                        NamedRange refRange;
+                        NamedRange? refRange;
                         if (grid.registeredNamedRanges.TryGetValue(addressOrName, out refRange))
                         {
                             return grid.CreateAndGetCell(refRange.StartPos);
@@ -1411,7 +1414,7 @@ namespace unvell.ReoGrid
         internal int pageBreakAdjustRow = -1;
         internal int pageBreakAdjustCol = -1;
 
-        internal Cell mouseCapturedCell = null;
+        internal Cell? mouseCapturedCell = null;
 
         internal RGFloat headerAdjustNewValue = 0;
 
@@ -1438,7 +1441,7 @@ namespace unvell.ReoGrid
             }
             else
 #elif AVALONIA
-            var control = this.workbook.ControlInstance;
+            var control = this.workbook!.ControlInstance;
 
             if (PlatformUtility.IsKeyDown(KeyCode.ControlKey, keyModifiers, control))
             {
@@ -1546,27 +1549,27 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised when mouse pointer moved into any cells
         /// </summary>
-        public event EventHandler<CellMouseEventArgs> CellMouseEnter;
+        public event EventHandler<CellMouseEventArgs>? CellMouseEnter;
 
         /// <summary>
         /// Event rasied when mouse pointer moved out from any cells
         /// </summary>
-        public event EventHandler<CellMouseEventArgs> CellMouseLeave;
+        public event EventHandler<CellMouseEventArgs>? CellMouseLeave;
 
         /// <summary>
         /// Event raised when mouse moving over all cells
         /// </summary>
-        public event EventHandler<CellMouseEventArgs> CellMouseMove;
+        public event EventHandler<CellMouseEventArgs>? CellMouseMove;
 
         /// <summary>
         /// Event raised after mouse button pressed down on spreadsheet
         /// </summary>
-        public event EventHandler<CellMouseEventArgs> CellMouseDown;
+        public event EventHandler<CellMouseEventArgs>? CellMouseDown;
 
         /// <summary>
         /// Event raised after mouse button released up on spreadsheet
         /// </summary>
-        public event EventHandler<CellMouseEventArgs> CellMouseUp;
+        public event EventHandler<CellMouseEventArgs>? CellMouseUp;
 
         internal bool HasCellMouseDown { get { return this.CellMouseDown != null; } }
         internal void RaiseCellMouseDown(CellMouseEventArgs args) { if (CellMouseDown != null) { CellMouseDown(this, args); } }
@@ -1584,7 +1587,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Get current focused visual object.
         /// </summary>
-        public IUserVisual FocusVisual { get => this.viewportController?.FocusVisual; }
+        public IUserVisual? FocusVisual { get => this.viewportController?.FocusVisual; }
 
         #endregion // Mouse
 
@@ -1608,7 +1611,7 @@ namespace unvell.ReoGrid
             }
 
 #if EX_SCRIPT
-            object rs = RaiseScriptEvent("onkeydown", new RSKeyEvent((int)keyData));
+            object? rs = RaiseScriptEvent("onkeydown", new RSKeyEvent((int)keyData));
             if (rs != null && !ScriptRunningMachine.GetBoolValue(rs))
             {
                 return true;
@@ -1878,7 +1881,7 @@ namespace unvell.ReoGrid
                         if (!this.selStart.IsEmpty)
                         {
                             StartEdit(this.selStart);
-                            this.controlAdapter.SetEditControlText(string.Empty);
+                            this.controlAdapter!.SetEditControlText(string.Empty);
                         }
                         break;
                     #endregion // F2 / F4 / Delete/ Back
@@ -1948,7 +1951,7 @@ namespace unvell.ReoGrid
         internal bool OnKeyUp(KeyCode keyData)
         {
 #if EX_SCRIPT
-            object rs = RaiseScriptEvent("onkeyup", new RSKeyEvent((int)keyData));
+            object? rs = RaiseScriptEvent("onkeyup", new RSKeyEvent((int)keyData));
             if (rs != null && !ScriptRunningMachine.GetBoolValue(rs))
             {
                 return false; 
@@ -1993,17 +1996,17 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raised before key pressed down on spreadsheet
         /// </summary>
-        public event EventHandler<BeforeCellKeyDownEventArgs> BeforeCellKeyDown;
+        public event EventHandler<BeforeCellKeyDownEventArgs>? BeforeCellKeyDown;
 
         /// <summary>
         /// Event raised after key pressed down on spreadsheet
         /// </summary>
-        public event EventHandler<AfterCellKeyDownEventArgs> AfterCellKeyDown;
+        public event EventHandler<AfterCellKeyDownEventArgs>? AfterCellKeyDown;
 
         /// <summary>
         /// Event raised after key released up on spreadsheet
         /// </summary>
-        public event EventHandler<CellKeyDownEventArgs> CellKeyUp;
+        public event EventHandler<CellKeyDownEventArgs>? CellKeyUp;
         #endregion // Keyboard
 
         #region Internal Utilites
@@ -2027,7 +2030,7 @@ namespace unvell.ReoGrid
 
         #region Pick Range & Style Brush
 #if WINFORM || WPF || AVALONIA
-        internal Func<Worksheet, RangePosition, bool> whenRangePicked;
+        internal Func<Worksheet, RangePosition, bool>? whenRangePicked;
 
         internal void PickRange(Func<Worksheet, RangePosition, bool> onPicked)
         {
@@ -2059,13 +2062,13 @@ namespace unvell.ReoGrid
         {
             RangePosition fromRange = selectionRange;
 
-            var pickSupportedControl = (this.controlAdapter.ControlInstance as IRangePickableControl);
+            var pickSupportedControl = (this.controlAdapter?.ControlInstance as IRangePickableControl);
 
             if (pickSupportedControl != null)
             {
                 pickSupportedControl.PickRange((grid, range) =>
                 {
-                    Cell fromCell = GetCell(fromRange.Row, fromRange.Col);
+                    Cell? fromCell = GetCell(fromRange.Row, fromRange.Col);
 
                     if (fromCell != null && fromCell.InnerStyle != null)
                     {
@@ -2094,7 +2097,7 @@ namespace unvell.ReoGrid
                 /// <summary>
                 /// Event raised when control resetted
                 /// </summary>
-        public event EventHandler Resetted;
+        public event EventHandler? Resetted;
 
         internal void NotifyExceptionHappen(Exception ex)
         {
@@ -2213,7 +2216,7 @@ namespace unvell.ReoGrid
         /// <summary>
         /// Event raisd when worksheet settings is changed.
         /// </summary>
-        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+        public event EventHandler<SettingsChangedEventArgs>? SettingsChanged;
 
         private float indentSize = 8;
 
@@ -2241,7 +2244,7 @@ namespace unvell.ReoGrid
         /// <param name="s">Stream is used to write html content</param>
         /// <param name="pageTitle">A string will be printed out to the html as page title</param>
         /// <param name="exportHeader">true to export the html headers, false to export content only inside table tag.</param>
-        public void ExportAsHTML(Stream s, string pageTitle, bool exportHeader = true)
+        public void ExportAsHTML(Stream s, string? pageTitle, bool exportHeader = true)
         {
             RGHTMLExporter.Export(s, this, string.IsNullOrEmpty(pageTitle) ? "Exported ReoGrid" : pageTitle, exportHeader);
         }

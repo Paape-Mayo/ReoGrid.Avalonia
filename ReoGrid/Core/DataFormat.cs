@@ -33,7 +33,7 @@ namespace unvell.ReoGrid
 		/// <param name="format">Flag specifies that which format will be used.</param>
 		/// <param name="dataFormatArgs">Argument to specify the details for different format.</param>
 		/// <exception cref="InvalidAddressException">Throw if specified address or name is illegal.</exception>
-		public void SetRangeDataFormat(string addressOrName, CellDataFormatFlag format, object dataFormatArgs = null)
+		public void SetRangeDataFormat(string addressOrName, CellDataFormatFlag format, object? dataFormatArgs = null)
 		{
 			if (RangePosition.IsValidAddress(addressOrName))
 			{
@@ -56,7 +56,7 @@ namespace unvell.ReoGrid
 		/// <param name="cols">Number of columns contained in the range.</param>
 		/// <param name="format">Flag specifies that which format will be used.</param>
 		/// <param name="dataFormatArgs">Argument to specify the details for different format.</param>
-		public void SetRangeDataFormat(int row, int col, int rows, int cols, CellDataFormatFlag format, object dataFormatArgs = null)
+		public void SetRangeDataFormat(int row, int col, int rows, int cols, CellDataFormatFlag format, object? dataFormatArgs = null)
 		{
 			SetRangeDataFormat(new RangePosition(row, col, rows, cols), format, dataFormatArgs);
 		}
@@ -67,7 +67,7 @@ namespace unvell.ReoGrid
 		/// <param name="range">Range to be set.</param>
 		/// <param name="format">Flag specifies that which format will be used.</param>
 		/// <param name="dataFormatArgs">Argument to specify the details for different format.</param>
-		public void SetRangeDataFormat(RangePosition range, CellDataFormatFlag format, object dataFormatArgs = null)
+		public void SetRangeDataFormat(RangePosition range, CellDataFormatFlag format, object? dataFormatArgs = null)
 		{
 			RangePosition fixedRange = FixRange(range);
 
@@ -102,13 +102,13 @@ namespace unvell.ReoGrid
 			RequestInvalidate();
 		}
 
-		internal void SetCellDataFormat(CellPosition pos, CellDataFormatFlag format, ref object dataFormatArgs)
+		internal void SetCellDataFormat(CellPosition pos, CellDataFormatFlag format, ref object? dataFormatArgs)
 		{
 			SetCellDataFormat(CreateAndGetCell(pos), format, ref dataFormatArgs);
 		}
 
 		internal void SetCellDataFormat(Cell cell, CellDataFormatFlag format,
-			ref object dataFormatArgs, List<Cell> formulaDirtyCells = null)
+			ref object? dataFormatArgs, List<Cell>? formulaDirtyCells = null)
 		{
 			cell.DataFormat = format;
 			cell.DataFormatArgs = dataFormatArgs;
@@ -140,7 +140,7 @@ namespace unvell.ReoGrid
 		#endregion // Set
 
 		#region Get
-		public CellDataFormatFlag GetCellDataFormat(string addressOrName, out object dataFormatArgs)
+		public CellDataFormatFlag GetCellDataFormat(string addressOrName, out object? dataFormatArgs)
 		{
 			if (CellPosition.IsValidAddress(addressOrName))
 			{
@@ -154,7 +154,7 @@ namespace unvell.ReoGrid
 				throw new InvalidAddressException(addressOrName);
 		}
 
-		public CellDataFormatFlag GetCellDataFormat(CellPosition pos, out object dataFormatArgs)
+		public CellDataFormatFlag GetCellDataFormat(CellPosition pos, out object? dataFormatArgs)
 		{
 			pos = this.FixPos(pos);
 
@@ -169,7 +169,7 @@ namespace unvell.ReoGrid
 			return GetCellDataFormat(cell, out dataFormatArgs);
 		}
 
-		internal CellDataFormatFlag GetCellDataFormat(Cell cell, out object dataFormatArgs)
+		internal CellDataFormatFlag GetCellDataFormat(Cell cell, out object? dataFormatArgs)
 		{
 			dataFormatArgs = cell.DataFormatArgs;
 			return cell.DataFormat;
@@ -189,7 +189,7 @@ namespace unvell.ReoGrid
 			{
 				for (int c = fixedRange.Col; c <= fixedRange.EndCol;)
 				{
-					Cell cell = this.cells[r, c];
+					Cell? cell = this.cells[r, c];
 
 					if (cell == null)
 					{

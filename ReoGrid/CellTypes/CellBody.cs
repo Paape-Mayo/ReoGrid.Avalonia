@@ -43,7 +43,7 @@ namespace unvell.ReoGrid.CellTypes
 	[Serializable]
 	public class CellBody : ICellBody
 	{
-		private Cell cell;
+		private Cell cell = null!;
 
 		internal Cell InnerCell { set { this.cell = value; } }
 
@@ -160,7 +160,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">user inputted data.</param>
 		/// <returns>new data to be into spreadsheet.</returns>
-		public virtual object OnEndEdit(object data) { return data; }
+		public virtual object? OnEndEdit(object? data) { return data; }
 
 		/// <summary>
 		/// Invoked when cell get focus.
@@ -177,7 +177,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">Data to be updated.</param>
 		/// <returns>New data that is used to replace the data inputted.</returns>
-		public virtual object OnSetData(object data) { return data; }
+		public virtual object? OnSetData(object? data) { return data; }
 
 		/// <summary>
 		/// Clone a cell body from this object.

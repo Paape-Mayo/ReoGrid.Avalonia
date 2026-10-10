@@ -40,7 +40,7 @@ namespace unvell.ReoGrid.Chart
 		#region Data Serial Colors
 		public const int MaxDataSerials = 100;
 
-		public static List<SolidColor> defaultDataSerialColors = null;
+		public static List<SolidColor>? defaultDataSerialColors = null;
 
 		public static SolidColor GetDefaultDataSerialFillColor(int index)
 		{

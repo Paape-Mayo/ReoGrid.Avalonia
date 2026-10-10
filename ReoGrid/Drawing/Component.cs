@@ -128,7 +128,7 @@ namespace unvell.ReoGrid.Drawing
 		#region Children Management
 		internal List<IDrawingObject> drawingObjects = new List<IDrawingObject>();
 
-		private DrawingObjectCollection drawingObjectCollection = null;
+		private DrawingObjectCollection? drawingObjectCollection = null;
 
 		public virtual IDrawingObjectCollection Children
 		{
@@ -151,7 +151,7 @@ namespace unvell.ReoGrid.Drawing
 		#endregion // Children Management
 
 		#region Style
-		private DrawingComponentStyle style;
+		private DrawingComponentStyle? style;
 
 		/// <summary>
 		/// Get style object.

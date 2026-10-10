@@ -142,7 +142,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">The data of user inputted.</param>
 		/// <returns>Data used to be set into the cell. If don't want to change user data, return the data from method parameter.</returns>
-		object OnEndEdit(object data);
+		object? OnEndEdit(object? data);
 
 		/// <summary>
 		/// This method invoked when cell getting focus.
@@ -159,7 +159,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <param name="data">The data will be set into the cell.</param>
 		/// <returns>Return the new data used to set into the cell.</returns>
-		object OnSetData(object data);
+		object? OnSetData(object? data);
 
 		/// <summary>
 		/// Clone a cell body from this object.

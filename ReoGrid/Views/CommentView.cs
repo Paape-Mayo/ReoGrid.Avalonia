@@ -40,7 +40,7 @@ namespace unvell.ReoGrid.Views
 			}
 		}
 
-		public override IView GetViewByPoint(Graphics.Point p)
+		public override IView? GetViewByPoint(Graphics.Point p)
 		{
 			return GetChildrenByPoint(p);
 		}

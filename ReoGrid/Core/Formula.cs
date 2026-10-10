@@ -86,7 +86,7 @@ namespace unvell.ReoGrid
 			// clear formula status
 			cell.formulaStatus = FormulaStatus.Normal;
 
-			STNode rootNode = null;
+			STNode? rootNode = null;
 			
 			try
 			{
@@ -111,7 +111,7 @@ namespace unvell.ReoGrid
 			cell.formulaStatus = FormulaStatus.Normal;
 
 			// clear range references from this cell
-			List<ReferenceRange> referencedRanges;
+			List<ReferenceRange>? referencedRanges;
 
 			if (this.formulaRanges.TryGetValue(cell, out referencedRanges))
 			{
@@ -157,12 +157,12 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		internal static void IterateToAddReference(Cell cell, STNode node, List<ReferenceRange> referencedRanges, bool checkSelfRefer)
+		internal static void IterateToAddReference(Cell cell, STNode? node, List<ReferenceRange> referencedRanges, bool checkSelfRefer)
 		{
 			if (node == null) return;
 
-			Worksheet worksheet;
-			NamedRange range;
+			Worksheet? worksheet;
+			NamedRange? range;
 			RangePosition rangePos;
 			STFunctionNode funNode;
 
@@ -204,7 +204,7 @@ namespace unvell.ReoGrid
 					var pos = cellNode.Position;
 
 					worksheet = cellNode.Worksheet;
-					if (worksheet == null) worksheet = cell.Worksheet;
+					if (worksheet == null) worksheet = cell.Worksheet!;
 
 					if (checkSelfRefer && pos.Equals(cell.Position) && worksheet == cell.Worksheet)
 					{
@@ -224,7 +224,7 @@ namespace unvell.ReoGrid
 					var rangeNode = (STRangeNode)node;
 
 					worksheet = rangeNode.Worksheet;
-					if (worksheet == null) worksheet = cell.Worksheet;
+					if (worksheet == null) worksheet = cell.Worksheet!;
 
 					rangePos = worksheet.FixRange(rangeNode.Range);
 
@@ -240,7 +240,7 @@ namespace unvell.ReoGrid
 					var idNode = (STIdentifierNode)node;
 
 					worksheet = idNode.Worksheet;
-					if (worksheet == null) worksheet = cell.Worksheet;
+					if (worksheet == null) worksheet = cell.Worksheet!;
 
 					if (worksheet.TryGetNamedRange(idNode.Identifier, out range))
 					{
@@ -377,7 +377,7 @@ namespace unvell.ReoGrid
 		/// <param name="col">Index of column of cell.</param>
 		public void RecalcCell(int row, int col)
 		{
-			Cell cell = GetCell(row, col);
+			Cell? cell = GetCell(row, col);
 			if (cell == null) return;
 			RecalcCell(cell);
 		}
@@ -387,14 +387,14 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="cell">Instance of cell to be recalculated.</param>
 		/// <param name="dirtyCellStack">Dirty cell stack.</param>
-		internal void RecalcCell(Cell cell, Stack<List<Cell>> dirtyCellStack = null)
+		internal void RecalcCell(Cell cell, Stack<List<Cell>>? dirtyCellStack = null)
 		{
 			if (!cell.HasFormula)
 			{
 				return;
 			}
 
-			object value = null;
+			object? value = null;
 
 			if (cell.formulaStatus != FormulaStatus.CircularReference
 				&& cell.formulaStatus != FormulaStatus.SyntaxError)
@@ -451,9 +451,9 @@ namespace unvell.ReoGrid
 		private Dictionary<Cell, List<ReferenceRange>> formulaRanges = new Dictionary<Cell, List<ReferenceRange>>();
 
 		private static void UpdateWorksheetReferencedFormulaCells(Worksheet worksheet, Cell fromCell,
-			Stack<List<Cell>> dirtyCellStack = null)
+			Stack<List<Cell>>? dirtyCellStack = null)
 		{
-			List<Cell> dirtyCells = null;
+			List<Cell>? dirtyCells = null;
 
 			foreach (var range in worksheet.formulaRanges)
 			{
@@ -494,12 +494,12 @@ namespace unvell.ReoGrid
 				}
 				finally
 				{
-					dirtyCellStack.Pop();
+					dirtyCellStack!.Pop();
 				}
 			}
 		}
 
-		internal void UpdateReferencedFormulaCells(Cell cell, Stack<List<Cell>> dirtyCellStack = null)
+		internal void UpdateReferencedFormulaCells(Cell cell, Stack<List<Cell>>? dirtyCellStack = null)
 		{
 			if (this.workbook == null)
 			{
@@ -517,7 +517,7 @@ namespace unvell.ReoGrid
 		internal void ClearCellReferenceList(Cell cell)
 		{
 			// clear range references from this cell
-			List<ReferenceRange> referencedRanges;
+			List<ReferenceRange>? referencedRanges;
 
 			if (this.formulaRanges.TryGetValue(cell, out referencedRanges))
 			{
@@ -530,7 +530,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="address">address of cell to find its reference list</param>
 		/// <returns>a list of referenced cell</returns>
-		public List<ReferenceRange> GetCellFormulaReferenceRanges(string address)
+		public List<ReferenceRange>? GetCellFormulaReferenceRanges(string address)
 		{
 			if (CellPosition.IsValidAddress(address))
 			{
@@ -547,9 +547,9 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="pos">position of cell to find its reference list</param>
 		/// <returns>a list of referenced cell</returns>
-		public List<ReferenceRange> GetCellFormulaReferenceRanges(CellPosition pos)
+		public List<ReferenceRange>? GetCellFormulaReferenceRanges(CellPosition pos)
 		{
-			Cell cell = this.cells[pos.Row, pos.Col];
+			Cell? cell = this.cells[pos.Row, pos.Col];
 			return cell == null ? null : GetCellFormulaReferenceRanges(cell);
 		}
 
@@ -558,7 +558,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="cell">cell to find its reference list</param>
 		/// <returns>a list of referenced cell</returns>
-		public List<ReferenceRange> GetCellFormulaReferenceRanges(Cell cell)
+		public List<ReferenceRange>? GetCellFormulaReferenceRanges(Cell cell)
 		{
 			if (this.formulaRanges.TryGetValue(cell, out var referencedRangeList))
 			{
@@ -579,7 +579,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="addressOrName">address or name used to locate a cell</param>
 		/// <returns>formula as string returned from cell</returns>
-		public string GetCellFormula(string addressOrName)
+		public string? GetCellFormula(string addressOrName)
 		{
 			if (CellPosition.IsValidAddress(addressOrName))
 			{
@@ -600,7 +600,7 @@ namespace unvell.ReoGrid
 		/// </summary>
 		/// <param name="pos">position to locate the cell to be get</param>
 		/// <returns>formula as string returned from specified cell</returns>
-		public string GetCellFormula(CellPosition pos)
+		public string? GetCellFormula(CellPosition pos)
 		{
 			var cell = GetCell(pos);
 			return cell == null ? string.Empty : cell.InnerFormula;
@@ -609,7 +609,7 @@ namespace unvell.ReoGrid
 #endregion // Get Formula
 
 #region Trace Arrow
-		internal Dictionary<Cell, List<Cell>> traceDependentArrows = null;
+		internal Dictionary<Cell, List<Cell>>? traceDependentArrows = null;
 
 		/// <summary>
 		/// Show cell formula precedent trace lines on worksheet
@@ -628,7 +628,7 @@ namespace unvell.ReoGrid
 		/// <returns>true if trace is successful</returns>
 		public bool TraceCellPrecedents(CellPosition pos)
 		{
-			Cell cell = GetCell(pos);
+			Cell? cell = GetCell(pos);
 			return cell == null ? false : TraceCellPrecedents(cell);
 		}
 
@@ -645,7 +645,7 @@ namespace unvell.ReoGrid
 
 			foreach (var rf in rfs)
 			{
-				AddTraceLine(GetCell(rf.StartPos), cell);
+				AddTraceLine(GetCell(rf.StartPos)!, cell);
 			}
 
 			this.RequestInvalidate();
@@ -670,7 +670,7 @@ namespace unvell.ReoGrid
 		/// <returns>true if trace lines has been removed successfully</returns>
 		public bool RemoveCellTracePrecedents(CellPosition pos)
 		{
-			Cell cell = GetCell(pos);
+			Cell? cell = GetCell(pos);
 			return cell == null ? false : RemoveCellTracePrecedents(cell);
 		}
 
@@ -682,7 +682,7 @@ namespace unvell.ReoGrid
 		public bool RemoveCellTracePrecedents(Cell cell)
 		{
 			bool found = false;
-			List<Cell> emptyPrecedentCells = null;
+			List<Cell>? emptyPrecedentCells = null;
 
 			if (this.traceDependentArrows != null)
 			{
@@ -741,7 +741,7 @@ namespace unvell.ReoGrid
 		/// <returns>true if trace arrow added</returns>
 		public bool TraceCellDependents(CellPosition pos)
 		{
-			Cell cell = GetCell(pos);
+			Cell? cell = GetCell(pos);
 			return cell == null ? false : TraceCellPrecedents(cell);
 		}
 
@@ -754,7 +754,7 @@ namespace unvell.ReoGrid
 		{
 			if (!cell.HasFormula) return false;
 
-			if (traceDependentArrows.Keys.Contains(cell))
+			if (traceDependentArrows != null && traceDependentArrows.Keys.Contains(cell))
 			{
 				// already on trace
 				return false;
@@ -798,7 +798,7 @@ namespace unvell.ReoGrid
 		/// <returns></returns>
 		public bool RemoveCellTraceDependents(CellPosition pos)
 		{
-			Cell cell = GetCell(pos);
+			Cell? cell = GetCell(pos);
 			return cell == null ? false : RemoveCellTraceDependents(cell);
 		}
 
@@ -840,7 +840,7 @@ namespace unvell.ReoGrid
 				return false;
 			}
 
-			List<Cell> lines;
+			List<Cell>? lines;
 
 			if (traceDependentArrows.TryGetValue(fromCell, out lines))
 			{
@@ -869,7 +869,7 @@ namespace unvell.ReoGrid
 		/// <returns></returns>
 		internal bool RemoveTraceLine(Cell fromCell, Cell toCell)
 		{
-			if (!this.traceDependentArrows.Keys.Contains(fromCell))
+			if (this.traceDependentArrows == null || !this.traceDependentArrows.Keys.Contains(fromCell))
 			{
 				return false;
 			}
@@ -985,6 +985,8 @@ namespace unvell.ReoGrid
 		/// <returns>list of cells</returns>
 		public IEnumerable<Cell> GetAllTraceDependentCells()
 		{
+			if (this.traceDependentArrows == null) return Enumerable.Empty<Cell>();
+
 			return this.traceDependentArrows.Keys;
 		}
 
@@ -1026,7 +1028,10 @@ namespace unvell.ReoGrid
 		{
 			get
 			{
-				return Worksheet.IsCellInTracePrecedents(this.InternalPos);
+				if (Worksheet == null)
+					return false;
+				else
+					return Worksheet.IsCellInTracePrecedents(this.InternalPos);
 			}
 			set
 			{

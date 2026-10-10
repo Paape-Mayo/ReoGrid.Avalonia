@@ -49,19 +49,19 @@ namespace unvell.ReoGrid.Views
         private LeadHeaderView leadHeadPart;
 
         // four-header (two columns, two rows)
-        private RowHeaderView rowHeaderPart1 = null;
-        private RowHeaderView rowHeaderPart2 = null;
-        private ColumnHeaderView colHeaderPart2 = null;
-        private ColumnHeaderView colHeaderPart1 = null;
+        private RowHeaderView? rowHeaderPart1 = null;
+        private RowHeaderView rowHeaderPart2;
+        private ColumnHeaderView colHeaderPart2;
+        private ColumnHeaderView? colHeaderPart1 = null;
 
         // four-viewport, any of one could be set as main-viewport, and others will be forzen
-        private SheetViewport topLeftViewport = null;
-        private SheetViewport leftBottomViewport = null;
-        private SheetViewport rightBottomViewport = null;
-        private SheetViewport rightTopViewport = null;
+        private SheetViewport? topLeftViewport = null;
+        private SheetViewport? leftBottomViewport = null;
+        private SheetViewport rightBottomViewport;
+        private SheetViewport? rightTopViewport = null;
 
         // main-viewport used to decide the value of scrollbar
-        internal SheetViewport mainViewport = null;
+        internal SheetViewport mainViewport;
 
         private SpaceView rightBottomSpace;
 
@@ -108,8 +108,8 @@ namespace unvell.ReoGrid.Views
 
                     if (this.currentFreezePos.Col > 0)
                     {
-                        colHeaderPart1.Visible = true;
-                        colHeaderPart1.VisibleRegion = frozenVisibleRegion;
+                        colHeaderPart1!.Visible = true;
+                        colHeaderPart1!.VisibleRegion = frozenVisibleRegion;
                     }
                 }
                 else
@@ -131,8 +131,8 @@ namespace unvell.ReoGrid.Views
 
                     if (this.currentFreezePos.Row > 0)
                     {
-                        rowHeaderPart1.Visible = true;
-                        rowHeaderPart1.VisibleRegion = frozenVisibleRegion;
+                        rowHeaderPart1!.Visible = true;
+                        rowHeaderPart1!.VisibleRegion = frozenVisibleRegion;
                     }
                 }
                 else
@@ -274,7 +274,7 @@ namespace unvell.ReoGrid.Views
             return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
-        public override IView FocusView
+        public override IView? FocusView
         {
             get
             {
@@ -308,28 +308,28 @@ namespace unvell.ReoGrid.Views
             if (freezePos.Row > 0 || freezePos.Col > 0)
             {
                 // update left top visible region
-                UpdateViewportVisibleRegion(this.topLeftViewport, NormalViewportController.GetVisibleRegion(this.topLeftViewport));
+                UpdateViewportVisibleRegion(this.topLeftViewport!, NormalViewportController.GetVisibleRegion(this.topLeftViewport!));
 
                 // update left bottom visible region
-                UpdateViewportVisibleRegion(this.leftBottomViewport, new GridRegion(
+                UpdateViewportVisibleRegion(this.leftBottomViewport!, new GridRegion(
                     this.rightBottomViewport.VisibleRegion.startRow,
-                    this.topLeftViewport.VisibleRegion.startCol,
+                    this.topLeftViewport!.VisibleRegion.startCol,
                     this.rightBottomViewport.VisibleRegion.endRow,
-                    this.topLeftViewport.VisibleRegion.endCol));
+                    this.topLeftViewport!.VisibleRegion.endCol));
 
                 // update right top visible region
-                UpdateViewportVisibleRegion(this.rightTopViewport, new GridRegion(
-                    this.topLeftViewport.VisibleRegion.startRow,
+                UpdateViewportVisibleRegion(this.rightTopViewport!, new GridRegion(
+                    this.topLeftViewport!.VisibleRegion.startRow,
                     this.rightBottomViewport.VisibleRegion.startCol,
-                    this.topLeftViewport.VisibleRegion.endRow,
+                    this.topLeftViewport!.VisibleRegion.endRow,
                     this.rightBottomViewport.VisibleRegion.endCol));
             }
 
             // frozen headers always are synchronized to left top viewport
             if (this.topLeftViewport != null)
             {
-                this.colHeaderPart1.VisibleRegion = this.topLeftViewport.VisibleRegion;
-                this.rowHeaderPart1.VisibleRegion = this.topLeftViewport.VisibleRegion;
+                this.colHeaderPart1!.VisibleRegion = this.topLeftViewport.VisibleRegion;
+                this.rowHeaderPart1!.VisibleRegion = this.topLeftViewport.VisibleRegion;
             }
 
             // normal headers always are synchronized to right bottom viewport
@@ -361,7 +361,7 @@ namespace unvell.ReoGrid.Views
                 var rowHeader = this.worksheet.rows[r];
                 if (rowHeader.InnerHeight <= 0) return region.Cols;
 
-                int cspan = cell.Colspan;
+                int cspan = cell!.Colspan;
                 if (cspan <= 0) return 1;
 
                 if (cell.RenderScaleFactor != this.ScaleFactor
@@ -600,7 +600,7 @@ namespace unvell.ReoGrid.Views
 
             if (colOutlineVisible)
             {
-                var outlines = worksheet.outlines[RowOrColumn.Column];
+                var outlines = worksheet.GetOutlines(RowOrColumn.Column);
 
                 if (outlines != null)
                 {
@@ -615,7 +615,7 @@ namespace unvell.ReoGrid.Views
 
             if (rowOutlineVisible)
             {
-                var outlines = worksheet.outlines[RowOrColumn.Row];
+                var outlines = worksheet.GetOutlines(RowOrColumn.Row);
 
                 if (outlines != null)
                 {
@@ -647,11 +647,11 @@ namespace unvell.ReoGrid.Views
             {
                 if (rowheadVisible)
                 {
-                    this.colOutlineHeadPart.Bounds = new Rectangle(leadheadRect.X, outlineSpaceRect.Y,
+                    this.colOutlineHeadPart!.Bounds = new Rectangle(leadheadRect.X, outlineSpaceRect.Y,
                         leadheadRect.Width, outlineSpaceRect.Height);
                 }
 
-                this.colOutlinePart2.Bounds = new Rectangle(leadheadRect.Right, outlineSpaceRect.Y,
+                this.colOutlinePart2!.Bounds = new Rectangle(leadheadRect.Right, outlineSpaceRect.Y,
                     contentRect.Width, outlineSpaceRect.Height);
             }
 
@@ -659,7 +659,7 @@ namespace unvell.ReoGrid.Views
             {
                 if (colheadVisible)
                 {
-                    this.rowOutlineHeadPart.Bounds = new Rectangle(outlineSpaceRect.X,
+                    this.rowOutlineHeadPart!.Bounds = new Rectangle(outlineSpaceRect.X,
                         outlineSpaceRect.Bottom, outlineSpaceRect.Width, leadheadRect.Height);
                 }
             }
@@ -722,17 +722,17 @@ namespace unvell.ReoGrid.Views
                     contentRect.Width - leftTopRect.Width, contentRect.Height - leftTopRect.Height);
 
                 // viewports
-                this.topLeftViewport.Bounds = leftTopRect;
-                this.leftBottomViewport.Bounds = new Rectangle(leftTopRect.X, rightBottomRect.Y, leftTopRect.Width, rightBottomRect.Height);
-                this.rightTopViewport.Bounds = new Rectangle(rightBottomRect.X, leftTopRect.Y, rightBottomRect.Width, leftTopRect.Height);
+                this.topLeftViewport!.Bounds = leftTopRect;
+                this.leftBottomViewport!.Bounds = new Rectangle(leftTopRect.X, rightBottomRect.Y, leftTopRect.Width, rightBottomRect.Height);
+                this.rightTopViewport!.Bounds = new Rectangle(rightBottomRect.X, leftTopRect.Y, rightBottomRect.Width, leftTopRect.Height);
 
                 // column header
-                this.colHeaderPart1.Bounds = new Rectangle(this.topLeftViewport.Left, this.leadHeadPart.Top,
-                    this.topLeftViewport.Width, worksheet.colHeaderHeight * scale);
+                this.colHeaderPart1!.Bounds = new Rectangle(this.topLeftViewport!.Left, this.leadHeadPart.Top,
+                    this.topLeftViewport!.Width, worksheet.colHeaderHeight * scale);
 
                 // row header
-                this.rowHeaderPart1.Bounds = new Rectangle(this.leadHeadPart.Left, this.topLeftViewport.Top,
-                    worksheet.rowHeaderWidth * scale, this.topLeftViewport.Height);
+                this.rowHeaderPart1!.Bounds = new Rectangle(this.leadHeadPart.Left, this.topLeftViewport!.Top,
+                    worksheet.rowHeaderWidth * scale, this.topLeftViewport!.Height);
 
 #if OUTLINE
                 CreateOutlineHeaderViewIfNotExist();
@@ -740,14 +740,14 @@ namespace unvell.ReoGrid.Views
                 // column outline
                 if (colOutlineVisible)
                 {
-                    this.colOutlinePart1.Bounds = new Rectangle(leftTopRect.X, outlineSpaceRect.Y,
+                    this.colOutlinePart1!.Bounds = new Rectangle(leftTopRect.X, outlineSpaceRect.Y,
                         leftTopRect.Width, outlineSpaceRect.Height);
                 }
 
                 // row outline
                 if (rowOutlineVisible)
                 {
-                    this.rowOutlinePart1.Bounds = new Rectangle(outlineSpaceRect.X, leftTopRect.Y,
+                    this.rowOutlinePart1!.Bounds = new Rectangle(outlineSpaceRect.X, leftTopRect.Y,
                         outlineSpaceRect.Width, leftTopRect.Height);
                 }
 #endif // OUTLINE
@@ -766,17 +766,17 @@ namespace unvell.ReoGrid.Views
 #if OUTLINE
             if (rowOutlineVisible)
             {
-                this.rowOutlinePart2.Bounds = new Rectangle(outlineSpaceRect.X, rightBottomRect.Y, outlineSpaceRect.Width, rightBottomRect.Height);
+                this.rowOutlinePart2!.Bounds = new Rectangle(outlineSpaceRect.X, rightBottomRect.Y, outlineSpaceRect.Width, rightBottomRect.Height);
             }
 
             if (colOutlineVisible)
             {
-                this.colOutlinePart2.Bounds = new Rectangle(rightBottomRect.X, outlineSpaceRect.Y, rightBottomRect.Width, outlineSpaceRect.Height);
+                this.colOutlinePart2!.Bounds = new Rectangle(rightBottomRect.X, outlineSpaceRect.Y, rightBottomRect.Width, outlineSpaceRect.Height);
             }
 
             if (rowOutlineVisible && colOutlineVisible)
             {
-                outlineLeftTopSpace.Bounds = outlineSpaceRect;
+                outlineLeftTopSpace!.Bounds = outlineSpaceRect;
             }
 #endif // OUTLINE
 
@@ -787,8 +787,8 @@ namespace unvell.ReoGrid.Views
 			this.worksheet.controlAdapter.ScrollBarHorizontalLargeChange = this.scrollHorLarge = (int)Math.Round(this.view.Width);
 			this.worksheet.controlAdapter.ScrollBarVerticalLargeChange = this.scrollVerLarge = (int)Math.Round(this.view.Height);
 #elif WPF || AVALONIA
-            this.worksheet.controlAdapter.ScrollBarHorizontalLargeChange = this.scrollHorLarge = this.view.Width;
-            this.worksheet.controlAdapter.ScrollBarVerticalLargeChange = this.scrollVerLarge = this.view.Height;
+            this.worksheet.controlAdapter!.ScrollBarHorizontalLargeChange = this.scrollHorLarge = this.view.Width;
+            this.worksheet.controlAdapter!.ScrollBarVerticalLargeChange = this.scrollVerLarge = this.view.Height;
 #endif // WPF and AVALONIA
 
             this.UpdateVisibleRegion();
@@ -834,7 +834,7 @@ namespace unvell.ReoGrid.Views
             mainVisibleRegion = GridRegion.Empty;
             frozenVisibleRegion = GridRegion.Empty;
 
-            var adapter = this.worksheet.controlAdapter;
+            var adapter = this.worksheet.controlAdapter!;
             adapter.ScrollBarHorizontalMinimum = 0;
             adapter.ScrollBarVerticalMinimum = 0;
             adapter.ScrollBarHorizontalValue = 0;
@@ -900,7 +900,7 @@ namespace unvell.ReoGrid.Views
                 worksheet.EndEdit(EndEditReason.NormalFinish);
             }
 
-            foreach (var v in this.view.Children)
+            foreach (var v in this.view.Children!)
             {
                 if (v is IViewport vp)
                 {
@@ -1101,8 +1101,8 @@ namespace unvell.ReoGrid.Views
                 if (this.topLeftViewport != null)
                 {
                     this.topLeftViewport.Visible =
-                        this.leftBottomViewport.Visible =
-                        this.rightTopViewport.Visible =
+                        this.leftBottomViewport!.Visible =
+                        this.rightTopViewport!.Visible =
                         false;
                 }
 
@@ -1231,11 +1231,11 @@ namespace unvell.ReoGrid.Views
             #region Synchronize other viewports
             if (this.rowHeaderPart1 != null)
             {
-                this.rowHeaderPart1.ViewTop = this.topLeftViewport.ViewTop;
+                this.rowHeaderPart1.ViewTop = this.topLeftViewport!.ViewTop;
             }
             if (this.colHeaderPart1 != null)
             {
-                this.colHeaderPart1.ViewLeft = this.topLeftViewport.ViewLeft;
+                this.colHeaderPart1.ViewLeft = this.topLeftViewport!.ViewLeft;
             }
 
             this.colHeaderPart2.ViewLeft = rightBottomViewport.ViewLeft;
@@ -1251,8 +1251,8 @@ namespace unvell.ReoGrid.Views
 
                 if (colOutlinePart1 != null)
                 {
-                    this.colOutlinePart1.ViewStart = this.colHeaderPart1.ViewStart;
-                    this.colOutlinePart1.ScrollableDirections = this.colHeaderPart1.ScrollableDirections;
+                    this.colOutlinePart1.ViewStart = this.colHeaderPart1!.ViewStart;
+                    this.colOutlinePart1.ScrollableDirections = this.colHeaderPart1!.ScrollableDirections;
                 }
             }
 
@@ -1263,8 +1263,8 @@ namespace unvell.ReoGrid.Views
 
                 if (rowOutlinePart1 != null)
                 {
-                    this.rowOutlinePart1.ViewStart = this.rowHeaderPart1.ViewStart;
-                    this.rowOutlinePart1.ScrollableDirections = this.rowHeaderPart1.ScrollableDirections;
+                    this.rowOutlinePart1.ViewStart = this.rowHeaderPart1!.ViewStart;
+                    this.rowOutlinePart1.ScrollableDirections = this.rowHeaderPart1!.ScrollableDirections;
                 }
             }
 #endif // OUTLINE
@@ -1272,8 +1272,8 @@ namespace unvell.ReoGrid.Views
 
             #region Update Scrollbar positions
             // scroll bars start at view-start of the main-viewport
-            this.worksheet.controlAdapter.ScrollBarHorizontalMinimum = 0;// this.scrollHorMin = (int)Math.Round(this.mainViewport.ViewLeft);
-            this.worksheet.controlAdapter.ScrollBarVerticalMinimum = 0;// this.scrollVerMin = (int)Math.Round(this.mainViewport.ViewTop);
+            this.worksheet.controlAdapter!.ScrollBarHorizontalMinimum = 0;// this.scrollHorMin = (int)Math.Round(this.mainViewport.ViewLeft);
+            this.worksheet.controlAdapter!.ScrollBarVerticalMinimum = 0;// this.scrollVerMin = (int)Math.Round(this.mainViewport.ViewTop);
 
             //int hlc = (int)(this.view.Width - rightBottomViewport.ScrollViewLeft);
             //if (hlc < 0) hlc = 0;
@@ -1301,8 +1301,8 @@ namespace unvell.ReoGrid.Views
                 AddView(rowOutlinePart1 = new RowOutlineView(this));
 
                 // move row outline header part to the topmost
-                this.RemoveView(this.rowOutlineHeadPart);
-                AddView(this.rowOutlineHeadPart);
+                this.RemoveView(this.rowOutlineHeadPart!);
+                AddView(this.rowOutlineHeadPart!);
             }
 
             if (colOutlinePart1 == null && colOutlinePart2 != null)
@@ -1310,8 +1310,8 @@ namespace unvell.ReoGrid.Views
                 AddView(colOutlinePart1 = new ColumnOutlinePart(this));
 
                 // move column outline header part to the topmost
-                this.RemoveView(this.colOutlineHeadPart);
-                AddView(this.colOutlineHeadPart);
+                this.RemoveView(this.colOutlineHeadPart!);
+                AddView(this.colOutlineHeadPart!);
 
                 // adjust z-index of outline left top corner space
                 if (this.outlineLeftTopSpace != null)
@@ -1327,13 +1327,13 @@ namespace unvell.ReoGrid.Views
 
         #region Outline
 #if OUTLINE
-        private RowOutlineView rowOutlinePart2;
-        private RowOutlineView rowOutlinePart1;
-        private RowOutlineHeaderView rowOutlineHeadPart;
-        private ColumnOutlinePart colOutlinePart2;
-        private ColumnOutlinePart colOutlinePart1;
-        private ColumnOutlineHeadPart colOutlineHeadPart;
-        private OutlineLeftTopSpace outlineLeftTopSpace;
+        private RowOutlineView? rowOutlinePart2;
+        private RowOutlineView? rowOutlinePart1;
+        private RowOutlineHeaderView? rowOutlineHeadPart;
+        private ColumnOutlinePart? colOutlinePart2;
+        private ColumnOutlinePart? colOutlinePart1;
+        private ColumnOutlineHeadPart? colOutlineHeadPart;
+        private OutlineLeftTopSpace? outlineLeftTopSpace;
 #endif // OUTLINE
         #endregion // Outline
 
@@ -1352,12 +1352,12 @@ namespace unvell.ReoGrid.Views
 
                 if (freezePos.Col > 0)
                 {
-                    g.DrawLine(leftBottomViewport.Right, this.view.Top, leftBottomViewport.Right, this.view.Bottom, SolidColor.Gray);
+                    g.DrawLine(leftBottomViewport!.Right, this.view.Top, leftBottomViewport!.Right, this.view.Bottom, SolidColor.Gray);
                 }
 
                 if (freezePos.Row > 0)
                 {
-                    g.DrawLine(this.view.Left, rightTopViewport.Bottom, this.view.Right, rightTopViewport.Bottom, SolidColor.Gray);
+                    g.DrawLine(this.view.Left, rightTopViewport!.Bottom, this.view.Right, rightTopViewport!.Bottom, SolidColor.Gray);
                 }
             }
             #endregion // Freeze Split Line

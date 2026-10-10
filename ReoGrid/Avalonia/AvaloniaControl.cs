@@ -110,7 +110,7 @@ namespace unvell.ReoGrid
                 SmallChange = Worksheet.InitDefaultRowHeight,
             };
             this.Child = new Canvas();
-            var canvas = Child as Canvas;
+            var canvas = (Canvas)Child;
 
             canvas.Children.Add(this.sheetTab);
             canvas.Children.Add(this.horScrollbar);
@@ -122,7 +122,7 @@ namespace unvell.ReoGrid
 
             this.horScrollbar.Scroll += (s, e) =>
             {
-                if (this.currentWorksheet.ViewportController is IScrollableViewportController)
+                if (this.currentWorksheet?.ViewportController is IScrollableViewportController)
                 {
                     ((IScrollableViewportController)this.currentWorksheet.ViewportController).HorizontalScroll(e.NewValue);
                 }
@@ -130,7 +130,7 @@ namespace unvell.ReoGrid
 
             this.verScrollbar.Scroll += (s, e) =>
             {
-                if (this.currentWorksheet.ViewportController is IScrollableViewportController)
+                if (this.currentWorksheet?.ViewportController is IScrollableViewportController)
                 {
                     ((IScrollableViewportController)this.currentWorksheet.ViewportController).VerticalScroll(e.NewValue);
                 }
@@ -138,7 +138,7 @@ namespace unvell.ReoGrid
 
             this.sheetTab.SplitterMoving += (s, e) =>
             {
-                var arg = e as PointerEventArgs;
+                var arg = (PointerEventArgs)e;
 
                 double width = arg.GetPosition(this).X + 3;
                 if (width < 75) width = 75;
@@ -188,7 +188,7 @@ namespace unvell.ReoGrid
                 if (!string.IsNullOrEmpty(this.LoadFromFile))
                 {
                     var file = new System.IO.FileInfo(this.LoadFromFile);
-                    this.currentWorksheet.Load(file.FullName);
+                    this.currentWorksheet?.Load(file.FullName);
                 }
             }, Avalonia.Threading.DispatcherPriority.Input);
 
@@ -201,14 +201,14 @@ namespace unvell.ReoGrid
         }
 
 
-        private void MouseUpHandler(object sender, PointerReleasedEventArgs e)
+        private void MouseUpHandler(object? sender, PointerReleasedEventArgs e)
         {
             this.OnWorksheetMouseUp(e.GetPosition(this), AvaloniaUtility.ConvertToUIMouseButtons(e.InitialPressMouseButton));
 
             //if (mouseCaptured) ReleaseMouseCapture();
         }
 
-        private void MouseDownHandler(object sender, PointerPressedEventArgs e)
+        private void MouseDownHandler(object? sender, PointerPressedEventArgs e)
         {
             Focus();
 
@@ -235,7 +235,7 @@ namespace unvell.ReoGrid
             {
                 if (e.ClickCount == 2)
                 {
-                    this.currentWorksheet.OnMouseDoubleClick(e.GetPosition(this), AvaloniaUtility.ConvertToUIMouseButtons(e));
+                    this.currentWorksheet?.OnMouseDoubleClick(e.GetPosition(this), AvaloniaUtility.ConvertToUIMouseButtons(e));
                 }
                 else
                 {
@@ -245,7 +245,7 @@ namespace unvell.ReoGrid
             }
         }
 
-        private void ReoGridControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ReoGridControl_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
 
             if (this.IsVisible)
@@ -341,7 +341,7 @@ namespace unvell.ReoGrid
                 this.verScrollbar.Height = this.Bounds.Size.Height;
             }
 
-            this.currentWorksheet.UpdateViewportControllBounds();
+            this.currentWorksheet?.UpdateViewportControllBounds();
         }
 
         private void ShowSheetTabControl()
@@ -435,7 +435,7 @@ namespace unvell.ReoGrid
                 ((AvaloniaRenderer)this.renderer).SetPlatformGraphics(dc);
 
                 var rgdc = new CellDrawingContext(this.currentWorksheet, DrawMode.View, this.renderer);
-                this.currentWorksheet.ViewportController.Draw(rgdc);
+                this.currentWorksheet.ViewportController!.Draw(rgdc);
 
             }
 
@@ -455,15 +455,15 @@ namespace unvell.ReoGrid
 
         #region Mouse
 
-        protected void OnMouseMove(object sender, PointerEventArgs e)
+        protected void OnMouseMove(object? sender, PointerEventArgs e)
         {
             var point = e.GetCurrentPoint(this);
             this.OnWorksheetMouseMove(e.GetPosition(this), AvaloniaUtility.ConvertToUIMouseButtons(point.Properties));
         }
 
-        protected void OnMouseWheel(object sender, PointerWheelEventArgs e)
+        protected void OnMouseWheel(object? sender, PointerWheelEventArgs e)
         {
-            this.currentWorksheet.OnMouseWheel(e.GetPosition(this), e.Delta * 120, e.KeyModifiers,
+            this.currentWorksheet?.OnMouseWheel(e.GetPosition(this), e.Delta * 120, e.KeyModifiers,
                 AvaloniaUtility.ConvertToUIMouseButtons(MouseButton.Middle));
         }
 
@@ -477,7 +477,7 @@ namespace unvell.ReoGrid
         /// <param name="e"></param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (!this.currentWorksheet.IsEditing)
+            if (this.currentWorksheet != null && !this.currentWorksheet.IsEditing)
             {
                 var wfkeys = AvaloniaUtility.GetKeyCode(e.Key);
 
@@ -508,7 +508,7 @@ namespace unvell.ReoGrid
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (!this.currentWorksheet.IsEditing)
+            if (this.currentWorksheet != null && !this.currentWorksheet.IsEditing)
             {
                 var wfkeys = AvaloniaUtility.GetKeyCode(e.Key);
 
@@ -559,7 +559,7 @@ namespace unvell.ReoGrid
 
         private void OnTextInputStart(object sender, TextInputEventArgs args)
         {
-            if (!this.currentWorksheet.IsEditing)
+            if (this.currentWorksheet != null && !this.currentWorksheet.IsEditing)
             {
                 this.currentWorksheet.StartEdit();
                 this.currentWorksheet.CellEditText = string.Empty;
@@ -573,7 +573,7 @@ namespace unvell.ReoGrid
         {
             #region Constructor
             private readonly ReoGridControl canvas;
-            internal InputTextBox editTextbox;
+            internal InputTextBox editTextbox = null!;
 
             internal ReoGridAvaloniaControlAdapter(ReoGridControl canvas)
             {
@@ -615,7 +615,7 @@ namespace unvell.ReoGrid
                 }
             }
 
-            private Cursor oldCursor = null;
+            private Cursor? oldCursor = null;
 
             public void ChangeCursor(CursorStyle cursor)
             {
@@ -709,7 +709,7 @@ namespace unvell.ReoGrid
                 return new Point(pixelPoint.X, pixelPoint.Y);
             }
 
-            public IGraphics PlatformGraphics { get { return null; } }
+            public IGraphics? PlatformGraphics { get { return null; } }
 
             public void ChangeBackgroundColor(SolidColor color)
             {
@@ -735,7 +735,7 @@ namespace unvell.ReoGrid
 
             public void ShowEditControl(Graphics.Rectangle bounds, Cell cell)
             {
-                var sheet = this.canvas.CurrentWorksheet;
+                var sheet = this.canvas.CurrentWorksheet!;
 
                 Color textColor;
 
@@ -762,13 +762,13 @@ namespace unvell.ReoGrid
 
                 this.editTextbox.CellSize = cell.Bounds.Size;
                 this.editTextbox.VAlign = cell.InnerStyle.VAlign;
-                this.editTextbox.FontFamily = new FontFamily(cell.InnerStyle.FontName);
+                this.editTextbox.FontFamily = new FontFamily(cell.InnerStyle.FontName!);
                 this.editTextbox.FontSize = cell.InnerStyle.FontSize * sheet.ScaleFactor * 96f / 72f;
                 this.editTextbox.FontStyle = PlatformUtility.ToAvaloniaFontStyle(cell.InnerStyle.fontStyles);
                 this.editTextbox.Foreground = this.Renderer.GetBrush(textColor);
                 this.editTextbox.Background = this.Renderer.GetBrush(cell.InnerStyle.HasStyle(PlainStyleFlag.BackColor)
                     ? cell.InnerStyle.BackColor : this.canvas.controlStyle[ControlAppearanceColors.GridBackground]);
-                this.editTextbox.SelectionStart = this.editTextbox.Text.Length;
+                this.editTextbox.SelectionStart = this.editTextbox.Text?.Length ?? 0;
                 this.editTextbox.TextWrap = cell.InnerStyle.TextWrapMode != TextWrapMode.NoWrap;
                 this.editTextbox.TextWrapping = (cell.InnerStyle.TextWrapMode == TextWrapMode.NoWrap)
                     ? TextWrapping.NoWrap : TextWrapping.Wrap;
@@ -782,12 +782,12 @@ namespace unvell.ReoGrid
                 this.editTextbox.IsVisible = false;
             }
 
-            public void SetEditControlText(string text)
+            public void SetEditControlText(string? text)
             {
                 this.editTextbox.Text = text;
             }
 
-            public string GetEditControlText()
+            public string? GetEditControlText()
             {
                 return this.editTextbox.Text;
             }
@@ -965,7 +965,7 @@ namespace unvell.ReoGrid
         #region Editor - TextBox
         internal class InputTextBox : TextBox
         {
-            internal ReoGridControl Owner { get; set; }
+            internal ReoGridControl Owner { get; set; } = null!;
             internal bool TextWrap { get; set; }
             internal Avalonia.Size CellSize { get; set; }
             internal ReoGridVerAlign VAlign { get; set; }
@@ -1028,7 +1028,7 @@ namespace unvell.ReoGrid
             {
                 var sheet = this.Owner.CurrentWorksheet;
 
-                if (sheet.currentEditingCell != null && IsVisible)
+                if (sheet != null && sheet.currentEditingCell != null && IsVisible)
                 {
                     sheet.EndEdit(Text);
                     IsVisible = false;
@@ -1036,14 +1036,14 @@ namespace unvell.ReoGrid
                 base.OnLostFocus(e);
             }
 
-            private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+            private void OnPreviewKeyDown(object? sender, KeyEventArgs e)
             {
                 var sheet = this.Owner.CurrentWorksheet;
 
                 // in single line text
-                if (!TextWrap && Text.IndexOf('\n') == -1)
+                if (sheet != null && !TextWrap && Text != null && Text.IndexOf('\n') == -1)
                 {
-                    Action moveAction = null;
+                    Action? moveAction = null;
 
                     if (e.Key == Key.Up)
                     {
@@ -1074,12 +1074,12 @@ namespace unvell.ReoGrid
             {
                 var sheet = this.Owner.CurrentWorksheet;
 
-                if (sheet.currentEditingCell != null && IsVisible)
+                if (sheet != null && sheet.currentEditingCell != null && IsVisible)
                 {
                     if (e.KeyModifiers == KeyModifiers.Control
                         && e.Key == Key.Enter)
                     {
-                        var str = this.Text;
+                        var str = this.Text ?? string.Empty;
                         var selstart = this.SelectionStart;
                         str = str.Insert(this.SelectionStart, Environment.NewLine);
                         this.Text = str;
@@ -1125,24 +1125,24 @@ namespace unvell.ReoGrid
                 var @this = args.Sender as InputTextBox;
                 if (@this is not null && args.NewValue == false)
                 {
-                    @this.Owner.CurrentWorksheet.EndEdit(@this.Text, EndEditReason.NormalFinish);
+                    @this.Owner.CurrentWorksheet?.EndEdit(@this.Text, EndEditReason.NormalFinish);
                 }
             }
             private static void OnTextChanged(AvaloniaPropertyChangedEventArgs e)
             {
                 var @this = e.Sender as InputTextBox;
-                if (@this != null)
+                if (@this != null && @this.Owner.currentWorksheet != null)
                 {
                     @this.Text = @this.Owner.currentWorksheet.RaiseCellEditTextChanging(@this.Text);
                 }
             }
 
-            private void OnPreviewTextInput(object sender, TextInputEventArgs e)
+            private void OnPreviewTextInput(object? sender, TextInputEventArgs e)
             {
-                if (e.Text.Length > 0)
+                if (!string.IsNullOrEmpty(e.Text))
                 {
                     int inputChar = e.Text[0];
-                    if (inputChar != this.Owner.currentWorksheet.RaiseCellEditCharInputed(inputChar))
+                    if (this.Owner.currentWorksheet != null && inputChar != this.Owner.currentWorksheet.RaiseCellEditCharInputed(inputChar))
                     {
 
                         e.Handled = true;
@@ -1155,33 +1155,33 @@ namespace unvell.ReoGrid
         #endregion // Editor - TextBox
 
         #region Context Menu Strips
-        internal ContextMenu BaseContextMenu { get { return base.ContextMenu; } set { base.ContextMenu = value; } }
+        internal ContextMenu? BaseContextMenu { get { return base.ContextMenu; } set { base.ContextMenu = value; } }
 
         /// <summary>
         /// Get or set the cells context menu
         /// </summary>
-        public ContextMenu CellsContextMenu { get; set; }
+        public ContextMenu? CellsContextMenu { get; set; }
 
         /// <summary>
         /// Get or set the row header context menu
         /// </summary>
-        public ContextMenu RowHeaderContextMenu { get; set; }
+        public ContextMenu? RowHeaderContextMenu { get; set; }
 
         /// <summary>
         /// Get or set the column header context menu
         /// </summary>
-        public ContextMenu ColumnHeaderContextMenu { get; set; }
+        public ContextMenu? ColumnHeaderContextMenu { get; set; }
 
         /// <summary>
         /// Get or set the lead header context menu
         /// </summary>
-        public ContextMenu LeadHeaderContextMenu { get; set; }
+        public ContextMenu? LeadHeaderContextMenu { get; set; }
         #endregion // Context Menu Strips
 
         /// <summary>
         /// Get or set filepath of startup template file
         /// </summary>
-        public string LoadFromFile { get; set; }
+        public string? LoadFromFile { get; set; }
 
         public void Dispose() { }
     }

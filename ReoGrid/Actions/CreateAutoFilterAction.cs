@@ -30,12 +30,12 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public RangePosition Range { get; private set; }
 
-		private AutoColumnFilter autoColumnFilter;
+		private AutoColumnFilter? autoColumnFilter;
 
 		/// <summary>
 		/// Get auto column filter instance created by this action. (Will be null before doing action)
 		/// </summary>
-		public AutoColumnFilter AutoColumnFilter { get { return this.autoColumnFilter; } }
+		public AutoColumnFilter? AutoColumnFilter { get { return this.autoColumnFilter; } }
 
 		/// <summary>
 		/// Create action to create column filter

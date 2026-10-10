@@ -48,7 +48,7 @@ namespace unvell.ReoGrid.Views
 		Rectangle Bounds { get; set; }
 
 		IView View { get; }
-		IView FocusView { get; set; }
+		IView? FocusView { get; set; }
 
 		void Draw(CellDrawingContext dc);
 

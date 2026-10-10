@@ -45,7 +45,7 @@ namespace unvell.ReoGrid.Actions
 		/// <summary>
 		/// Backuped cells content used to recover the target range.
 		/// </summary>
-		PartialGrid backupedGrid;
+		PartialGrid backupedGrid = null!;
 
 		public override void Do()
 		{

@@ -63,7 +63,7 @@ namespace unvell.ReoGrid.Rendering
 #endif // WINFORM
     sealed class BorderPainter : IDisposable
     {
-        private static BorderPainter instance;
+        private static BorderPainter? instance;
 
         /// <summary>
         /// Get BorderPainter instance
@@ -90,7 +90,7 @@ namespace unvell.ReoGrid.Rendering
             RGPen p;
 
 #if AVALONIA
-            static RGPen CreatePen(Avalonia.Media.IBrush color, double thickness, RGDashStyle dashStyle)
+            static RGPen CreatePen(Avalonia.Media.IBrush color, double thickness, RGDashStyle? dashStyle)
             {
                 return new RGPen(color, 1)
                 {
@@ -320,7 +320,7 @@ namespace unvell.ReoGrid.Rendering
         /// <param name="color">Color of border.</param>
         /// <param name="bgPen">Fill pen used when drawing double outline.</param>
         public void DrawLine(PlatformGraphics g, RGFloat x, RGFloat y, RGFloat x2, RGFloat y2, BorderLineStyle style,
-            SolidColor color, RGPen bgPen = null)
+            SolidColor color, RGPen? bgPen = null)
         {
             if (style == BorderLineStyle.None) return;
 

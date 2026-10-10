@@ -141,7 +141,7 @@ namespace unvell.ReoGrid.Drawing.Shapes
 			}
 #elif AVALONIA
 
-			Path.Figures.Clear();
+			Path.Figures!.Clear();
 
 			if (c > 0)
             {
@@ -249,18 +249,18 @@ namespace unvell.ReoGrid.Drawing.Shapes
 			}
 #elif AVALONIA
 
-			Path.Figures.Clear();
+			Path.Figures!.Clear();
 
 			if (this.sweepAngle > 0)
 			{
 				Avalonia.Media.PathFigure pf = new Avalonia.Media.PathFigure();
 			
-				pf.Segments.Add(new Avalonia.Media.LineSegment{Point = this.OriginPoint});
-				pf.Segments.Add(new Avalonia.Media.ArcSegment{Point =new Avalonia.Point(0, 0),
+				pf.Segments!.Add(new Avalonia.Media.LineSegment{Point = this.OriginPoint});
+				pf.Segments!.Add(new Avalonia.Media.ArcSegment{Point =new Avalonia.Point(0, 0),
 					Size=new Avalonia.Size(this.Width, this.Height),RotationAngle = this.sweepAngle,IsLargeArc = true,SweepDirection = Avalonia.Media.SweepDirection.Clockwise
                 });
 
-				Path.Figures.Add(pf);
+				Path.Figures!.Add(pf);
 			}
 
 #elif ANDROID

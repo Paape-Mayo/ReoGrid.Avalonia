@@ -29,7 +29,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public PlainStyleFlag Flag { get { return flag; } set { flag = value; } }
 
-		private PartialGrid backupData;
+		private PartialGrid backupData = null!;
 
 		/// <summary>
 		/// Create instance for action to remove style from specified range.

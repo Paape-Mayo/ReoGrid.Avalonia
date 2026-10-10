@@ -85,11 +85,11 @@ namespace unvell.ReoGrid.Views
 		{
 			return Contains(range) || Intersect(range);
 		}
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if ((obj as GridRegion?) == null) return false;
 
-			GridRegion gr2 = (GridRegion)obj;
+			GridRegion gr2 = (GridRegion)obj!;
 			return startRow == gr2.startRow && startCol == gr2.startCol
 				&& endRow == gr2.endRow && endCol == gr2.endCol;
 		}

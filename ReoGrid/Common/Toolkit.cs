@@ -52,7 +52,7 @@ namespace unvell.Common
 
 #endif // WINFORM || WPF
 
-        private static MD5 md5 = null;
+        private static MD5? md5 = null;
 
 		internal static byte[] GetMD5Hash(string str)
 		{

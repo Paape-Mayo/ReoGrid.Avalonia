@@ -50,7 +50,7 @@ namespace unvell.ReoGrid.Views
 			if (bounds.Width <= 0 || bounds.Height <= 0 || sheet.controlAdapter == null) return;
 
 			var g = dc.Graphics;
-			var controlStyle = sheet.workbook.controlAdapter.ControlStyle;
+			var controlStyle = sheet.workbook!.controlAdapter!.ControlStyle;
 
 			g.FillRectangle(bounds, controlStyle.Colors[ControlAppearanceColors.LeadHeadNormal]);
 
@@ -77,7 +77,7 @@ namespace unvell.ReoGrid.Views
 						// show context menu
 						if (buttons == MouseButtons.Right)
 						{
-							this.sheet.controlAdapter.ShowContextMenuStrip(ViewTypes.LeadHeader, location);
+							this.sheet.controlAdapter!.ShowContextMenuStrip(ViewTypes.LeadHeader, location);
 						}
 
 						return true;
@@ -90,7 +90,7 @@ namespace unvell.ReoGrid.Views
 
 		public override bool OnMouseMove(Point location, MouseButtons buttons)
 		{
-			this.sheet.controlAdapter.ChangeCursor(CursorStyle.Selection);
+			this.sheet.controlAdapter!.ChangeCursor(CursorStyle.Selection);
 
 			return false;
 		}

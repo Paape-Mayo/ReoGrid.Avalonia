@@ -53,13 +53,13 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Instance of worksheet
 		/// </summary>
-		public Worksheet Worksheet { get; set; }
+		public Worksheet? Worksheet { get; set; }
 
 		/// <summary>
 		/// Create common worksheet event arguments with specified instance of worksheet
 		/// </summary>
 		/// <param name="sheet">instance of worksheet related to the event</param>
-		public WorksheetEventArgs(Worksheet sheet)
+		public WorksheetEventArgs(Worksheet? sheet)
 		{
 			this.Worksheet = sheet;
 		}
@@ -267,13 +267,13 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Get instance of current editing cell. This property may be null.
 		/// </summary>
-		public Cell Cell { get; protected set; }
+		public Cell? Cell { get; protected set; }
 
 		/// <summary>
 		/// Create instance for CellEventArgs with specified cell.
 		/// </summary>
 		/// <param name="cell">Instance of current editing cell.</param>
-		public CellEventArgs(Cell cell)
+		public CellEventArgs(Cell? cell)
 		{
 			this.Cell = cell;
 		}
@@ -355,7 +355,7 @@ namespace unvell.ReoGrid.Events
 		/// Event source instance of cell. Note: this property may be null if cell has no data and style attached. 
 		/// Check this property and create cell instance by CellPosition property.
 		/// </summary>
-		public Cell Cell { get; set; }
+		public Cell? Cell { get; set; }
 
 		/// <summary>
 		/// Zero-based cell position
@@ -406,7 +406,7 @@ namespace unvell.ReoGrid.Events
 		/// <param name="absolutePosition">absolute mouse position (position in spreadsheet)</param>
 		/// <param name="buttons">pressed buttons</param>
 		/// <param name="clicks">number of clicks</param>
-		public CellMouseEventArgs(Worksheet worksheet, Cell cell, Point relativePosition,
+		public CellMouseEventArgs(Worksheet worksheet, Cell? cell, Point relativePosition,
 			Point absolutePosition, MouseButtons buttons, int clicks)
 			: this(worksheet, cell, cell == null ? CellPosition.Empty : cell.InternalPos,
 			relativePosition, absolutePosition, buttons, clicks)
@@ -423,7 +423,7 @@ namespace unvell.ReoGrid.Events
 		/// <param name="absolutePosition">absolute mouse position (position in spreadsheet)</param>
 		/// <param name="buttons">pressed buttons</param>
 		/// <param name="clicks">number of clicks</param>
-		public CellMouseEventArgs(Worksheet worksheet, Cell cell, CellPosition cellPosition,
+		public CellMouseEventArgs(Worksheet worksheet, Cell? cell, CellPosition cellPosition,
 			Point relativePosition, Point absolutePosition, MouseButtons buttons, int clicks)
 			: base(worksheet, relativePosition, absolutePosition, buttons, clicks)
 		{
@@ -450,7 +450,7 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Cell of event source
 		/// </summary>
-		public Cell Cell { get; set; }
+		public Cell? Cell { get; set; }
 
 		/// <summary>
 		/// Position of cell of event source
@@ -487,7 +487,7 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Set the data to new value instead of edited value.
 		/// </summary>
-		public object NewData { get; set; }
+		public object? NewData { get; set; }
 
 		/// <summary>
 		/// Reason of edit operation ending. Set this property to restore 
@@ -522,7 +522,7 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Text will display in the input field, this text could be changed.
 		/// </summary>
-		public string EditText { get; set; }
+		public string? EditText { get; set; }
 
 		/// <summary>
 		/// Create instance for CellBeforeEditEventArgs with specified cell.
@@ -539,13 +539,13 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Get or set the inputting text. Set new text to replace the text of user inputted.
 		/// </summary>
-		public string Text { get; set; }
+		public string? Text { get; set; }
 
 		/// <summary>
 		/// Create event argument with specified cell.
 		/// </summary>
 		/// <param name="cell">instance of cell</param>
-		public CellEditTextChangingEventArgs(Cell cell)
+		public CellEditTextChangingEventArgs(Cell? cell)
 			: base(cell)
 		{
 		}
@@ -575,9 +575,9 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Get current edit text inputted by user.
 		/// </summary>
-		public string InputText { get; private set; }
+		public string? InputText { get; private set; }
 
-		internal CellEditCharInputEventArgs(Cell cell, string text, int @char, int caret, int line)
+		internal CellEditCharInputEventArgs(Cell? cell, string? text, int @char, int caret, int line)
 			: base(cell)
 		{
 			this.InputText = text;
@@ -844,7 +844,7 @@ namespace unvell.ReoGrid.Events
 		/// </summary>
 		/// <param name="sheet">Worksheet instance.</param>
 		/// <param name="exception">Exception instance.</param>
-		public ExceptionHappenEventArgs(Worksheet sheet, Exception exception)
+		public ExceptionHappenEventArgs(Worksheet? sheet, Exception exception)
 			: base(sheet)
 		{
 			this.Exception = exception;
@@ -1110,7 +1110,7 @@ namespace unvell.ReoGrid.Events
 		/// <summary>
 		/// Named range instance
 		/// </summary>
-		public NamedRange NamedRange { get; private set; }
+		public NamedRange? NamedRange { get; private set; }
 
 		/// <summary>
 		/// Create event argument instance with named range instance

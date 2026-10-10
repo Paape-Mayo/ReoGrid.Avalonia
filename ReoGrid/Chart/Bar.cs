@@ -131,6 +131,7 @@ namespace unvell.ReoGrid.Chart
 			if (axisChart == null) return;
 
 			var ds = Chart.DataSource;
+			if (ds == null) return;
 
 			var rows = ds.SerialCount;
 			var columns = ds.CategoryCount;
@@ -149,7 +150,7 @@ namespace unvell.ReoGrid.Chart
 			{
 				for (int r = 0; r < ds.SerialCount; r++)
 				{
-					var pt = axisChart.PlotDataPoints[r][c];
+					var pt = axisChart.PlotDataPoints![r][c];
 
 					if (pt.hasValue)
 					{

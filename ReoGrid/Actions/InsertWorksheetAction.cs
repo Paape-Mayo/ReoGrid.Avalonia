@@ -48,7 +48,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public override void Do()
 		{
-			this.Workbook.InsertWorksheet(this.Index, this.Worksheet);
+			this.Workbook!.InsertWorksheet(this.Index, this.Worksheet);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace unvell.ReoGrid.Actions
 		/// </summary>
 		public override void Undo()
 		{
-			this.Workbook.RemoveWorksheet(this.Index);
+			this.Workbook!.RemoveWorksheet(this.Index);
 		}
 
 		/// <summary>

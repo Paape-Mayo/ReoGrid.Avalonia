@@ -86,13 +86,13 @@ namespace unvell.ReoGrid.Views
 
 		internal virtual void AddView(IView view)
 		{
-			this.view.Children.Add(view);
+			this.view.Children!.Add(view);
 			view.ViewportController = this;
 		}
 
 		internal virtual void InsertView(IView before, IView viewport)
 		{
-			IList<IView> views = this.view.Children;
+			IList<IView> views = this.view.Children!;
 
 			int index = views.IndexOf(before);
 			if (index > 0 && index < views.Count)
@@ -107,12 +107,12 @@ namespace unvell.ReoGrid.Views
 
 		internal virtual void InsertView(int index, IView viewport)
 		{
-			this.view.Children.Insert(index, viewport);
+			this.view.Children!.Insert(index, viewport);
 		}
 
 		internal virtual bool RemoveView(IView view)
 		{
-			if (this.view.Children.Remove(view))
+			if (this.view.Children!.Remove(view))
 			{
 				view.ViewportController = null;
 				return true;
@@ -170,9 +170,9 @@ namespace unvell.ReoGrid.Views
 
 		#region Focus
 		
-		public virtual IView FocusView { get; set; }
+		public virtual IView? FocusView { get; set; }
 
-		public virtual IUserVisual FocusVisual { get; set; }
+		public virtual IUserVisual? FocusVisual { get; set; }
 
 		#endregion // View Point Evalution
 

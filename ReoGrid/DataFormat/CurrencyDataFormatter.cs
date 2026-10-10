@@ -36,11 +36,11 @@ namespace unvell.ReoGrid.DataFormat
 		/// </summary>
 		/// <param name="cell">cell instance</param>
 		/// <returns>true if cell has been formatted</returns>
-		public string FormatCell(Cell cell)
+		public string? FormatCell(Cell cell)
 		{
 			bool isFormat = false;
 
-			object data = cell.InnerData;
+			object? data = cell.InnerData;
 			double currency = double.NaN;
 
 			if (data is double)
@@ -55,7 +55,7 @@ namespace unvell.ReoGrid.DataFormat
 			}
 			else
 			{
-				string str = Convert.ToString(data).Trim();
+				string str = Convert.ToString(data)!.Trim();
 				string number = string.Empty;
 
 				if (str.StartsWith("$"))
@@ -91,11 +91,11 @@ namespace unvell.ReoGrid.DataFormat
 					cell.RenderHorAlign = ReoGridRenderHorAlign.Right;
 				}
 
-				string prefixSymbol = null, postfixSymbol = null;
+				string? prefixSymbol = null, postfixSymbol = null;
 				short decimals = 2;
 				NumberDataFormatter.NumberNegativeStyle negativeStyle = NumberDataFormatter.NumberNegativeStyle.Default;
-				string prefix = null;
-				string postfix = null;
+				string? prefix = null;
+				string? postfix = null;
 
 				if (cell.DataFormatArgs != null && cell.DataFormatArgs is CurrencyFormatArgs)
 				{
@@ -170,24 +170,24 @@ namespace unvell.ReoGrid.DataFormat
 			/// <summary>
 			/// Currency symbol that displayed before currency number.
 			/// </summary>
-			public string PrefixSymbol { get; set; }
+			public string? PrefixSymbol { get; set; }
 
 			/// <summary>
 			/// Currency symbol that displayed after currency number.
 			/// </summary>
-			public string PostfixSymbol { get; set; }
+			public string? PostfixSymbol { get; set; }
 
 			/// <summary>
 			/// Culture name in English. (e.g. en-US)
 			/// </summary>
-			public string CultureEnglishName { get; set; }
+			public string? CultureEnglishName { get; set; }
 
 			/// <summary>
 			/// Check whether or not two objects are same.
 			/// </summary>
 			/// <param name="obj">Another object to be compared.</param>
 			/// <returns>True if two objects are same; Otherwise return false.</returns>
-			public override bool Equals(object obj)
+			public override bool Equals(object? obj)
 			{
 				if (!(obj is CurrencyFormatArgs)) return false;
 

@@ -82,7 +82,7 @@ namespace unvell.ReoGrid.Utility
 			double dpi = PlatformUtility.GetDPI();
 			double scale = dpi / 96.0;
 
-			double dVal = (double)Convert.ChangeType(val, typeof(double));
+			double dVal = (double)Convert.ChangeType(val, typeof(double))!;
 
 			T result = (T)Convert.ChangeType(dVal * scale, typeof(T));
 			return result;

@@ -25,7 +25,7 @@ namespace unvell.ReoGrid.Actions
 	public class SetRangeDataAction : WorksheetReusableAction
 	{
 		private object[,] data;
-		private object[,] backupData;
+		private object?[,] backupData = null!;
 
 		/// <summary>
 		/// Create action to set data into specified range of spreadsheet.

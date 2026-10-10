@@ -115,6 +115,7 @@ namespace unvell.ReoGrid.Chart
 
 			//var bottomAxis = axisChart.BottomAxisInfo;
 			var ds = Chart.DataSource;
+			if (ds == null) return;
 
 			var g = dc.Graphics;
 
@@ -132,13 +133,13 @@ namespace unvell.ReoGrid.Chart
 
 				for (int c = 0; c < ds.CategoryCount; c++)
 				{
-					var pt = axisChart.PlotDataPoints[r][c];
+					var pt = axisChart.PlotDataPoints![r][c];
 
 					int count = c - lastIndex;
 
 					if (pt.hasValue)
 					{
-						columns[c] = new Point(axisChart.PlotColumnPoints[c]/* * scaleX*/, axisChart.ZeroHeight - pt.value/* * scaleY*/);
+						columns[c] = new Point(axisChart.PlotColumnPoints![c]/* * scaleX*/, axisChart.ZeroHeight - pt.value/* * scaleY*/);
 					}
 
 					bool last = c >= ds.CategoryCount - 1;

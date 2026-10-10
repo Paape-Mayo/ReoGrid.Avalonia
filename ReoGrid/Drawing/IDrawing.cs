@@ -65,7 +65,7 @@ namespace unvell.ReoGrid.Drawing
 		/// <summary>
 		/// Get or set the container of drawing object.
 		/// </summary>
-		IDrawingContainer Container { get; set; }
+		IDrawingContainer? Container { get; set; }
 
 		/// <summary>
 		/// Access the style set of drawing object.

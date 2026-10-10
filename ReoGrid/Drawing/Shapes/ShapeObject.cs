@@ -37,12 +37,12 @@ namespace unvell.ReoGrid.Drawing.Shapes
 	public abstract class ShapeObject : DrawingObject
 	{
 		#region Text
-		private string text;
+		private string? text;
 
 		/// <summary>
 		/// Get or set the text displayed inside this shape.
 		/// </summary>
-		public string Text
+		public string? Text
 		{
 			get
 			{
@@ -67,12 +67,12 @@ namespace unvell.ReoGrid.Drawing.Shapes
 			}
 		}
 
-		private RichText richText;
+		private RichText? richText;
 
 		/// <summary>
 		/// Get or set rich format text.
 		/// </summary>
-		public RichText RichText
+		public RichText? RichText
 		{
 			get { return this.richText; }
 			set
@@ -90,7 +90,7 @@ namespace unvell.ReoGrid.Drawing.Shapes
 
 		internal VerticalAlignment VerticalAlignment { get; set; }
 
-		private DrawingShapeObjectStyle styleProxy = null;
+		private DrawingShapeObjectStyle? styleProxy = null;
 		
 		/// <summary>
 		/// Get style object.

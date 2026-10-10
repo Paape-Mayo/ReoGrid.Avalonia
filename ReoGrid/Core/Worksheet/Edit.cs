@@ -29,8 +29,8 @@ namespace unvell.ReoGrid
 	{
 		#region StartEdit
 
-		internal Cell currentEditingCell;
-		private string backupData;
+		internal Cell? currentEditingCell;
+		private string? backupData;
 
 		/// <summary>
 		/// Start to edit selected cell
@@ -127,7 +127,7 @@ namespace unvell.ReoGrid
 			return this.StartEdit(cell, null);
 		}
 
-		internal bool StartEdit(Cell cell, string newText)
+		internal bool StartEdit(Cell cell, string? newText)
 		{
 			// abort if either spreadsheet or cell is readonly
 			if (this.HasSettings(WorksheetSettings.Edit_Readonly)
@@ -145,7 +145,7 @@ namespace unvell.ReoGrid
 				this.ScrollToCell(cell);
 			}
 
-			string editText = null;
+			string? editText = null;
 
 			if (newText == null)
 			{
@@ -206,7 +206,7 @@ namespace unvell.ReoGrid
 #if EX_SCRIPT
 			// v0.8.2: 'beforeCellEdit' renamed to 'onCellEdit'
 			// v0.8.5: 'onCellEdit' renamed to 'oncelledit'
-			object scriptReturn = RaiseScriptEvent("oncelledit", new RSCellObject(this, cell.InternalPos, cell));
+			object? scriptReturn = RaiseScriptEvent("oncelledit", new RSCellObject(this, cell.InternalPos, cell));
 			if (scriptReturn != null && !ScriptRunningMachine.GetBoolValue(scriptReturn))
 			{
 				return false;
@@ -219,6 +219,11 @@ namespace unvell.ReoGrid
 				if (!canContinue) return false;
 			}
 
+			if (this.controlAdapter == null || this.viewportController == null)
+			{
+				return false;
+			}
+
 			if (currentEditingCell != null)
 			{
 				EndEdit(this.controlAdapter.GetEditControlText());
@@ -228,7 +233,7 @@ namespace unvell.ReoGrid
 
 			this.controlAdapter.SetEditControlText(editText);
 
-			if (cell.DataFormat == CellDataFormatFlag.Percent && editText.EndsWith("%"))
+			if (cell.DataFormat == CellDataFormatFlag.Percent && editText != null && editText.EndsWith("%"))
 			{
 				this.controlAdapter.SetEditControlCaretPos(editText.Length - 1);
 			}
@@ -287,8 +292,8 @@ namespace unvell.ReoGrid
 
 			var activeViewport = viewportController.FocusView as IViewport;
 
-			int boxX = (int)Math.Round(x + viewportController.FocusView.Left - (activeViewport == null ? 0 : (activeViewport.ScrollViewLeft * scale)));
-			int boxY = (int)Math.Round(y + viewportController.FocusView.Top - (activeViewport == null ? 0 : (activeViewport.ScrollViewTop * scale)));
+			int boxX = (int)Math.Round(x + viewportController.FocusView!.Left - (activeViewport == null ? 0 : (activeViewport.ScrollViewLeft * scale)));
+			int boxY = (int)Math.Round(y + viewportController.FocusView!.Top - (activeViewport == null ? 0 : (activeViewport.ScrollViewTop * scale)));
 
 			RGFloat height = (cell.Height - 1) * scale - 1;
 
@@ -342,7 +347,7 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get instance of current editing cell.
 		/// </summary>
-		public Cell EditingCell
+		public Cell? EditingCell
 		{
 			get { return this.currentEditingCell; }
 		}
@@ -357,7 +362,7 @@ namespace unvell.ReoGrid
 		/// finished successfully.</returns>
 		public bool EndEdit(EndEditReason reason)
 		{
-			return EndEdit(reason == EndEditReason.NormalFinish ? this.controlAdapter.GetEditControlText() : null, reason);
+			return EndEdit(reason == EndEditReason.NormalFinish ? this.controlAdapter?.GetEditControlText() : null, reason);
 		}
 
 		/// <summary>
@@ -367,7 +372,7 @@ namespace unvell.ReoGrid
 		/// <param name="data">New data to be set to the edited cell</param>
 		/// <returns>True if currently in editing mode, and operation has been
 		/// finished successfully.</returns>
-		public bool EndEdit(object data)
+		public bool EndEdit(object? data)
 		{
 			return EndEdit(data, EndEditReason.NormalFinish);
 		}
@@ -380,7 +385,7 @@ namespace unvell.ReoGrid
 		/// <param name="reason">Ending Reason of editing operation</param>
 		/// <returns>True if currently in editing mode, and operation has been
 		/// finished successfully.</returns>
-		public bool EndEdit(object data, EndEditReason reason)
+		public bool EndEdit(object? data, EndEditReason reason)
 		{
 			if (currentEditingCell == null || endEditProcessing) return false;
 
@@ -388,7 +393,7 @@ namespace unvell.ReoGrid
 
 			if (data == null)
 			{
-				data = this.controlAdapter.GetEditControlText();
+				data = this.controlAdapter!.GetEditControlText();
 			}
 
 			if (AfterCellEdit != null)
@@ -474,8 +479,8 @@ namespace unvell.ReoGrid
 					break;
 			}
 
-			this.controlAdapter.HideEditControl();
-			this.controlAdapter.Focus();
+			this.controlAdapter!.HideEditControl();
+			this.controlAdapter!.Focus();
 			currentEditingCell = null;
 
 			endEditProcessing = false;
@@ -490,24 +495,24 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Event raised before cell changed to edit mode
 		/// </summary>
-		public event EventHandler<CellBeforeEditEventArgs> BeforeCellEdit;
+		public event EventHandler<CellBeforeEditEventArgs>? BeforeCellEdit;
 
 		/// <summary>
 		/// Event raised after cell changed to edit mode
 		/// </summary>
-		public event EventHandler<CellAfterEditEventArgs> AfterCellEdit;
+		public event EventHandler<CellAfterEditEventArgs>? AfterCellEdit;
 
 		/// <summary>
 		/// Event raised after input text changing
 		/// </summary>
-		public event EventHandler<CellEditTextChangingEventArgs> CellEditTextChanging;
+		public event EventHandler<CellEditTextChangingEventArgs>? CellEditTextChanging;
 
 		/// <summary>
 		/// Event raised after any characters is input
 		/// </summary>
-		public event EventHandler<CellEditCharInputEventArgs> CellEditCharInputed;
+		public event EventHandler<CellEditCharInputEventArgs>? CellEditCharInputed;
 
-		internal string RaiseCellEditTextChanging(string text)
+		internal string? RaiseCellEditTextChanging(string? text)
 		{
 			if (this.CellEditTextChanging == null)
 				return text;
@@ -521,7 +526,7 @@ namespace unvell.ReoGrid
 
 		internal int RaiseCellEditCharInputed(int @char)
 		{
-			if (this.CellEditCharInputed == null)
+			if (this.CellEditCharInputed == null || this.controlAdapter == null)
 			{
 				return @char;
 			}
@@ -544,11 +549,11 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Get or set the current text in edit textbox of cell
 		/// </summary>
-		public string CellEditText
+		public string? CellEditText
 		{
 			// TODO: move to control
-			get { return this.controlAdapter.GetEditControlText(); }
-			set { this.controlAdapter.SetEditControlText(value); }
+			get { return this.controlAdapter?.GetEditControlText(); }
+			set { this.controlAdapter?.SetEditControlText(value); }
 		}
 		#endregion // Editing Text
 	}

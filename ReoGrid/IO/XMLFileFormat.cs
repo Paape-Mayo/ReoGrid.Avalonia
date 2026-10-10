@@ -115,7 +115,7 @@ namespace unvell.ReoGrid
 			#endregion
 
 			#region Data Format
-			internal static string EncodeCellDataFormat(CellDataFormatFlag format)
+			internal static string? EncodeCellDataFormat(CellDataFormatFlag format)
 			{
 				switch (format)
 				{
@@ -134,7 +134,7 @@ namespace unvell.ReoGrid
 						return "currency";
 				}
 			}
-			internal static CellDataFormatFlag DecodeCellDataFormat(string format)
+			internal static CellDataFormatFlag DecodeCellDataFormat(string? format)
 			{
 				if (format == null) return CellDataFormatFlag.General;
 
@@ -155,7 +155,7 @@ namespace unvell.ReoGrid
 				}
 			}
 
-			internal static string EncodeNegativeNumberStyle(NumberDataFormatter.NumberNegativeStyle numberNegativeStyle)
+			internal static string? EncodeNegativeNumberStyle(NumberDataFormatter.NumberNegativeStyle numberNegativeStyle)
 			{
 				if (numberNegativeStyle == NumberDataFormatter.NumberNegativeStyle.Default) return null;
 
@@ -174,7 +174,7 @@ namespace unvell.ReoGrid
 
 				return sb.ToString();
 			}
-			internal static NumberDataFormatter.NumberNegativeStyle DecodeNegativeNumberStyle(string p)
+			internal static NumberDataFormatter.NumberNegativeStyle DecodeNegativeNumberStyle(string? p)
 			{
 				NumberDataFormatter.NumberNegativeStyle flag = NumberDataFormatter.NumberNegativeStyle.Default;
 
@@ -220,7 +220,7 @@ namespace unvell.ReoGrid
 			{
 				return pos.ToString().ToLower();
 			}
-			internal static object DecodeBorderPos(string p)
+			internal static object DecodeBorderPos(string? p)
 			{
 				if (string.IsNullOrEmpty(p)) return BorderPositions.None;
 				// TODO: need convert first char upper 
@@ -231,7 +231,7 @@ namespace unvell.ReoGrid
 			{
 				return pos.ToString().ToLower();
 			}
-			internal static HBorderOwnerPosition DecodeHBorderOwnerPos(string p)
+			internal static HBorderOwnerPosition DecodeHBorderOwnerPos(string? p)
 			{
 				if (string.IsNullOrEmpty(p)) return HBorderOwnerPosition.None;
 				if (p.Equals("all", StringComparison.CurrentCultureIgnoreCase))
@@ -248,7 +248,7 @@ namespace unvell.ReoGrid
 			{
 				return pos.ToString().ToLower();
 			}
-			internal static VBorderOwnerPosition DecodeVBorderOwnerPos(string p)
+			internal static VBorderOwnerPosition DecodeVBorderOwnerPos(string? p)
 			{
 				if (string.IsNullOrEmpty(p)) return VBorderOwnerPosition.None;
 				if (p.Equals("all", StringComparison.CurrentCultureIgnoreCase))
@@ -276,7 +276,7 @@ namespace unvell.ReoGrid
 						return "break-all";
 				}
 			}
-			internal static TextWrapMode DecodeTextWrapMode(string p)
+			internal static TextWrapMode DecodeTextWrapMode(string? p)
 			{
 				if (string.IsNullOrEmpty(p)) return TextWrapMode.NoWrap;
 
@@ -407,7 +407,7 @@ namespace unvell.ReoGrid
 					case FreezeArea.RightBottom: return "left-top";
 				}
 			}
-			public static FreezeArea DecodeFreezeArea(string str)
+			public static FreezeArea DecodeFreezeArea(string? str)
 			{
 				if (string.IsNullOrEmpty(str))
 					return FreezeArea.LeftTop;
@@ -431,10 +431,10 @@ namespace unvell.ReoGrid
 		public class RGXmlSheet
 		{
 			[XmlElement("head")]
-			public RGXmlHead head;
+			public RGXmlHead head = null!;
 
 			[XmlElement("style")]
-			public RGXmlCellStyle style;
+			public RGXmlCellStyle? style;
 
 			[XmlArray("rows"), XmlArrayItem("row")]
 			public List<RGXmlRowHead> rows = new List<RGXmlRowHead>();
@@ -454,7 +454,7 @@ namespace unvell.ReoGrid
 		public class RGXmlHead
 		{
 			[XmlElement("meta")]
-			public RGXmlMeta meta;
+			public RGXmlMeta? meta;
 			
 			[XmlElement("rows")]
 			public int rows;
@@ -466,35 +466,35 @@ namespace unvell.ReoGrid
 			[XmlElement("default-col-width")]
 			public ushort defaultColumnWidth;
 			[XmlElement("row-header-panel-width")]
-			public string rowHeaderWidth;
+			public string? rowHeaderWidth;
 
 			[XmlElement("freeze-row")]
-			public string freezeRow;
+			public string? freezeRow;
 			[XmlElement("freeze-col")]
-			public string freezeCol;
+			public string? freezeCol;
 			[XmlElement("freeze-area")]
-			public string freezeArea;
+			public string? freezeArea;
 
 			[XmlElement("selection-mode")]
-			public string selectionMode;
+			public string? selectionMode;
 			[XmlElement("selection-style")]
-			public string selectionStyle;
+			public string? selectionStyle;
 			[XmlElement("focus-forward-direction")]
-			public string focusForwardDirection;
+			public string? focusForwardDirection;
 			[XmlElement("focus-cell-style")]
-			public string focusCellStyle;
+			public string? focusCellStyle;
 
 			[XmlElement("outlines")]
-			public RGXmlOutlineList outlines;
+			public RGXmlOutlineList? outlines;
 
 			[XmlArray("named-ranges"), XmlArrayItem("named-range")]
-			public List<RGXmlNamedRange> namedRanges;
+			public List<RGXmlNamedRange>? namedRanges;
 
 			[XmlElement("print-settings")]
-			public RGXmlPrintSetting printSettings;
+			public RGXmlPrintSetting? printSettings;
 
 			[XmlElement("settings")]
-			public RGXmlWorksheetSetting settings;
+			public RGXmlWorksheetSetting? settings;
 
 			//[Obsolete("moved into meta element")]
 			//[XmlElement("culture")]
@@ -505,51 +505,51 @@ namespace unvell.ReoGrid
 			//public string editor;
 			
 			[XmlElement("script")]
-			public RGXmlScript script;
+			public RGXmlScript? script;
 		}
 
 		[Obfuscation(Feature = "renaming", Exclude = true)]
 		public class RGXmlMeta
 		{
 			[XmlElement("culture")]
-			public string culture;
+			public string? culture;
 
 			[XmlElement("editor")]
-			public string editor;
+			public string? editor;
 
 			[XmlElement("core-ver")]
-			public string controlVersion;
+			public string? controlVersion;
 		}
 
 		[Obfuscation(Feature = "renaming", Exclude = true)]
 		public class RGXmlPrintSetting
 		{
 			[XmlElement("page-break-rows")]
-			public string pageBreakRows;
+			public string? pageBreakRows;
 
 			[XmlElement("page-break-cols")]
-			public string pageBreakCols;
+			public string? pageBreakCols;
 
 			[XmlElement("scale-factor")]
-			public string scaling;
+			public string? scaling;
 
 			[XmlElement("paper-size")]
-			public string paperName;
+			public string? paperName;
 
 			[XmlElement("landscape")]
-			public string landscape;
+			public string? landscape;
 
 			[XmlElement("page-order")]
-			public string pageOrder;
+			public string? pageOrder;
 
 			[XmlElement("paper-width")]
-			public string paperWidth;
+			public string? paperWidth;
 
 			[XmlElement("paper-height")]
-			public string paperHeight;
+			public string? paperHeight;
 
 			[XmlElement("margins")]
-			public RGXmlMargins margins;
+			public RGXmlMargins? margins;
 		}
 
 		[Obfuscation(Feature = "renaming", Exclude = true)]
@@ -579,35 +579,35 @@ namespace unvell.ReoGrid
 		public class RGXmlWorksheetSetting
 		{
 			[XmlElement("show-grid")]
-			public string showGrid;
+			public string? showGrid;
 			[XmlElement("show-page-break")]
-			public string showPageBreakes;
+			public string? showPageBreakes;
 
 			[XmlElement("show-row-header")]
-			public string showRowHeader;
+			public string? showRowHeader;
 			[XmlElement("show-col-header")]
-			public string showColHeader;
+			public string? showColHeader;
 
 			[XmlElement("show-h-scrollbar")]
-			public string showHScrollBar;
+			public string? showHScrollBar;
 			[XmlElement("show-v-scrollbar")]
-			public string showVScrollBar;
+			public string? showVScrollBar;
 
 			[XmlElement("selection-mode")]
-			public string selectionMode;
+			public string? selectionMode;
 			[XmlElement("selection-style")]
-			public string selectionStyle;
+			public string? selectionStyle;
 
 			[XmlElement("readonly")]
-			public string @readonly;
+			public string? @readonly;
 
 			[XmlElement("allow-adjust-row-height")]
-			public string allowAdjustRowHeight;
+			public string? allowAdjustRowHeight;
 			[XmlElement("allow-adjust-column-width")]
-			public string allowAdjustColumnWidth;
+			public string? allowAdjustColumnWidth;
 
 			[XmlAttribute("meta")]
-			public string metaValue;
+			public string? metaValue;
 		}
 
 		[Obfuscation(Feature = "renaming", Exclude = true)]
@@ -619,16 +619,16 @@ namespace unvell.ReoGrid
 			public ushort height;
 
 			[XmlAttribute("last-height")]
-			public string lastHeight;
+			public string? lastHeight;
 
 			[XmlAttribute("auto-height")]
-			public string autoHeight;
+			public string? autoHeight;
 			[XmlElement("style")]
-			public RGXmlCellStyle style;
+			public RGXmlCellStyle? style;
 			[XmlAttribute]
-			public string text;
+			public string? text;
 			[XmlAttribute("text-color")]
-			public string textColor;
+			public string? textColor;
 		}
 
 		public class RGXmlColHead
@@ -638,17 +638,17 @@ namespace unvell.ReoGrid
 			[XmlAttribute]
 			public ushort width;
 			[XmlAttribute("last-width")]
-			public string lastWidth;
+			public string? lastWidth;
 			[XmlAttribute("auto-width")]
-			public string autoWidth;
+			public string? autoWidth;
 			[XmlElement("style")]
-			public RGXmlCellStyle style;
+			public RGXmlCellStyle? style;
 			[XmlAttribute]
-			public string text;
+			public string? text;
 			[XmlAttribute("text-color")]
-			public string textColor;
+			public string? textColor;
 			[XmlAttribute("cell-body-type")]
-			public string defaultCellBody;
+			public string? defaultCellBody;
 		}
 
 		public class RGXmlVBorder : RGXmlBorder
@@ -681,12 +681,12 @@ namespace unvell.ReoGrid
 			public int col;
 
 			[XmlAttribute]
-			public string color;
+			public string? color;
 			[XmlAttribute]
-			public string style;
+			public string? style;
 
 			[XmlAttribute]
-			public string pos;
+			public string? pos;
 
 			public RGXmlBorder() { }
 
@@ -754,83 +754,83 @@ namespace unvell.ReoGrid
 			[XmlAttribute]
 			public int col;
 			[XmlAttribute]
-			public string colspan;
+			public string? colspan;
 			[XmlAttribute]
-			public string rowspan;
+			public string? rowspan;
 
 			[XmlText]
-			public string data;
+			public string? data;
 
 			[XmlElement]
-			public RGXmlCellFormual formula;
+			public RGXmlCellFormual? formula;
 
 			[XmlAttribute("format")]
-			public string dataFormat;
+			public string? dataFormat;
 			[XmlElement("format-args")]
-			public RGXmlCellDataFormatArgs dataFormatArgs;
+			public RGXmlCellDataFormatArgs? dataFormatArgs;
 
 			[XmlElement("style")]
-			public RGXmlCellStyle style;
+			public RGXmlCellStyle? style;
 
 			[XmlAttribute("body-type")]
-			public string bodyType;
+			public string? bodyType;
 
 			// add by Rick
 			[XmlAttribute("readonly")]
-			public string @readonly;
+			public string? @readonly;
 
 			[XmlAttribute("trace-precedents")]
-			public string tracePrecedents;
+			public string? tracePrecedents;
 
 			[XmlAttribute("trace-dependents")]
-			public string traceDependents;
+			public string? traceDependents;
 		}
 
 		public class RGXmlCellFormual
 		{
 			[XmlText]
-			public string val;
+			public string? val;
 		}
 
 		public class RGXmlCellStyle
 		{
 			[XmlAttribute("bgcolor")]
-			public string backColor;
+			public string? backColor;
 			[XmlAttribute("color")]
-			public string textColor;
+			public string? textColor;
 			[XmlAttribute("font")]
-			public string font;
+			public string? font;
 			[XmlAttribute("font-size")]
-			public string fontSize;
+			public string? fontSize;
 			[XmlAttribute("bold")]
-			public string bold;
+			public string? bold;
 			[XmlAttribute("italic")]
-			public string italic;
+			public string? italic;
 			[XmlAttribute("strikethrough")]
-			public string strikethrough;
+			public string? strikethrough;
 			[XmlAttribute("underline")]
-			public string underline;
+			public string? underline;
 			[XmlAttribute("align")]
-			public string hAlign;
+			public string? hAlign;
 			[XmlAttribute("valign")]
-			public string vAlign;
+			public string? vAlign;
 			[XmlAttribute("text-wrap")]
-			public string textWrap;
+			public string? textWrap;
 			[XmlAttribute("indent")]
-			public string indent;
+			public string? indent;
 			[XmlAttribute("padding")]
-			public string padding;
+			public string? padding;
 			[XmlAttribute("rotate-angle")]
-			public string rotateAngle;
+			public string? rotateAngle;
 
 			[XmlElement("fill-pattern")]
-			public RGXmlCellStyleFillPattern fillPattern;
+			public RGXmlCellStyleFillPattern? fillPattern;
 		}
 
 		public class RGXmlCellStyleFillPattern
 		{
 			[XmlAttribute("color")]
-			public string color;
+			public string color = null!;
 			[XmlAttribute("style")]
 			public int patternStyleId;
 		}
@@ -838,15 +838,15 @@ namespace unvell.ReoGrid
 		public class RGXmlCellDataFormatArgs
 		{
 			[XmlAttribute("decimal-places")]
-			public string decimalPlaces;
+			public string? decimalPlaces;
 			[XmlAttribute("use-separator")]
-			public string useSeparator;
+			public string? useSeparator;
 			[XmlAttribute("pattern")]
-			public string pattern;
+			public string? pattern;
 			[XmlAttribute("culture")]
-			public string culture;
+			public string? culture;
 			[XmlAttribute("negative-style")]
-			public string negativeStyle;
+			public string? negativeStyle;
 
 			public bool IsEmpty
 			{
@@ -864,9 +864,9 @@ namespace unvell.ReoGrid
 		public class RGXmlOutlineList
 		{
 			[XmlElement("row-outline")]
-			public List<RGXmlOutline> rowOutlines;
+			public List<RGXmlOutline>? rowOutlines;
 			[XmlElement("col-outline")]
-			public List<RGXmlOutline> colOutlines;
+			public List<RGXmlOutline>? colOutlines;
 		}
 
 		public class RGXmlOutline
@@ -882,17 +882,17 @@ namespace unvell.ReoGrid
 		public class RGXmlNamedRange
 		{
 			[XmlAttribute("name")]
-			public string name;
+			public string name = null!;
 			[XmlAttribute("address")]
-			public string address;
+			public string address = null!;
 			[XmlText]
-			public string comment;
+			public string? comment;
 		}
 
 		public class RGXmlScript
 		{
 			[XmlText]
-			public string content;
+			public string? content;
 		}
 
 		#endregion // XML
