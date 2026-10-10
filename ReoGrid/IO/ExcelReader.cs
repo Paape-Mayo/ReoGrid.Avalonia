@@ -2415,9 +2415,14 @@ namespace unvell.ReoGrid.IO.OpenXML
 		private static RichText CreateRichTextFromRuns(Document doc, IEnumerable<Paragraph> paragraphs)
 		{
 			var rt = new RichText();
+			bool firstParagraph = true;
 
 			foreach (var p in paragraphs)
 			{
+				// Paragraphs are separated, not terminated, so the last one gains no empty line.
+				if (!firstParagraph) rt.NewLine();
+				firstParagraph = false;
+
 				foreach (var run in p.runs)
 				{
 					AddRunIntoRichText(doc, rt, run);
@@ -2435,8 +2440,6 @@ namespace unvell.ReoGrid.IO.OpenXML
 						}
 					}
 				}
-
-				rt.NewLine();
 			}
 
 			return rt;

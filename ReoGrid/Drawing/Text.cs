@@ -486,6 +486,16 @@ namespace unvell.ReoGrid.Drawing
                             null, null);
 
                         g.PlatformGraphics.DrawGlyphRun(lastBrush, gr);
+#elif AVALONIA
+                        if (b.FontInfo.GlyphTypeface != null)
+                        {
+                            // Layout puts a box's top one line height above its baseline.
+                            using var gr = new Avalonia.Media.GlyphRun(b.FontInfo.GlyphTypeface, b.FontInfo.EmSize,
+                                b.Str.AsMemory(), new[] { new Avalonia.Media.TextFormatting.GlyphInfo(b.GlyphIndex, 0, b.Width, default) },
+                                new Avalonia.Point(tx, ty + b.FontInfo.LineHeight));
+
+                            g.PlatformGraphics.DrawGlyphRun(lastBrush!, gr);
+                        }
 #endif // WPF
                     }
                 }
@@ -1116,6 +1126,37 @@ namespace unvell.ReoGrid.Drawing.Text
 
                     fontInfo.Ascent = typeface.FontFamily.Baseline;
                     fontInfo.LineHeight = typeface.CapsHeight;
+#elif AVALONIA
+                    var emSize = renderFontSize * 96 / 72;
+                    var typeface = new Avalonia.Media.Typeface(
+                        string.IsNullOrEmpty(this.fontName) ? Avalonia.Media.FontFamily.Default : new Avalonia.Media.FontFamily(this.fontName),
+                        PlatformUtility.ToAvaloniaFontStyle(this.fontStyles),
+                        (this.fontStyles & FontStyles.Bold) == FontStyles.Bold ? Avalonia.Media.FontWeight.Bold : Avalonia.Media.FontWeight.Normal);
+
+                    var fontManager = Avalonia.Media.FontManager.Current;
+                    Avalonia.Media.GlyphTypeface? glyphTypeface;
+                    if (!fontManager.TryGetGlyphTypeface(typeface, out glyphTypeface))
+                    {
+                        fontManager.TryGetGlyphTypeface(Avalonia.Media.Typeface.Default, out glyphTypeface);
+                    }
+
+                    this.fontInfo.EmSize = emSize;
+                    this.fontInfo.GlyphTypeface = glyphTypeface;
+
+                    if (glyphTypeface != null)
+                    {
+                        var metrics = glyphTypeface.Metrics;
+                        var scale = emSize / metrics.DesignEmHeight;
+                        var ascent = Math.Abs(metrics.Ascent);
+
+                        fontInfo.Ascent = ascent * scale;
+                        fontInfo.LineHeight = (ascent + Math.Abs(metrics.Descent) + metrics.LineGap) * scale;
+                    }
+                    else
+                    {
+                        fontInfo.Ascent = emSize * 0.8;
+                        fontInfo.LineHeight = emSize * 1.2;
+                    }
 #endif // WPF
 
                     //fontInfo.Height = font.Height;
@@ -1152,7 +1193,7 @@ namespace unvell.ReoGrid.Drawing.Text
 
 #if WINFORM
             this.TextSizes = new List<RGFloat>();
-#elif WPF
+#elif WPF || AVALONIA
             this.TextSizes = new List<double>();
             this.GlyphIndexes = new List<ushort>();
 #endif // WPF
@@ -1168,6 +1209,9 @@ namespace unvell.ReoGrid.Drawing.Text
                 this.text = string.Empty;
                 this.TextSizes!.Clear();
                 this.TextSizes!.Capacity = this.text.Length;
+#if WPF || AVALONIA
+                this.GlyphIndexes!.Clear();
+#endif // WPF || AVALONIA
 
                 this.AppendText(value);
             }
@@ -1232,6 +1276,29 @@ namespace unvell.ReoGrid.Drawing.Text
                 this.TextSizes.Add(width);
             }
 
+#elif AVALONIA
+            var fontInfo = this.FontInfo;
+            var glyphTypeface = fontInfo.GlyphTypeface;
+            var scale = glyphTypeface == null ? 0 : fontInfo.EmSize / glyphTypeface.Metrics.DesignEmHeight;
+
+            for (int n = 0; n < text.Length; n++)
+            {
+                ushort glyphIndex = 0;
+                double width = fontInfo.EmSize / 2;
+
+                if (glyphTypeface != null)
+                {
+                    glyphIndex = glyphTypeface.CharacterToGlyphMap.GetGlyph(text[n]);
+
+                    if (glyphTypeface.TryGetHorizontalGlyphAdvance(glyphIndex, out var advance))
+                    {
+                        width = advance * scale;
+                    }
+                }
+
+                this.GlyphIndexes!.Add(glyphIndex);
+                this.TextSizes!.Add(width);
+            }
 #endif // WINFORM
         }
         #endregion // Text
@@ -1293,6 +1360,9 @@ namespace unvell.ReoGrid.Drawing.Text
 #elif WPF
         public System.Windows.Media.Typeface Typeface { get; set; }
         public System.Windows.Media.GlyphTypeface GlyphTypeface { get; set; }
+#elif AVALONIA
+        public Avalonia.Media.GlyphTypeface? GlyphTypeface { get; set; }
+        public RGFloat EmSize { get; set; }
 #endif // WPF
 
         public RGFloat Ascent { get; set; }
